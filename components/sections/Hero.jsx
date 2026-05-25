@@ -15,7 +15,12 @@ import Button from '@/components/ui/Button'
 import HeroButtonGroup from '@/components/ui/HeroButtonGroup'
 
 // [3] MAGNETIC BUTTON
-function MagneticButton({ children, href, prefersReducedMotion }) {
+function MagneticButton({
+  children,
+  href,
+  prefersReducedMotion,
+  buttonClassName,
+}) {
   const buttonRef = useRef(null)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
@@ -77,7 +82,7 @@ function MagneticButton({ children, href, prefersReducedMotion }) {
       onMouseLeave={prefersReducedMotion ? undefined : handleMouseLeave}
       onMouseMove={prefersReducedMotion ? undefined : handleMouseMove}
     >
-      <Button href={href} variant="primary">
+      <Button href={href} variant="primary" className={buttonClassName}>
         {children}
       </Button>
     </motion.div>
@@ -750,7 +755,7 @@ export default function Hero() {
         style={prefersReducedMotion ? undefined : { opacity: heroBlendOpacity }}
       />
       <motion.div
-        className="relative z-[2] mx-auto flex min-h-screen max-w-7xl flex-col justify-center gap-10 px-5 py-20 md:px-8 md:py-28 min-h-dvh"
+        className="relative z-[2] mx-auto flex min-h-screen max-w-7xl flex-col justify-center gap-8 px-5 py-16 md:gap-10 md:px-8 md:py-28 min-h-dvh"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -760,13 +765,13 @@ export default function Hero() {
             : { y: contentY, opacity: effectiveContentOpacity }
         }
       >
-        <div className="max-w-5xl space-y-6">
+        <div className="max-w-5xl space-y-5 sm:space-y-6">
           <motion.div variants={itemVariants}>
-            <p className="font-mono text-xs uppercase tracking-[0.35em] text-[var(--color-accent)] md:text-sm">
+            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--color-accent)] sm:text-xs sm:tracking-[0.35em] md:text-sm">
               Ihre Webseite verdient ein Upgrade
             </p>
           </motion.div>
-          <h1 className="text-5xl font-extrabold leading-[0.9] tracking-[-0.04em] md:text-7xl lg:text-[6.5rem]">
+          <h1 className="text-[2.35rem] font-extrabold leading-[0.92] tracking-[-0.04em] min-[375px]:text-[2.65rem] min-[480px]:text-5xl md:text-7xl lg:text-[6.5rem]">
             <motion.div variants={itemVariants}>
               <span className="block">Wir bauen</span>
             </motion.div>
@@ -778,21 +783,22 @@ export default function Hero() {
             </motion.div>
           </h1>
           <motion.div variants={itemVariants}>
-            <p className="max-w-2xl font-mono text-sm leading-7 text-[var(--color-text)]/72 md:text-base">
+            <p className="max-w-2xl font-mono text-sm leading-6 text-[var(--color-text)]/72 sm:leading-7 md:text-base">
               <span className="block">Design. Chatbots. Crypto-Payment.</span>
               <span className="block">Keine Buzzwords — nur Ergebnisse.</span>
             </p>
           </motion.div>
         </div>
         <motion.div variants={itemVariants}>
-          <div className="flex flex-col gap-4 sm:flex-row">
+          <div className="flex w-full max-w-xl flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:gap-4">
             <MagneticButton
               href="#services"
               prefersReducedMotion={prefersReducedMotion}
+              buttonClassName="w-full sm:w-auto"
             >
               Leistungen ansehen
             </MagneticButton>
-            <Button href="#kontakt" variant="ghost">
+            <Button href="#kontakt" variant="ghost" className="w-full sm:w-auto">
               Unverbindlich anfragen
             </Button>
           </div>
