@@ -7,11 +7,16 @@ const variants = {
     'border border-[var(--color-border)] bg-transparent text-[var(--color-text)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]',
 }
 
-export default function Button({ children, href, variant = 'primary' }) {
+export default function Button({
+  children,
+  href,
+  variant = 'primary',
+  className = '',
+}) {
   return (
     <Link
       href={href}
-      className={`inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3 font-mono text-xs uppercase tracking-[0.24em] transition-colors duration-300 ${variants[variant]}`}
+      className={`inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3 font-mono text-xs uppercase tracking-[0.24em] transition-colors duration-300 ${variants[variant]} ${className}`}
     >
       {children}
     </Link>
