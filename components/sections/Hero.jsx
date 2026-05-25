@@ -228,6 +228,12 @@ export default function Hero() {
     const acceleratedStepDuration = 75
     const gravityRadius = 160
 
+    // Mobile scroll-driven snake state
+    let isMobileMode = false
+    let scrollAccumulator = 0
+    let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0
+    const scrollPixelsPerStep = 60
+
     const isSameCell = (leftCell, rightCell) =>
       leftCell.column === rightCell.column && leftCell.row === rightCell.row
 
@@ -367,6 +373,96 @@ export default function Hero() {
       }
 
       return openCells[Math.floor(Math.random() * openCells.length)]
+    }
+
+    const getDirectionTowardFood = () => {
+      if (!food || snake.length === 0) {
+        return direction
+      }
+
+      const head = snake[0]
+      const deltaColumn = food.column - head.column
+      const deltaRow = food.row - head.row
+
+      const candidates = []
+
+      if (deltaColumn > 0) candidates.push({ x: 1, y: 0 })
+      if (deltaColumn < 0) candidates.push({ x: -1, y: 0 })
+      if (deltaRow > 0) candidates.push({ x: 0, y: 1 })
+      if (deltaRow < 0) candidates.push({ x: 0, y: -1 })
+
+      if (candidates.length === 0) {
+        candidates.push(direction)
+      }
+
+      for (const candidate of candidates) {
+        const isReverse =
+          snake.length > 1 &&
+          candidate.x === -direction.x &&
+          candidate.y === -direction.y
+
+        if (isReverse) {
+          continue
+        }
+
+        const nextHead = {
+          column: head.column + candidate.x,
+          row: head.row + candidate.y,
+        }
+
+        const hitWall =
+          nextHead.column < 0 ||
+          nextHead.column >= columns ||
+          nextHead.row < 0 ||
+          nextHead.row >= rows
+
+        const hitSelf = snake.some((segment) => isSameCell(segment, nextHead))
+
+        if (!hitWall && !hitSelf) {
+          return candidate
+        }
+      }
+
+      return direction
+    }
+
+    const stepMobileSnake = () => {
+      if (snake.length === 0 || !food) {
+        return
+      }
+
+      direction = getDirectionTowardFood()
+      pendingDirection = direction
+
+      const nextHead = {
+        column: snake[0].column + direction.x,
+        row: snake[0].row + direction.y,
+      }
+
+      const hitWall =
+        nextHead.column < 0 ||
+        nextHead.column >= columns ||
+        nextHead.row < 0 ||
+        nextHead.row >= rows
+
+      const hitSelf = snake.some((segment) => isSameCell(segment, nextHead))
+
+      if (hitWall || hitSelf) {
+        snake = createInitialSnake()
+        direction = { x: 1, y: 0 }
+        pendingDirection = { x: 1, y: 0 }
+        food = spawnFood(snake)
+        return
+      }
+
+      snake = [nextHead, ...snake]
+
+      if (isSameCell(nextHead, food)) {
+        food = spawnFood(snake)
+        return
+      }
+
+      snake.pop()
     }
 
     const resetGame = () => {
@@ -732,6 +828,21 @@ export default function Hero() {
     }
 
     const pauseGameOnScroll = () => {
+      if (isMobileMode) {
+        const currentScrollY = window.scrollY
+        const delta = currentScrollY - lastScrollY
+        lastScrollY = currentScrollY
+
+        scrollAccumulator += Math.abs(delta)
+
+        while (scrollAccumulator >= scrollPixelsPerStep) {
+          scrollAccumulator -= scrollPixelsPerStep
+          stepMobileSnake()
+        }
+
+        return
+      }
+
       if (!started || paused || gameOver) {
         return
       }
@@ -775,9 +886,21 @@ export default function Hero() {
 
       context.setTransform(dpr, 0, 0, dpr, 0, 0)
       resetGame()
-      started = false
-      paused = false
-      setGameStatus('idle')
+
+      isMobileMode = nextWidth < 1024
+
+      if (isMobileMode) {
+        started = false
+        paused = false
+        lastScrollY = window.scrollY
+        scrollAccumulator = 0
+        setGameStatus('idle')
+      } else {
+        started = false
+        paused = false
+        setGameStatus('idle')
+      }
+
       renderGame()
     }
 
@@ -804,19 +927,21 @@ export default function Hero() {
     gameApiRef.current = { startGame, pauseGame }
 
     const render = (now) => {
-      const currentStepDuration =
-        heldDirectionKey && heldDirectionKey === directionToKey(direction)
-          ? acceleratedStepDuration
-          : stepDuration
+      if (!isMobileMode) {
+        const currentStepDuration =
+          heldDirectionKey && heldDirectionKey === directionToKey(direction)
+            ? acceleratedStepDuration
+            : stepDuration
 
-      if (
-        started &&
-        !paused &&
-        !gameOver &&
-        now - lastStepTime >= currentStepDuration
-      ) {
-        stepGame()
-        lastStepTime = now
+        if (
+          started &&
+          !paused &&
+          !gameOver &&
+          now - lastStepTime >= currentStepDuration
+        ) {
+          stepGame()
+          lastStepTime = now
+        }
       }
 
       renderGame()
