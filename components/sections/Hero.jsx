@@ -989,6 +989,7 @@ export default function Hero() {
             highScores={highScores}
             onStartGame={() => gameApiRef.current.startGame()}
             onPauseGame={() => gameApiRef.current.pauseGame()}
+            scrollYProgress={scrollYProgress}
           />
         </div>
         <motion.div

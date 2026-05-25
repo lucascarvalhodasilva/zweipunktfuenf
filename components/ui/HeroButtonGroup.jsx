@@ -2,7 +2,13 @@
 
 import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from 'framer-motion'
 
 import Snake from '@/components/ui/Snake'
 
@@ -12,10 +18,52 @@ export default function HeroButtonGroup({
   highScores,
   onStartGame,
   onPauseGame,
+  scrollYProgress,
 }) {
   const prefersReducedMotion = useReducedMotion()
   const [activeModal, setActiveModal] = useState(null)
   const triggerRefs = useRef({})
+
+  // Scroll-driven staggered fade for buttons (cookie fades first, then snake, then chat)
+  const cookieScrollOpacity = useTransform(
+    scrollYProgress,
+    prefersReducedMotion ? [0.5, 0.7] : [0.15, 0.35],
+    [1, 0],
+  )
+  const snakeScrollOpacity = useTransform(
+    scrollYProgress,
+    prefersReducedMotion ? [0.5, 0.7] : [0.25, 0.45],
+    [1, 0],
+  )
+  const chatScrollOpacity = useTransform(
+    scrollYProgress,
+    prefersReducedMotion ? [0.5, 0.7] : [0.35, 0.55],
+    [1, 0],
+  )
+
+  // Container-level dissolve at the end of the scroll range
+  const containerTargetOpacity = useTransform(
+    scrollYProgress,
+    prefersReducedMotion ? [0.5, 0.75] : [0.4, 0.6],
+    [1, 0],
+  )
+  const containerScrollOpacity = useSpring(containerTargetOpacity, {
+    stiffness: 120,
+    damping: 24,
+    mass: 0.6,
+  })
+
+  // Mobile container fade
+  const mobileTargetOpacity = useTransform(
+    scrollYProgress,
+    prefersReducedMotion ? [0.5, 0.75] : [0.3, 0.55],
+    [1, 0],
+  )
+  const mobileScrollOpacity = useSpring(mobileTargetOpacity, {
+    stiffness: 120,
+    damping: 24,
+    mass: 0.6,
+  })
 
   const closeModal = useCallback(() => {
     const previousModal = activeModal
@@ -249,16 +297,17 @@ export default function HeroButtonGroup({
     <>
       {/* Desktop */}
       <div className="absolute right-24 top-1/2 z-[4] hidden -translate-y-1/2 lg:block">
-        <motion.div
-          layout
-          animate={gameStatus === 'running' ? 'hidden' : 'visible'}
-          variants={{
-            visible: { opacity: 1, x: 0, pointerEvents: 'auto' },
-            hidden: { opacity: 0, x: 18, pointerEvents: 'none' },
-          }}
-          transition={{ ...menuVisibilityTransition, layout: layoutTransition }}
-          className="w-72 overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.14)] bg-[rgba(10,10,10,0.62)] p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.04)] backdrop-blur"
-        >
+        <motion.div style={{ opacity: containerScrollOpacity }}>
+          <motion.div
+            layout
+            animate={gameStatus === 'running' ? 'hidden' : 'visible'}
+            variants={{
+              visible: { opacity: 1, x: 0, pointerEvents: 'auto' },
+              hidden: { opacity: 0, x: 18, pointerEvents: 'none' },
+            }}
+            transition={{ ...menuVisibilityTransition, layout: layoutTransition }}
+            className="w-72 overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.14)] bg-[rgba(10,10,10,0.62)] p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.04)] backdrop-blur"
+          >
           <AnimatePresence mode="wait" initial={false}>
             {activeModal === null ? (
               <motion.div
@@ -273,13 +322,17 @@ export default function HeroButtonGroup({
                 }
                 className="space-y-0"
               >
-                <div className="mb-3">
+                <motion.div className="mb-3" style={{ opacity: chatScrollOpacity }}>
                   {renderButton('chat', 'Chat', primaryButtonClassName)}
-                </div>
+                </motion.div>
                 <hr className="my-0 h-[0.5px] border-none border-t border-[var(--color-border)]/30" />
                 <div className="mt-3 space-y-2.5">
-                  {renderButton('snake', 'Snake', secondaryButtonClassName)}
-                  {renderButton('cookie', 'Cookie', secondaryButtonClassName)}
+                  <motion.div style={{ opacity: snakeScrollOpacity }}>
+                    {renderButton('snake', 'Snake', secondaryButtonClassName)}
+                  </motion.div>
+                  <motion.div style={{ opacity: cookieScrollOpacity }}>
+                    {renderButton('cookie', 'Cookie', secondaryButtonClassName)}
+                  </motion.div>
                 </div>
               </motion.div>
             ) : (
@@ -308,10 +361,14 @@ export default function HeroButtonGroup({
             )}
           </AnimatePresence>
         </motion.div>
+        </motion.div>
       </div>
 
       {/* Mobile */}
-      <div className="fixed bottom-6 right-5 z-[4] lg:hidden">
+      <motion.div
+        className="fixed bottom-6 right-5 z-[4] lg:hidden"
+        style={{ opacity: mobileScrollOpacity }}
+      >
         <AnimatePresence>
           {/* Snake is excluded from mobile — it requires keyboard input */}
           {activeModal !== null && activeModal !== 'snake' && (
@@ -359,7 +416,7 @@ export default function HeroButtonGroup({
           {renderMobileIconButton('chat', mobilePrimaryIconClassName)}
           {renderMobileIconButton('cookie', mobileSecondaryIconClassName)}
         </div>
-      </div>
+      </motion.div>
     </>
   )
 }
