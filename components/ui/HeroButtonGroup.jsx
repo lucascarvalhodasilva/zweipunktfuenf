@@ -313,6 +313,7 @@ export default function HeroButtonGroup({
       {/* Mobile */}
       <div className="fixed bottom-6 right-5 z-[4] lg:hidden">
         <AnimatePresence>
+          {/* Snake is excluded from mobile — it requires keyboard input */}
           {activeModal !== null && activeModal !== 'snake' && (
             <>
               <motion.div
@@ -355,8 +356,8 @@ export default function HeroButtonGroup({
           )}
         </AnimatePresence>
         <div className="flex flex-col gap-3">
-          {renderMobileIconButton('cookie', mobileSecondaryIconClassName)}
           {renderMobileIconButton('chat', mobilePrimaryIconClassName)}
+          {renderMobileIconButton('cookie', mobileSecondaryIconClassName)}
         </div>
       </div>
     </>
