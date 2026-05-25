@@ -10,7 +10,9 @@ import {
   useTransform,
 } from 'framer-motion'
 
-import Snake from '@/components/ui/Snake'
+import dynamic from 'next/dynamic'
+
+const Snake = dynamic(() => import('@/components/ui/Snake'), { ssr: false })
 
 export default function HeroButtonGroup({
   gameStatus,
