@@ -226,6 +226,11 @@ export default function Hero() {
     let pointerX = 0
     let pointerY = 0
     let hasInitialized = false
+    let isVisible = true
+    let loopRunning = false
+    let singleFrameId = 0
+    let isIntersecting = true
+    let isTabVisible = true
 
     const SNAPSHOT_KEY = 'hero-snake-snapshot'
     const SNAPSHOT_VERSION = 1
@@ -497,6 +502,74 @@ export default function Hero() {
     const isGravityActive = () =>
       !prefersReducedMotion && hasPointer && !gameOver && (!started || paused)
 
+    const isGameRunning = () => started && !paused && !gameOver
+
+    const needsContinuousLoop = () => isVisible && isGameRunning()
+
+    const requestSingleFrame = () => {
+      if (loopRunning || !isVisible) {
+        return
+      }
+
+      window.cancelAnimationFrame(singleFrameId)
+      singleFrameId = window.requestAnimationFrame(() => {
+        singleFrameId = 0
+        renderGame()
+      })
+    }
+
+    const startLoop = () => {
+      if (loopRunning) {
+        return
+      }
+
+      loopRunning = true
+      window.cancelAnimationFrame(singleFrameId)
+      singleFrameId = 0
+
+      const tick = (now) => {
+        if (!needsContinuousLoop()) {
+          loopRunning = false
+          renderGame()
+          return
+        }
+
+        if (!isMobileMode) {
+          const currentStepDuration =
+            heldDirectionKey && heldDirectionKey === directionToKey(direction)
+              ? acceleratedStepDuration
+              : stepDuration
+
+          if (now - lastStepTime >= currentStepDuration) {
+            stepGame()
+            lastStepTime = now
+          }
+        }
+
+        renderGame()
+        frameId = window.requestAnimationFrame(tick)
+      }
+
+      frameId = window.requestAnimationFrame(tick)
+    }
+
+    const stopLoop = () => {
+      loopRunning = false
+      window.cancelAnimationFrame(frameId)
+      window.cancelAnimationFrame(singleFrameId)
+      frameId = 0
+      singleFrameId = 0
+    }
+
+    const ensureCorrectLoopState = () => {
+      if (needsContinuousLoop()) {
+        startLoop()
+      } else if (loopRunning) {
+        stopLoop()
+        renderGame()
+      }
+    }
+
     const getCellRect = (cell, offsetX = 0, offsetY = 0) => ({
       x: cell.column * cellWidth + gridLineWidth + offsetX,
       y: cell.row * cellHeight + gridLineWidth + offsetY,
@@ -757,6 +830,7 @@ export default function Hero() {
           clearGameSnapshot()
         }
 
+        ensureCorrectLoopState()
         event.preventDefault()
         return
       }
@@ -793,6 +867,7 @@ export default function Hero() {
         paused = false
         setGameStatus('running')
         clearGameSnapshot()
+        ensureCorrectLoopState()
       }
 
       event.preventDefault()
@@ -816,6 +891,7 @@ export default function Hero() {
       gameOver = false
       clearGameSnapshot()
       setGameStatus('running')
+      ensureCorrectLoopState()
     }
 
     const pauseGame = () => {
@@ -831,6 +907,8 @@ export default function Hero() {
       } else {
         clearGameSnapshot()
       }
+
+      ensureCorrectLoopState()
     }
 
     const pauseGameOnScroll = () => {
@@ -846,6 +924,7 @@ export default function Hero() {
           stepMobileSnake()
         }
 
+        requestSingleFrame()
         return
       }
 
@@ -856,6 +935,7 @@ export default function Hero() {
       paused = true
       setGameStatus('paused')
       saveGameSnapshot()
+      ensureCorrectLoopState()
     }
 
     const handlePointerMove = (event) => {
@@ -864,10 +944,12 @@ export default function Hero() {
       hasPointer = true
       pointerX = event.clientX - rect.left
       pointerY = event.clientY - rect.top
+      requestSingleFrame()
     }
 
     const handlePointerLeave = () => {
       hasPointer = false
+      requestSingleFrame()
     }
 
     const resizeCanvas = () => {
@@ -932,39 +1014,56 @@ export default function Hero() {
     section.addEventListener('pointerleave', handlePointerLeave)
     gameApiRef.current = { startGame, pauseGame }
 
-    const render = (now) => {
-      if (!isMobileMode) {
-        const currentStepDuration =
-          heldDirectionKey && heldDirectionKey === directionToKey(direction)
-            ? acceleratedStepDuration
-            : stepDuration
+    // Visibility tracking: IntersectionObserver + visibilitychange
+    const updateVisibility = () => {
+      const wasVisible = isVisible
+      isVisible = isIntersecting && isTabVisible
 
-        if (
-          started &&
-          !paused &&
-          !gameOver &&
-          now - lastStepTime >= currentStepDuration
-        ) {
-          stepGame()
-          lastStepTime = now
+      if (isVisible && !wasVisible) {
+        ensureCorrectLoopState()
+
+        if (!loopRunning) {
+          requestSingleFrame()
         }
+      } else if (!isVisible && wasVisible) {
+        stopLoop()
       }
-
-      renderGame()
-
-      frameId = window.requestAnimationFrame(render)
     }
 
-    frameId = window.requestAnimationFrame(render)
+    const intersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        isIntersecting = entry.isIntersecting
+        updateVisibility()
+      },
+      { threshold: 0 }
+    )
+
+    intersectionObserver.observe(section)
+
+    const handleVisibilityChange = () => {
+      isTabVisible = document.visibilityState !== 'hidden'
+      updateVisibility()
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    // Start the loop only if the game is actively running; otherwise render a single frame
+    ensureCorrectLoopState()
+
+    if (!loopRunning) {
+      requestSingleFrame()
+    }
 
     return () => {
-      window.cancelAnimationFrame(frameId)
+      stopLoop()
       window.removeEventListener('keydown', handleKeyDown)
       window.removeEventListener('keyup', handleKeyUp)
       window.removeEventListener('scroll', pauseGameOnScroll)
       section.removeEventListener('pointermove', handlePointerMove)
       section.removeEventListener('pointerleave', handlePointerLeave)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
       resizeObserver.disconnect()
+      intersectionObserver.disconnect()
       section.style.removeProperty('--surface-grid-cell-width')
       section.style.removeProperty('--surface-grid-cell-height')
       gameApiRef.current = {
