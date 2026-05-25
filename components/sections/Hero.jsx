@@ -11,8 +11,14 @@ import {
   useTransform,
 } from 'framer-motion'
 
+import dynamic from 'next/dynamic'
+
 import Button from '@/components/ui/Button'
-import HeroButtonGroup from '@/components/ui/HeroButtonGroup'
+
+const HeroButtonGroup = dynamic(
+  () => import('@/components/ui/HeroButtonGroup'),
+  { ssr: false },
+)
 
 // [3] MAGNETIC BUTTON
 function MagneticButton({
