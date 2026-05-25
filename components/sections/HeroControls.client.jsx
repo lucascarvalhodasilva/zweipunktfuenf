@@ -16,15 +16,13 @@ export default function HeroControls({
   scrollYProgress,
 }) {
   return (
-    <div>
-      <HeroButtonGroup
-        gameStatus={gameStatus}
-        score={score}
-        highScores={highScores}
-        onStartGame={onStartGame}
-        onPauseGame={onPauseGame}
-        scrollYProgress={scrollYProgress}
-      />
-    </div>
+    <HeroButtonGroup
+      gameStatus={gameStatus}
+      score={score}
+      highScores={highScores}
+      onStartGame={onStartGame}
+      onPauseGame={onPauseGame}
+      scrollYProgress={scrollYProgress}
+    />
   )
 }
