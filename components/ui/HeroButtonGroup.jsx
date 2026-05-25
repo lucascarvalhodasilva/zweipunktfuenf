@@ -1,0 +1,367 @@
+'use client'
+
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+
+import Snake from '@/components/ui/Snake'
+
+const defaultCookiePreferences = {
+  analytics: false,
+  marketing: false,
+}
+
+export default function HeroButtonGroup({
+  gameStatus,
+  score,
+  highScores,
+  onStartGame,
+  onPauseGame,
+}) {
+  const prefersReducedMotion = useReducedMotion()
+  const [activeModal, setActiveModal] = useState(null)
+  const [cookiePreferences, setCookiePreferences] = useState(
+    defaultCookiePreferences
+  )
+  const triggerRefs = useRef({})
+
+  const closeModal = useCallback(() => {
+    const previousModal = activeModal
+
+    setActiveModal(null)
+
+    if (previousModal && triggerRefs.current[previousModal]) {
+      window.requestAnimationFrame(() => {
+        triggerRefs.current[previousModal]?.focus()
+      })
+    }
+  }, [activeModal])
+
+  useEffect(() => {
+    if (activeModal !== 'cookie') {
+      return () => {}
+    }
+
+    const storedPreferences = window.localStorage.getItem('zpf_cookie_consent')
+
+    if (!storedPreferences) {
+      setCookiePreferences(defaultCookiePreferences)
+      return () => {}
+    }
+
+    try {
+      const parsedPreferences = JSON.parse(storedPreferences)
+
+      setCookiePreferences({
+        analytics: Boolean(parsedPreferences.analytics),
+        marketing: Boolean(parsedPreferences.marketing),
+      })
+    } catch {
+      setCookiePreferences(defaultCookiePreferences)
+    }
+
+    return () => {}
+  }, [activeModal])
+
+  useEffect(() => {
+    if (!activeModal) {
+      return () => {}
+    }
+
+    const handleKeyDown = (event) => {
+      if (event.key !== 'Escape') {
+        return
+      }
+
+      event.preventDefault()
+      closeModal()
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [activeModal, closeModal])
+
+  const toggleModal = (modalKey) => {
+    setActiveModal((currentModal) =>
+      currentModal === modalKey ? null : modalKey
+    )
+  }
+
+  const handleCookiePreferenceChange = (key) => {
+    setCookiePreferences((currentPreferences) => ({
+      ...currentPreferences,
+      [key]: !currentPreferences[key],
+    }))
+  }
+
+  const handleCookieConfirm = () => {
+    window.localStorage.setItem(
+      'zpf_cookie_consent',
+      JSON.stringify({
+        analytics: cookiePreferences.analytics,
+        marketing: cookiePreferences.marketing,
+        savedAt: Date.now(),
+      })
+    )
+    setActiveModal(null)
+  }
+
+  const buttonBaseClassName =
+    'group flex min-h-11 w-full items-center gap-3 rounded-xl border px-4 py-2 font-mono text-[11px] uppercase tracking-[0.12em] transition-colors duration-300'
+
+  const secondaryButtonClassName =
+    `${buttonBaseClassName} border-[var(--color-border)] bg-transparent text-[var(--color-text)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]`
+
+  const primaryButtonClassName =
+    `${buttonBaseClassName} border-[var(--color-accent)] bg-[var(--color-accent)] text-black hover:bg-transparent hover:text-[var(--color-accent)]`
+
+  const panelTransition = prefersReducedMotion
+    ? { duration: 0 }
+    : { duration: 0.2, ease: 'easeOut' }
+
+  const layoutTransition = prefersReducedMotion
+    ? { duration: 0 }
+    : { duration: 0.25, ease: 'easeOut' }
+
+  const menuVisibilityTransition = prefersReducedMotion
+    ? { duration: 0 }
+    : { duration: 0.2, ease: 'easeOut' }
+
+  const renderIcon = (type) => {
+    const commonProps = {
+      width: 16,
+      height: 16,
+      viewBox: '0 0 24 24',
+      fill: 'none',
+      stroke: 'currentColor',
+      strokeWidth: 1.5,
+      strokeLinecap: 'round',
+      strokeLinejoin: 'round',
+      className: 'shrink-0',
+      'aria-hidden': true,
+    }
+
+    if (type === 'chat') {
+      return (
+        <svg {...commonProps}>
+          <path d="M4 6.5a2.5 2.5 0 0 1 2.5-2.5h11A2.5 2.5 0 0 1 20 6.5v7A2.5 2.5 0 0 1 17.5 16H10l-4 4v-4H6.5A2.5 2.5 0 0 1 4 13.5z" />
+        </svg>
+      )
+    }
+
+    if (type === 'snake') {
+      return (
+        <svg {...commonProps}>
+          <path d="M7 8h7a3 3 0 1 1 0 6h-4a2 2 0 1 0 0 4h7" />
+          <path d="M18 8h.01" />
+        </svg>
+      )
+    }
+
+    return (
+      <svg {...commonProps}>
+        <path d="M7 10.5a2.5 2.5 0 1 1 5 0c0 1.2-.7 1.9-1.6 2.6-.9.6-1.4 1.1-1.4 2.4" />
+        <path d="M10 19h.01" />
+        <path d="M21 12a9 9 0 1 1-3.2-6.9" />
+      </svg>
+    )
+  }
+
+  const renderButton = (key, label, className) => (
+    <button
+      ref={(element) => {
+        triggerRefs.current[key] = element
+      }}
+      type="button"
+      onClick={() => toggleModal(key)}
+      className={className}
+    >
+      {renderIcon(key)}
+      <span className="flex-1 text-left">{label}</span>
+    </button>
+  )
+
+  const renderPanel = () => {
+    if (activeModal === 'snake') {
+      return (
+        <Snake
+          gameStatus={gameStatus}
+          score={score}
+          highScores={highScores}
+          onStart={onStartGame}
+          onPause={onPauseGame}
+        />
+      )
+    }
+
+    if (activeModal === 'chat') {
+      return (
+        <div className="space-y-5">
+          <div className="space-y-2">
+            <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-[var(--color-accent)]">
+              Chat
+            </p>
+            <p className="font-mono text-sm leading-7 text-[var(--color-text)]/78">
+              Hallo — der Chat kommt bald. Bis dahin: schreib uns einfach.
+            </p>
+          </div>
+          <div className="flex gap-3">
+            <input
+              type="text"
+              disabled
+              placeholder="Chat kommt bald"
+              className="min-h-11 flex-1 rounded-xl border border-[var(--color-border)] bg-transparent px-4 font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--color-text)]/40 outline-none"
+            />
+            <button
+              type="button"
+              disabled
+              className="min-h-11 rounded-xl border border-[var(--color-border)] px-5 font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-text)]/40"
+            >
+              Senden
+            </button>
+          </div>
+        </div>
+      )
+    }
+
+    if (activeModal === 'cookie') {
+      return (
+        <div className="space-y-5">
+          <div className="space-y-2">
+            <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-[var(--color-accent)]">
+              Cookie Einstellungen
+            </p>
+            <p className="font-mono text-sm leading-7 text-[var(--color-text)]/78">
+              Wähle aus, welche Cookies wir neben den technisch notwendigen setzen dürfen.
+            </p>
+          </div>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between rounded-xl border border-[var(--color-border)] px-4 py-3">
+              <div>
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-text)]">
+                  Notwendig
+                </p>
+              </div>
+              <button
+                type="button"
+                disabled
+                aria-pressed="true"
+                className="relative h-7 w-12 rounded-full border border-[rgba(200,255,0,0.45)] bg-[rgba(200,255,0,0.2)] opacity-70"
+              >
+                <span className="absolute left-[26px] top-1/2 h-4 w-4 -translate-y-1/2 rounded-full bg-[var(--color-accent)]" />
+              </button>
+            </div>
+            {[
+              ['analytics', 'Analyse'],
+              ['marketing', 'Marketing'],
+            ].map(([key, label]) => {
+              const enabled = cookiePreferences[key]
+
+              return (
+                <div
+                  key={key}
+                  className="flex items-center justify-between rounded-xl border border-[var(--color-border)] px-4 py-3"
+                >
+                  <div>
+                    <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-text)]">
+                      {label}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    aria-pressed={enabled}
+                    onClick={() => handleCookiePreferenceChange(key)}
+                    className={`relative h-7 w-12 rounded-full border transition-colors duration-300 ${
+                      enabled
+                        ? 'border-[rgba(200,255,0,0.45)] bg-[rgba(200,255,0,0.2)]'
+                        : 'border-[var(--color-border)] bg-transparent'
+                    }`}
+                  >
+                    <span
+                      className={`absolute top-1/2 h-4 w-4 -translate-y-1/2 rounded-full transition-[left,background-color] duration-300 ${
+                        enabled
+                          ? 'left-[26px] bg-[var(--color-accent)]'
+                          : 'left-[4px] bg-[var(--color-text)]/48'
+                      }`}
+                    />
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+          <button
+            type="button"
+            onClick={handleCookieConfirm}
+            className="flex min-h-11 w-full items-center justify-center rounded-xl border border-[var(--color-accent)] bg-[var(--color-accent)] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.2em] text-black transition-colors duration-300 hover:bg-transparent hover:text-[var(--color-accent)]"
+          >
+            Speichern
+          </button>
+        </div>
+      )
+    }
+
+    return null
+  }
+
+  return (
+    <div className="absolute right-24 top-1/2 z-[4] hidden -translate-y-1/2 lg:block">
+      <motion.div
+        layout
+        animate={gameStatus === 'running' ? 'hidden' : 'visible'}
+        variants={{
+          visible: { opacity: 1, x: 0, pointerEvents: 'auto' },
+          hidden: { opacity: 0, x: 18, pointerEvents: 'none' },
+        }}
+        transition={{ ...menuVisibilityTransition, layout: layoutTransition }}
+        className="w-72 overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.14)] bg-[rgba(10,10,10,0.62)] p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.04)] backdrop-blur"
+      >
+        <AnimatePresence mode="wait" initial={false}>
+          {activeModal === null ? (
+            <motion.div
+              key="button-view"
+              initial={prefersReducedMotion ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
+              transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.2, ease: 'easeOut' }}
+              className="space-y-0"
+            >
+              <div className="mb-3">
+                {renderButton('chat', 'Chat', primaryButtonClassName)}
+              </div>
+              <hr className="my-0 h-[0.5px] border-none border-t border-[var(--color-border)]/30" />
+              <div className="mt-3 space-y-2.5">
+                {renderButton('snake', 'Snake', secondaryButtonClassName)}
+                {renderButton('cookie', 'Cookie', secondaryButtonClassName)}
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key={activeModal}
+              initial={
+                prefersReducedMotion
+                  ? false
+                  : { opacity: 0, clipPath: 'inset(0 0 100% 0)' }
+              }
+              animate={{ opacity: 1, clipPath: 'inset(0 0 0% 0)' }}
+              exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
+              transition={panelTransition}
+              className="relative"
+            >
+              <button
+                type="button"
+                onClick={closeModal}
+                className="absolute right-1 top-0.5 font-mono text-sm text-[var(--color-muted)] transition-colors duration-300 hover:text-[var(--color-accent)]"
+                aria-label="Schließen"
+              >
+                ✕
+              </button>
+              <div>{renderPanel()}</div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </div>
+  )
+}
