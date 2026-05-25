@@ -846,86 +846,88 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="surface-grid surface-grid-canvas sticky top-0 z-0 isolate min-h-screen w-full overflow-hidden border-b border-[var(--color-border)] min-h-dvh"
+      className="relative z-0 h-screen min-h-dvh"
     >
-      <motion.canvas
-        ref={canvasRef}
-        className={`pointer-events-none absolute inset-0 ${
-          isGameForeground ? 'z-[3]' : 'z-[1]'
-        }`}
-      />
-      <div>
-        <HeroButtonGroup
-          gameStatus={gameStatus}
-          score={score}
-          highScores={highScores}
-          onStartGame={() => gameApiRef.current.startGame()}
-          onPauseGame={() => gameApiRef.current.pauseGame()}
+      <div className="surface-grid surface-grid-canvas fixed inset-x-0 top-0 z-0 isolate h-screen w-full overflow-hidden min-h-dvh">
+        <motion.canvas
+          ref={canvasRef}
+          className={`pointer-events-none absolute inset-0 ${
+            isGameForeground ? 'z-[3]' : 'z-[1]'
+          }`}
         />
-      </div>
-      <motion.div
-        className="absolute left-[8%] top-20 h-40 w-40 rounded-full border border-[rgba(200,255,0,0.35)] bg-[rgba(200,255,0,0.08)] blur-3xl"
-        style={
-          prefersReducedMotion
-            ? undefined
-            : { opacity: heroGlowOpacity, y: heroGlowShift }
-        }
-      />
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-40 bg-gradient-to-b from-transparent via-[rgba(10,10,10,0.45)] to-[rgba(26,26,26,0.98)]"
-        style={prefersReducedMotion ? undefined : { opacity: heroBlendOpacity }}
-      />
-      <motion.div
-        className="relative z-[2] mx-auto flex min-h-screen max-w-7xl flex-col justify-center gap-10 px-5 py-20 md:px-8 md:py-28 min-h-dvh"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        style={
-          prefersReducedMotion
-            ? undefined
-            : { y: contentY, opacity: effectiveContentOpacity }
-        }
-      >
-        <div className="max-w-5xl space-y-6 sm:space-y-6">
-          <motion.div variants={itemVariants}>
-            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--color-accent)] sm:text-xs sm:tracking-[0.35em] md:text-sm">
-              Ihre Webseite verdient ein Upgrade
-            </p>
-          </motion.div>
-          <h1 className="text-[2.75rem] font-black leading-[0.92] tracking-[-0.04em] min-[375px]:text-[3.25rem] min-[480px]:text-6xl md:text-7xl lg:text-[6.5rem]">
-            <motion.div variants={itemVariants}>
-              <span className="block">Wir bauen</span>
-            </motion.div>
-            <motion.div variants={itemVariants}>
-              <span className="block text-outline">Webseiten</span>
-            </motion.div>
-            <motion.div variants={itemVariants}>
-              <span className="block">die funktionieren.</span>
-            </motion.div>
-          </h1>
-          <motion.div variants={itemVariants}>
-            <p className="max-w-2xl font-mono text-sm leading-6 text-[var(--color-text)]/72 sm:leading-7 md:text-base">
-              <span className="block">Design. Chatbots. Crypto-Payment.</span>
-              <span className="block">Keine Buzzwords — nur Ergebnisse.</span>
-            </p>
-          </motion.div>
+        <div>
+          <HeroButtonGroup
+            gameStatus={gameStatus}
+            score={score}
+            highScores={highScores}
+            onStartGame={() => gameApiRef.current.startGame()}
+            onPauseGame={() => gameApiRef.current.pauseGame()}
+          />
         </div>
-        <motion.div variants={itemVariants}>
-          <div className="flex w-full max-w-xl flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:gap-4">
-            <MagneticButton
-              href="#services"
-              prefersReducedMotion={prefersReducedMotion}
-              buttonClassName="w-full sm:w-auto"
-            >
-              Leistungen ansehen
-            </MagneticButton>
-            <Button href="#kontakt" variant="ghost" className="w-full sm:w-auto">
-              Unverbindlich anfragen
-            </Button>
+        <motion.div
+          className="absolute left-[8%] top-20 h-40 w-40 rounded-full border border-[rgba(200,255,0,0.35)] bg-[rgba(200,255,0,0.08)] blur-3xl"
+          style={
+            prefersReducedMotion
+              ? undefined
+              : { opacity: heroGlowOpacity, y: heroGlowShift }
+          }
+        />
+        <motion.div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-40 bg-gradient-to-b from-transparent via-[rgba(10,10,10,0.45)] to-[rgba(26,26,26,0.98)]"
+          style={prefersReducedMotion ? undefined : { opacity: heroBlendOpacity }}
+        />
+        <motion.div
+          className="relative z-[2] mx-auto flex h-screen max-w-7xl flex-col justify-center gap-10 px-5 py-20 md:px-8 md:py-28 min-h-dvh"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          style={
+            prefersReducedMotion
+              ? undefined
+              : { y: contentY, opacity: effectiveContentOpacity }
+          }
+        >
+          <div className="max-w-5xl space-y-6 sm:space-y-6">
+            <motion.div variants={itemVariants}>
+              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--color-accent)] sm:text-xs sm:tracking-[0.35em] md:text-sm">
+                Ihre Webseite verdient ein Upgrade
+              </p>
+            </motion.div>
+            <h1 className="text-[2.75rem] font-black leading-[0.92] tracking-[-0.04em] min-[375px]:text-[3.25rem] min-[480px]:text-6xl md:text-7xl lg:text-[6.5rem]">
+              <motion.div variants={itemVariants}>
+                <span className="block">Wir bauen</span>
+              </motion.div>
+              <motion.div variants={itemVariants}>
+                <span className="block text-outline">Webseiten</span>
+              </motion.div>
+              <motion.div variants={itemVariants}>
+                <span className="block">die funktionieren.</span>
+              </motion.div>
+            </h1>
+            <motion.div variants={itemVariants}>
+              <p className="max-w-2xl font-mono text-sm leading-6 text-[var(--color-text)]/72 sm:leading-7 md:text-base">
+                <span className="block">Design. Chatbots. Crypto-Payment.</span>
+                <span className="block">Keine Buzzwords — nur Ergebnisse.</span>
+              </p>
+            </motion.div>
           </div>
+          <motion.div variants={itemVariants}>
+            <div className="flex w-full max-w-xl flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:gap-4">
+              <MagneticButton
+                href="#services"
+                prefersReducedMotion={prefersReducedMotion}
+                buttonClassName="w-full sm:w-auto"
+              >
+                Leistungen ansehen
+              </MagneticButton>
+              <Button href="#kontakt" variant="ghost" className="w-full sm:w-auto">
+                Unverbindlich anfragen
+              </Button>
+            </div>
+          </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   )
 }
