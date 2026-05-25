@@ -101,30 +101,9 @@ export default function Hero() {
   const [score, setScore] = useState(0)
   const [highScores, setHighScores] = useState([0, 0, 0])
   const isGameForeground = gameStatus !== 'idle'
-  const { scrollYProgress, scrollY } = useScroll({
+  const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end start'],
-  })
-  const sectionTop = useMotionValue(0)
-  const sectionHeight = useMotionValue(0)
-  const viewportHeight = useMotionValue(0)
-  useEffect(() => {
-    const measure = () => {
-      const el = sectionRef.current
-      if (el) {
-        sectionTop.set(el.offsetTop)
-        sectionHeight.set(el.offsetHeight)
-      }
-      viewportHeight.set(window.innerHeight)
-    }
-    measure()
-    window.addEventListener('resize', measure)
-    return () => window.removeEventListener('resize', measure)
-  }, [sectionTop, sectionHeight, viewportHeight])
-  const pinY = useTransform(scrollY, (latest) => {
-    const top = sectionTop.get()
-    const maxPin = sectionHeight.get() - viewportHeight.get()
-    return Math.min(Math.max(0, latest - top), maxPin)
   })
   const heroGlowOpacity = useTransform(scrollYProgress, [0.45, 0.85], [1, 0.18])
   const heroGlowShift = useTransform(scrollYProgress, [0.45, 0.85], [0, 48])
@@ -869,9 +848,8 @@ export default function Hero() {
       ref={sectionRef}
       className="relative z-0 h-[200vh]"
     >
-      <motion.div
-        className="surface-grid surface-grid-canvas absolute inset-x-0 top-0 z-0 isolate h-screen w-full overflow-hidden"
-        style={{ y: pinY }}
+      <div
+        className="surface-grid surface-grid-canvas sticky top-0 z-0 isolate h-screen w-full overflow-hidden"
       >
         <motion.canvas
           ref={canvasRef}
@@ -951,7 +929,7 @@ export default function Hero() {
             </div>
           </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   )
 }

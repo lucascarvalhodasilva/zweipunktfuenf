@@ -48,7 +48,6 @@ body {
 }
 
 .surface-grid {
-  position: relative;
   --surface-grid-cell-width: 36px;
   --surface-grid-cell-height: 36px;
 }
