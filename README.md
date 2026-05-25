@@ -90,6 +90,65 @@ podman ps
 
 Für eine Domain davor typischerweise Nginx oder Caddy als Reverse Proxy auf Port 80/443 einsetzen und intern auf `127.0.0.1:3000` weiterleiten. Wenn du Laufzeitvariablen brauchst, ergänze sie mit weiteren `-e NAME=WERT` Parametern beim `podman run`.
 
+### Nginx Reverse Proxy
+
+Wenn der Container lokal auf `127.0.0.1:3006` läuft, kann Nginx die Domain auf diesen Port weiterleiten.
+
+Container auf localhost starten:
+
+```bash
+podman run -d \
+  --name zweipunktfuenf \
+  --replace \
+  --publish 127.0.0.1:3006:3000 \
+  --restart=always \
+  -e NODE_ENV=production \
+  zweipunktfuenf:latest
+```
+
+Nginx und Certbot installieren:
+
+Fedora:
+
+```bash
+sudo dnf install -y nginx certbot python3-certbot-nginx
+```
+
+Debian/Ubuntu:
+
+```bash
+sudo apt update
+sudo apt install -y nginx certbot python3-certbot-nginx
+```
+
+Beispiel-Konfiguration liegt in `deploy/nginx/zweipunktfuenf.conf.example`.
+
+Fedora nutzt in der Regel `/etc/nginx/conf.d/` statt `sites-available` und `sites-enabled`:
+
+```bash
+sudo cp deploy/nginx/zweipunktfuenf.conf.example /etc/nginx/conf.d/zweipunktfuenf.conf
+sudo nginx -t
+sudo systemctl enable --now nginx
+sudo systemctl reload nginx
+```
+
+Debian/Ubuntu-Variante:
+
+```bash
+sudo cp deploy/nginx/zweipunktfuenf.conf.example /etc/nginx/sites-available/zweipunktfuenf
+sudo ln -s /etc/nginx/sites-available/zweipunktfuenf /etc/nginx/sites-enabled/zweipunktfuenf
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+TLS aktivieren:
+
+```bash
+sudo certbot --nginx -d zweipunktfuenf.de -d www.zweipunktfuenf.de
+```
+
+Danach zeigt Nginx auf den Podman-Container auf `127.0.0.1:3006`, und Certbot ergänzt automatisch die HTTPS-Konfiguration.
+
 ## Getting Started
 
 First, run the development server:

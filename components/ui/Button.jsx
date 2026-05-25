@@ -12,10 +12,12 @@ export default function Button({
   href,
   variant = 'primary',
   className = '',
+  onClick,
 }) {
   return (
     <Link
       href={href}
+      onClick={onClick}
       className={`inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3 font-mono text-xs uppercase tracking-[0.24em] transition-colors duration-300 ${variants[variant]} ${className}`}
     >
       {children}
