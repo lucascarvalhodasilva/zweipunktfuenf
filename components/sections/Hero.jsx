@@ -728,7 +728,7 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="surface-grid surface-grid-canvas relative isolate min-h-screen w-full overflow-hidden border-b border-[var(--color-border)] min-h-dvh"
+      className="surface-grid surface-grid-canvas sticky top-0 z-0 isolate min-h-screen w-full overflow-hidden border-b border-[var(--color-border)] min-h-dvh"
     >
       <motion.canvas
         ref={canvasRef}

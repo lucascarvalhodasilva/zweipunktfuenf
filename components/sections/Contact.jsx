@@ -65,7 +65,7 @@ export default function Contact() {
   return (
     <section
       id="kontakt"
-      className="relative border-t border-[var(--color-border)] px-6 py-24 md:px-12 lg:px-24"
+      className="relative z-10 border-t border-[var(--color-border)] bg-[var(--color-bg)] px-6 py-24 md:px-12 lg:px-24"
     >
       <div className="mx-auto max-w-2xl">
         <motion.div
