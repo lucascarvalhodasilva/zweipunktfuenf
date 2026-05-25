@@ -26,42 +26,58 @@ export default function HeroButtonGroup({
   const [activeModal, setActiveModal] = useState(null)
   const triggerRefs = useRef({})
 
-  // Scroll-driven staggered fade for buttons (chat fades first, then snake, then cookie — top to bottom)
+  // Box visual fade — fades the panel background/border/blur first
+  const boxTargetOpacity = useTransform(
+    scrollYProgress,
+    prefersReducedMotion ? [0.5, 0.7] : [0.1, 0.28],
+    [1, 0],
+  )
+  const boxScrollOpacity = useSpring(boxTargetOpacity, {
+    stiffness: 120,
+    damping: 24,
+    mass: 0.6,
+  })
+  const boxBg = useTransform(boxScrollOpacity, (v) => `rgba(10,10,10,${(0.62 * v).toFixed(3)})`)
+  const boxBorder = useTransform(boxScrollOpacity, (v) => `rgba(255,255,255,${(0.14 * v).toFixed(3)})`)
+  const boxShadow = useTransform(boxScrollOpacity, (v) => `0 0 0 1px rgba(255,255,255,${(0.04 * v).toFixed(3)})`)
+  const boxBackdrop = useTransform(boxScrollOpacity, (v) => (v < 0.02 ? 'none' : `blur(${(v * 12).toFixed(1)}px)`))
+
+  // Scroll-driven staggered fade for buttons (start after box has faded)
   const chatScrollOpacity = useTransform(
     scrollYProgress,
-    prefersReducedMotion ? [0.5, 0.7] : [0.15, 0.35],
+    prefersReducedMotion ? [0.5, 0.7] : [0.3, 0.48],
     [1, 0],
   )
   const chatScrollY = useTransform(
     scrollYProgress,
-    prefersReducedMotion ? [0.5, 0.7] : [0.15, 0.35],
+    prefersReducedMotion ? [0.5, 0.7] : [0.3, 0.48],
     [0, -12],
   )
   const snakeScrollOpacity = useTransform(
     scrollYProgress,
-    prefersReducedMotion ? [0.5, 0.7] : [0.25, 0.45],
+    prefersReducedMotion ? [0.5, 0.7] : [0.38, 0.55],
     [1, 0],
   )
   const snakeScrollY = useTransform(
     scrollYProgress,
-    prefersReducedMotion ? [0.5, 0.7] : [0.25, 0.45],
+    prefersReducedMotion ? [0.5, 0.7] : [0.38, 0.55],
     [0, -12],
   )
   const cookieScrollOpacity = useTransform(
     scrollYProgress,
-    prefersReducedMotion ? [0.5, 0.7] : [0.35, 0.55],
+    prefersReducedMotion ? [0.5, 0.7] : [0.45, 0.62],
     [1, 0],
   )
   const cookieScrollY = useTransform(
     scrollYProgress,
-    prefersReducedMotion ? [0.5, 0.7] : [0.35, 0.55],
+    prefersReducedMotion ? [0.5, 0.7] : [0.45, 0.62],
     [0, -12],
   )
 
-  // Container-level dissolve at the end of the scroll range
+  // Container pointer-events cutoff (after all buttons have faded)
   const containerTargetOpacity = useTransform(
     scrollYProgress,
-    prefersReducedMotion ? [0.5, 0.75] : [0.4, 0.6],
+    prefersReducedMotion ? [0.5, 0.75] : [0.45, 0.65],
     [1, 0],
   )
   const containerScrollOpacity = useSpring(containerTargetOpacity, {
@@ -319,8 +335,13 @@ export default function HeroButtonGroup({
   return (
     <>
       {/* Desktop */}
-      <div className="absolute right-24 top-1/2 z-[4] hidden -translate-y-1/2 lg:block">
-        <motion.div style={{ opacity: containerScrollOpacity, pointerEvents: containerPointerEvents }}>
+      <motion.div
+        className="absolute right-24 top-1/2 z-[4] hidden -translate-y-1/2 lg:block"
+        initial={prefersReducedMotion ? false : { clipPath: 'inset(0 100% 0 0)', opacity: 0 }}
+        animate={{ clipPath: 'inset(0 0% 0 0)', opacity: 1 }}
+        transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <motion.div style={{ pointerEvents: containerPointerEvents }}>
           <motion.div
             layout
             animate={gameStatus === 'running' ? 'hidden' : 'visible'}
@@ -329,7 +350,8 @@ export default function HeroButtonGroup({
               hidden: { opacity: 0, x: 18, pointerEvents: 'none' },
             }}
             transition={{ ...menuVisibilityTransition, layout: layoutTransition }}
-            className="w-72 overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.14)] bg-[rgba(10,10,10,0.62)] p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.04)] backdrop-blur"
+            className="w-72 overflow-hidden rounded-2xl border p-5"
+            style={{ backgroundColor: boxBg, borderColor: boxBorder, boxShadow: boxShadow, backdropFilter: boxBackdrop }}
           >
           <AnimatePresence mode="wait" initial={false}>
             {activeModal === null ? (
@@ -385,7 +407,7 @@ export default function HeroButtonGroup({
           </AnimatePresence>
         </motion.div>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Mobile */}
       <motion.div
