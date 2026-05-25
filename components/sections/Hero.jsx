@@ -105,16 +105,16 @@ export default function Hero() {
     target: sectionRef,
     offset: ['start start', 'end start'],
   })
-  const heroGlowOpacity = useTransform(scrollYProgress, [0.45, 0.85], [1, 0.18])
-  const heroGlowShift = useTransform(scrollYProgress, [0.45, 0.85], [0, 48])
-  const heroBlendOpacity = useTransform(scrollYProgress, [0.35, 0.8], [0.2, 1])
-  const contentTargetY = useTransform(scrollYProgress, [0.55, 0.92], [0, 12])
+  const heroGlowOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0.18])
+  const heroGlowShift = useTransform(scrollYProgress, [0, 0.7], [0, 48])
+  const heroBlendOpacity = useTransform(scrollYProgress, [0, 0.6], [0.2, 1])
+  const contentTargetY = useTransform(scrollYProgress, [0.1, 0.8], [0, 12])
   const contentY = useSpring(contentTargetY, {
     stiffness: 90,
     damping: 20,
     mass: 0.8,
   })
-  const contentTargetOpacity = useTransform(scrollYProgress, [0.6, 0.95], [1, 0.92])
+  const contentTargetOpacity = useTransform(scrollYProgress, [0.2, 0.85], [1, 0.92])
   const contentOpacity = useSpring(contentTargetOpacity, {
     stiffness: 120,
     damping: 24,
@@ -224,6 +224,12 @@ export default function Hero() {
     const acceleratedStepDuration = 75
     const gravityRadius = 160
 
+    // Mobile scroll-driven snake state
+    let isMobileMode = false
+    let scrollAccumulator = 0
+    let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0
+    const scrollPixelsPerStep = 60
+
     const isSameCell = (leftCell, rightCell) =>
       leftCell.column === rightCell.column && leftCell.row === rightCell.row
 
@@ -274,6 +280,96 @@ export default function Hero() {
       }
 
       return openCells[Math.floor(Math.random() * openCells.length)]
+    }
+
+    const getDirectionTowardFood = () => {
+      if (!food || snake.length === 0) {
+        return direction
+      }
+
+      const head = snake[0]
+      const deltaColumn = food.column - head.column
+      const deltaRow = food.row - head.row
+
+      const candidates = []
+
+      if (deltaColumn > 0) candidates.push({ x: 1, y: 0 })
+      if (deltaColumn < 0) candidates.push({ x: -1, y: 0 })
+      if (deltaRow > 0) candidates.push({ x: 0, y: 1 })
+      if (deltaRow < 0) candidates.push({ x: 0, y: -1 })
+
+      if (candidates.length === 0) {
+        candidates.push(direction)
+      }
+
+      for (const candidate of candidates) {
+        const isReverse =
+          snake.length > 1 &&
+          candidate.x === -direction.x &&
+          candidate.y === -direction.y
+
+        if (isReverse) {
+          continue
+        }
+
+        const nextHead = {
+          column: head.column + candidate.x,
+          row: head.row + candidate.y,
+        }
+
+        const hitWall =
+          nextHead.column < 0 ||
+          nextHead.column >= columns ||
+          nextHead.row < 0 ||
+          nextHead.row >= rows
+
+        const hitSelf = snake.some((segment) => isSameCell(segment, nextHead))
+
+        if (!hitWall && !hitSelf) {
+          return candidate
+        }
+      }
+
+      return direction
+    }
+
+    const stepMobileSnake = () => {
+      if (snake.length === 0 || !food) {
+        return
+      }
+
+      direction = getDirectionTowardFood()
+      pendingDirection = direction
+
+      const nextHead = {
+        column: snake[0].column + direction.x,
+        row: snake[0].row + direction.y,
+      }
+
+      const hitWall =
+        nextHead.column < 0 ||
+        nextHead.column >= columns ||
+        nextHead.row < 0 ||
+        nextHead.row >= rows
+
+      const hitSelf = snake.some((segment) => isSameCell(segment, nextHead))
+
+      if (hitWall || hitSelf) {
+        snake = createInitialSnake()
+        direction = { x: 1, y: 0 }
+        pendingDirection = { x: 1, y: 0 }
+        food = spawnFood(snake)
+        return
+      }
+
+      snake = [nextHead, ...snake]
+
+      if (isSameCell(nextHead, food)) {
+        food = spawnFood(snake)
+        return
+      }
+
+      snake.pop()
     }
 
     const resetGame = () => {
@@ -623,6 +719,21 @@ export default function Hero() {
     }
 
     const pauseGameOnScroll = () => {
+      if (isMobileMode) {
+        const currentScrollY = window.scrollY
+        const delta = currentScrollY - lastScrollY
+        lastScrollY = currentScrollY
+
+        scrollAccumulator += Math.abs(delta)
+
+        while (scrollAccumulator >= scrollPixelsPerStep) {
+          scrollAccumulator -= scrollPixelsPerStep
+          stepMobileSnake()
+        }
+
+        return
+      }
+
       if (!started || paused || gameOver) {
         return
       }
@@ -665,9 +776,21 @@ export default function Hero() {
 
       context.setTransform(dpr, 0, 0, dpr, 0, 0)
       resetGame()
-      started = false
-      paused = false
-      setGameStatus('idle')
+
+      isMobileMode = nextWidth < 1024
+
+      if (isMobileMode) {
+        started = false
+        paused = false
+        lastScrollY = window.scrollY
+        scrollAccumulator = 0
+        setGameStatus('idle')
+      } else {
+        started = false
+        paused = false
+        setGameStatus('idle')
+      }
+
       renderGame()
     }
 
@@ -686,19 +809,21 @@ export default function Hero() {
     gameApiRef.current = { startGame, pauseGame }
 
     const render = (now) => {
-      const currentStepDuration =
-        heldDirectionKey && heldDirectionKey === directionToKey(direction)
-          ? acceleratedStepDuration
-          : stepDuration
+      if (!isMobileMode) {
+        const currentStepDuration =
+          heldDirectionKey && heldDirectionKey === directionToKey(direction)
+            ? acceleratedStepDuration
+            : stepDuration
 
-      if (
-        started &&
-        !paused &&
-        !gameOver &&
-        now - lastStepTime >= currentStepDuration
-      ) {
-        stepGame()
-        lastStepTime = now
+        if (
+          started &&
+          !paused &&
+          !gameOver &&
+          now - lastStepTime >= currentStepDuration
+        ) {
+          stepGame()
+          lastStepTime = now
+        }
       }
 
       renderGame()
@@ -728,86 +853,90 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="surface-grid surface-grid-canvas relative isolate min-h-screen w-full overflow-hidden border-b border-[var(--color-border)] min-h-dvh"
+      className="relative z-0 h-screen"
     >
-      <motion.canvas
-        ref={canvasRef}
-        className={`pointer-events-none absolute inset-0 ${
-          isGameForeground ? 'z-[3]' : 'z-[1]'
-        }`}
-      />
-      <div>
-        <HeroButtonGroup
-          gameStatus={gameStatus}
-          score={score}
-          highScores={highScores}
-          onStartGame={() => gameApiRef.current.startGame()}
-          onPauseGame={() => gameApiRef.current.pauseGame()}
-        />
-      </div>
-      <motion.div
-        className="absolute left-[8%] top-20 h-40 w-40 rounded-full border border-[rgba(200,255,0,0.35)] bg-[rgba(200,255,0,0.08)] blur-3xl"
-        style={
-          prefersReducedMotion
-            ? undefined
-            : { opacity: heroGlowOpacity, y: heroGlowShift }
-        }
-      />
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-40 bg-gradient-to-b from-transparent via-[rgba(10,10,10,0.45)] to-[rgba(26,26,26,0.98)]"
-        style={prefersReducedMotion ? undefined : { opacity: heroBlendOpacity }}
-      />
-      <motion.div
-        className="relative z-[2] mx-auto flex min-h-screen max-w-7xl flex-col justify-center gap-10 px-5 py-20 md:px-8 md:py-28 min-h-dvh"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        style={
-          prefersReducedMotion
-            ? undefined
-            : { y: contentY, opacity: effectiveContentOpacity }
-        }
+      <div
+        className="surface-grid surface-grid-canvas fixed inset-x-0 top-0 z-0 isolate h-screen w-full overflow-hidden"
       >
-        <div className="max-w-5xl space-y-6 sm:space-y-6">
-          <motion.div variants={itemVariants}>
-            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--color-accent)] sm:text-xs sm:tracking-[0.35em] md:text-sm">
-              Ihre Webseite verdient ein Upgrade
-            </p>
-          </motion.div>
-          <h1 className="text-[2.75rem] font-black leading-[0.92] tracking-[-0.04em] min-[375px]:text-[3.25rem] min-[480px]:text-6xl md:text-7xl lg:text-[6.5rem]">
-            <motion.div variants={itemVariants}>
-              <span className="block">Wir bauen</span>
-            </motion.div>
-            <motion.div variants={itemVariants}>
-              <span className="block text-outline">Webseiten</span>
-            </motion.div>
-            <motion.div variants={itemVariants}>
-              <span className="block">die funktionieren.</span>
-            </motion.div>
-          </h1>
-          <motion.div variants={itemVariants}>
-            <p className="max-w-2xl font-mono text-sm leading-6 text-[var(--color-text)]/72 sm:leading-7 md:text-base">
-              <span className="block">Design. Chatbots. Crypto-Payment.</span>
-              <span className="block">Keine Buzzwords — nur Ergebnisse.</span>
-            </p>
-          </motion.div>
+        <motion.canvas
+          ref={canvasRef}
+          className={`pointer-events-none absolute inset-0 ${
+            isGameForeground ? 'z-[3]' : 'z-[1]'
+          }`}
+        />
+        <div>
+          <HeroButtonGroup
+            gameStatus={gameStatus}
+            score={score}
+            highScores={highScores}
+            onStartGame={() => gameApiRef.current.startGame()}
+            onPauseGame={() => gameApiRef.current.pauseGame()}
+          />
         </div>
-        <motion.div variants={itemVariants}>
-          <div className="flex w-full max-w-xl flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:gap-4">
-            <MagneticButton
-              href="#services"
-              prefersReducedMotion={prefersReducedMotion}
-              buttonClassName="w-full sm:w-auto"
-            >
-              Leistungen ansehen
-            </MagneticButton>
-            <Button href="#kontakt" variant="ghost" className="w-full sm:w-auto">
-              Unverbindlich anfragen
-            </Button>
+        <motion.div
+          className="absolute left-[8%] top-20 h-40 w-40 rounded-full border border-[rgba(200,255,0,0.35)] bg-[rgba(200,255,0,0.08)] blur-3xl"
+          style={
+            prefersReducedMotion
+              ? undefined
+              : { opacity: heroGlowOpacity, y: heroGlowShift }
+          }
+        />
+        <motion.div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-40 bg-gradient-to-b from-transparent via-[rgba(10,10,10,0.45)] to-[rgba(26,26,26,0.98)]"
+          style={prefersReducedMotion ? undefined : { opacity: heroBlendOpacity }}
+        />
+        <motion.div
+          className="relative z-[2] mx-auto flex h-full max-w-7xl flex-col justify-center gap-10 px-5 py-20 md:px-8 md:py-28"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          style={
+            prefersReducedMotion
+              ? undefined
+              : { y: contentY, opacity: effectiveContentOpacity }
+          }
+        >
+          <div className="max-w-5xl space-y-6 sm:space-y-6">
+            <motion.div variants={itemVariants}>
+              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--color-accent)] sm:text-xs sm:tracking-[0.35em] md:text-sm">
+                Ihre Webseite verdient ein Upgrade
+              </p>
+            </motion.div>
+            <h1 className="text-[2.75rem] font-black leading-[0.92] tracking-[-0.04em] min-[375px]:text-[3.25rem] min-[480px]:text-6xl md:text-7xl lg:text-[6.5rem]">
+              <motion.div variants={itemVariants}>
+                <span className="block">Wir bauen</span>
+              </motion.div>
+              <motion.div variants={itemVariants}>
+                <span className="block text-outline">Webseiten</span>
+              </motion.div>
+              <motion.div variants={itemVariants}>
+                <span className="block">die funktionieren.</span>
+              </motion.div>
+            </h1>
+            <motion.div variants={itemVariants}>
+              <p className="max-w-2xl font-mono text-sm leading-6 text-[var(--color-text)]/72 sm:leading-7 md:text-base">
+                <span className="block">Design. Chatbots. Crypto-Payment.</span>
+                <span className="block">Keine Buzzwords — nur Ergebnisse.</span>
+              </p>
+            </motion.div>
           </div>
+          <motion.div variants={itemVariants}>
+            <div className="flex w-full max-w-xl flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:gap-4">
+              <MagneticButton
+                href="#services"
+                prefersReducedMotion={prefersReducedMotion}
+                buttonClassName="w-full sm:w-auto"
+              >
+                Leistungen ansehen
+              </MagneticButton>
+              <Button href="#kontakt" variant="ghost" className="w-full sm:w-auto">
+                Unverbindlich anfragen
+              </Button>
+            </div>
+          </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   )
 }
