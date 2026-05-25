@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 
@@ -181,6 +182,16 @@ export default function HeroButtonGroup({
             <p className="font-mono text-sm leading-7 text-[var(--color-text)]/78">
               Diese Website verwendet ausschließlich technisch notwendige
               Cookies. Analyse- oder Marketing-Cookies werden nicht eingesetzt.
+            </p>
+            <p className="font-mono text-[11px] leading-6 text-[var(--color-text)]/70">
+              Details findest du in unserer{' '}
+              <Link
+                href="/datenschutz"
+                className="text-[var(--color-accent)] underline-offset-2 hover:underline"
+              >
+                Datenschutzerklärung
+              </Link>
+              .
             </p>
           </div>
           <div className="space-y-3">

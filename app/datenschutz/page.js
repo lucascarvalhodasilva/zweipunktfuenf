@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export const metadata = {
   title: 'Datenschutz | zweipunktfünf',
   description: 'Datenschutzerklärung von zweipunktfünf.',
@@ -9,7 +11,6 @@ export default function Datenschutz() {
       <h1 className="mb-10 font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-[var(--color-text)]">
         Datenschutz
       </h1>
-
       <div className="space-y-8 font-mono text-sm leading-7 text-[var(--color-text)]/78">
         <section className="space-y-3">
           <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-accent)]">
@@ -21,7 +22,6 @@ export default function Datenschutz() {
             Analyse-, Tracking- oder Marketing-Cookies eingesetzt.
           </p>
         </section>
-
         <section className="space-y-3">
           <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-accent)]">
             Datenerhebung
@@ -32,7 +32,6 @@ export default function Datenschutz() {
             weitergegeben.
           </p>
         </section>
-
         <section className="space-y-3">
           <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-accent)]">
             Hosting
@@ -45,7 +44,6 @@ export default function Datenschutz() {
             mit anderen Datenquellen zusammengeführt.
           </p>
         </section>
-
         <section className="space-y-3">
           <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-accent)]">
             Kontakt
@@ -55,14 +53,13 @@ export default function Datenschutz() {
             angegebenen Kontaktdaten.
           </p>
         </section>
-
         <div className="pt-4">
-          <a
+          <Link
             href="/"
             className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-muted)] transition-colors duration-300 hover:text-[var(--color-accent)]"
           >
             ← Zurück zur Startseite
-          </a>
+          </Link>
         </div>
       </div>
     </div>
