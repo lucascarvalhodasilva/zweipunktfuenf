@@ -57,6 +57,39 @@ public/
 - Bewegungen respektieren `prefers-reduced-motion`.
 - Vercel benötigt keine zusätzliche Konfiguration für dieses Projekt.This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Produktion mit Podman
+
+Die App wird für Self-Hosting als Next.js-Standalone-Build erzeugt. Dadurch läuft sie im Container direkt mit `node server.js`, ohne `next start`.
+
+Image bauen:
+
+```bash
+podman build -t zweipunktfuenf:latest -f Containerfile .
+```
+
+Container starten:
+
+```bash
+podman run -d \
+  --name zweipunktfuenf \
+  --replace \
+  --publish 3000:3000 \
+  --restart=always \
+  -e NODE_ENV=production \
+  zweipunktfuenf:latest
+```
+
+Nützliche Kommandos auf dem Server:
+
+```bash
+podman logs -f zweipunktfuenf
+podman stop zweipunktfuenf
+podman start zweipunktfuenf
+podman ps
+```
+
+Für eine Domain davor typischerweise Nginx oder Caddy als Reverse Proxy auf Port 80/443 einsetzen und intern auf `127.0.0.1:3000` weiterleiten. Wenn du Laufzeitvariablen brauchst, ergänze sie mit weiteren `-e NAME=WERT` Parametern beim `podman run`.
+
 ## Getting Started
 
 First, run the development server:
