@@ -492,14 +492,18 @@ export default function Hero() {
         drawCell(segment, fillStyle, offsetX, offsetY)
       })
 
-      if (!started) {
-        drawInstruction('Start im Menue', 'Danach steuerst du mit WASD.')
-      } else if (paused) {
-        drawInstruction('Pausiert', 'Weiter im Menue oder per WASD.')
-      } else if (!gameOver) {
-        drawInstruction('Snake aktiv', 'Pause mit Taste P.')
-      } else if (gameOver) {
-        drawInstruction('Game Over', 'Starte im Menue eine neue Runde.')
+      const shouldShowGameInstructions = width >= 1024
+
+      if (shouldShowGameInstructions) {
+        if (!started) {
+          drawInstruction('Start im Menue', 'Danach steuerst du mit WASD.')
+        } else if (paused) {
+          drawInstruction('Pausiert', 'Weiter im Menue oder per WASD.')
+        } else if (!gameOver) {
+          drawInstruction('Snake aktiv', 'Pause mit Taste P.')
+        } else if (gameOver) {
+          drawInstruction('Game Over', 'Starte im Menue eine neue Runde.')
+        }
       }
     }
 
