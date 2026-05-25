@@ -24,21 +24,36 @@ export default function HeroButtonGroup({
   const [activeModal, setActiveModal] = useState(null)
   const triggerRefs = useRef({})
 
-  // Scroll-driven staggered fade for buttons (cookie fades first, then snake, then chat)
-  const cookieScrollOpacity = useTransform(
+  // Scroll-driven staggered fade for buttons (chat fades first, then snake, then cookie — top to bottom)
+  const chatScrollOpacity = useTransform(
     scrollYProgress,
     prefersReducedMotion ? [0.5, 0.7] : [0.15, 0.35],
     [1, 0],
+  )
+  const chatScrollY = useTransform(
+    scrollYProgress,
+    prefersReducedMotion ? [0.5, 0.7] : [0.15, 0.35],
+    [0, -12],
   )
   const snakeScrollOpacity = useTransform(
     scrollYProgress,
     prefersReducedMotion ? [0.5, 0.7] : [0.25, 0.45],
     [1, 0],
   )
-  const chatScrollOpacity = useTransform(
+  const snakeScrollY = useTransform(
+    scrollYProgress,
+    prefersReducedMotion ? [0.5, 0.7] : [0.25, 0.45],
+    [0, -12],
+  )
+  const cookieScrollOpacity = useTransform(
     scrollYProgress,
     prefersReducedMotion ? [0.5, 0.7] : [0.35, 0.55],
     [1, 0],
+  )
+  const cookieScrollY = useTransform(
+    scrollYProgress,
+    prefersReducedMotion ? [0.5, 0.7] : [0.35, 0.55],
+    [0, -12],
   )
 
   // Container-level dissolve at the end of the scroll range
@@ -328,15 +343,15 @@ export default function HeroButtonGroup({
                 }
                 className="space-y-0"
               >
-                <motion.div className="mb-3" style={{ opacity: chatScrollOpacity }}>
+                <motion.div className="mb-3" style={{ opacity: chatScrollOpacity, y: chatScrollY }}>
                   {renderButton('chat', 'Chat', primaryButtonClassName)}
                 </motion.div>
                 <hr className="my-0 h-[0.5px] border-none border-t border-[var(--color-border)]/30" />
                 <div className="mt-3 space-y-2.5">
-                  <motion.div style={{ opacity: snakeScrollOpacity }}>
+                  <motion.div style={{ opacity: snakeScrollOpacity, y: snakeScrollY }}>
                     {renderButton('snake', 'Snake', secondaryButtonClassName)}
                   </motion.div>
-                  <motion.div style={{ opacity: cookieScrollOpacity }}>
+                  <motion.div style={{ opacity: cookieScrollOpacity, y: cookieScrollY }}>
                     {renderButton('cookie', 'Cookie', secondaryButtonClassName)}
                   </motion.div>
                 </div>
