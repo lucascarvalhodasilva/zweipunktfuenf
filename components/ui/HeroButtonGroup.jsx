@@ -224,67 +224,141 @@ export default function HeroButtonGroup({
     return null
   }
 
+  const mobileIconButtonClassName =
+    'flex h-11 w-11 items-center justify-center rounded-full border transition-colors duration-300'
+
+  const mobileSecondaryIconClassName = `${mobileIconButtonClassName} border-[var(--color-border)] bg-[rgba(10,10,10,0.82)] text-[var(--color-text)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]`
+
+  const mobilePrimaryIconClassName = `${mobileIconButtonClassName} border-[var(--color-accent)] bg-[var(--color-accent)] text-black hover:bg-transparent hover:text-[var(--color-accent)]`
+
+  const renderMobileIconButton = (key, className) => (
+    <button
+      ref={(element) => {
+        triggerRefs.current[`mobile-${key}`] = element
+      }}
+      type="button"
+      onClick={() => toggleModal(key)}
+      className={className}
+      aria-label={key === 'chat' ? 'Chat' : 'Cookie'}
+    >
+      {renderIcon(key)}
+    </button>
+  )
+
   return (
-    <div className="absolute right-24 top-1/2 z-[4] hidden -translate-y-1/2 lg:block">
-      <motion.div
-        layout
-        animate={gameStatus === 'running' ? 'hidden' : 'visible'}
-        variants={{
-          visible: { opacity: 1, x: 0, pointerEvents: 'auto' },
-          hidden: { opacity: 0, x: 18, pointerEvents: 'none' },
-        }}
-        transition={{ ...menuVisibilityTransition, layout: layoutTransition }}
-        className="w-72 overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.14)] bg-[rgba(10,10,10,0.62)] p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.04)] backdrop-blur"
-      >
-        <AnimatePresence mode="wait" initial={false}>
-          {activeModal === null ? (
-            <motion.div
-              key="button-view"
-              initial={prefersReducedMotion ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
-              transition={
-                prefersReducedMotion
-                  ? { duration: 0 }
-                  : { duration: 0.2, ease: 'easeOut' }
-              }
-              className="space-y-0"
-            >
-              <div className="mb-3">
-                {renderButton('chat', 'Chat', primaryButtonClassName)}
-              </div>
-              <hr className="my-0 h-[0.5px] border-none border-t border-[var(--color-border)]/30" />
-              <div className="mt-3 space-y-2.5">
-                {renderButton('snake', 'Snake', secondaryButtonClassName)}
-                {renderButton('cookie', 'Cookie', secondaryButtonClassName)}
-              </div>
-            </motion.div>
-          ) : (
-            <motion.div
-              key={activeModal}
-              initial={
-                prefersReducedMotion
-                  ? false
-                  : { opacity: 0, clipPath: 'inset(0 0 100% 0)' }
-              }
-              animate={{ opacity: 1, clipPath: 'inset(0 0 0% 0)' }}
-              exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
-              transition={panelTransition}
-              className="relative"
-            >
-              <button
-                type="button"
-                onClick={closeModal}
-                className="absolute right-1 top-0.5 font-mono text-sm text-[var(--color-muted)] transition-colors duration-300 hover:text-[var(--color-accent)]"
-                aria-label="Schließen"
+    <>
+      {/* Desktop */}
+      <div className="absolute right-24 top-1/2 z-[4] hidden -translate-y-1/2 lg:block">
+        <motion.div
+          layout
+          animate={gameStatus === 'running' ? 'hidden' : 'visible'}
+          variants={{
+            visible: { opacity: 1, x: 0, pointerEvents: 'auto' },
+            hidden: { opacity: 0, x: 18, pointerEvents: 'none' },
+          }}
+          transition={{ ...menuVisibilityTransition, layout: layoutTransition }}
+          className="w-72 overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.14)] bg-[rgba(10,10,10,0.62)] p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.04)] backdrop-blur"
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            {activeModal === null ? (
+              <motion.div
+                key="button-view"
+                initial={prefersReducedMotion ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
+                transition={
+                  prefersReducedMotion
+                    ? { duration: 0 }
+                    : { duration: 0.2, ease: 'easeOut' }
+                }
+                className="space-y-0"
               >
-                ✕
-              </button>
-              <div>{renderPanel()}</div>
-            </motion.div>
+                <div className="mb-3">
+                  {renderButton('chat', 'Chat', primaryButtonClassName)}
+                </div>
+                <hr className="my-0 h-[0.5px] border-none border-t border-[var(--color-border)]/30" />
+                <div className="mt-3 space-y-2.5">
+                  {renderButton('snake', 'Snake', secondaryButtonClassName)}
+                  {renderButton('cookie', 'Cookie', secondaryButtonClassName)}
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key={activeModal}
+                initial={
+                  prefersReducedMotion
+                    ? false
+                    : { opacity: 0, clipPath: 'inset(0 0 100% 0)' }
+                }
+                animate={{ opacity: 1, clipPath: 'inset(0 0 0% 0)' }}
+                exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
+                transition={panelTransition}
+                className="relative"
+              >
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="absolute right-1 top-0.5 font-mono text-sm text-[var(--color-muted)] transition-colors duration-300 hover:text-[var(--color-accent)]"
+                  aria-label="Schließen"
+                >
+                  ✕
+                </button>
+                <div>{renderPanel()}</div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </div>
+
+      {/* Mobile */}
+      <div className="fixed bottom-6 right-5 z-[4] lg:hidden">
+        <AnimatePresence>
+          {activeModal !== null && activeModal !== 'snake' && (
+            <>
+              <motion.div
+                key="mobile-overlay"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.2 }}
+                className="fixed inset-0 z-[4] bg-black/60"
+                onClick={closeModal}
+                aria-hidden="true"
+              />
+              <motion.div
+                key="mobile-panel"
+                initial={
+                  prefersReducedMotion
+                    ? false
+                    : { opacity: 0, y: 40 }
+                }
+                animate={{ opacity: 1, y: 0 }}
+                exit={
+                  prefersReducedMotion
+                    ? { opacity: 0 }
+                    : { opacity: 0, y: 40 }
+                }
+                transition={panelTransition}
+                className="fixed inset-x-4 bottom-4 z-[5] max-h-[80vh] overflow-y-auto rounded-2xl border border-[rgba(255,255,255,0.14)] bg-[rgba(10,10,10,0.92)] p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.04)] backdrop-blur"
+              >
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="absolute right-4 top-3 flex h-9 w-9 items-center justify-center rounded-full font-mono text-base text-[var(--color-muted)] transition-colors duration-300 hover:text-[var(--color-accent)]"
+                  aria-label="Schließen"
+                >
+                  ✕
+                </button>
+                <div>{renderPanel()}</div>
+              </motion.div>
+            </>
           )}
         </AnimatePresence>
-      </motion.div>
-    </div>
+        <div className="flex flex-col gap-3">
+          {renderMobileIconButton('cookie', mobileSecondaryIconClassName)}
+          {renderMobileIconButton('chat', mobilePrimaryIconClassName)}
+        </div>
+      </div>
+    </>
   )
 }
