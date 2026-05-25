@@ -105,16 +105,16 @@ export default function Hero() {
     target: sectionRef,
     offset: ['start start', 'end start'],
   })
-  const heroGlowOpacity = useTransform(scrollYProgress, [0.45, 0.85], [1, 0.18])
-  const heroGlowShift = useTransform(scrollYProgress, [0.45, 0.85], [0, 48])
-  const heroBlendOpacity = useTransform(scrollYProgress, [0.35, 0.8], [0.2, 1])
-  const contentTargetY = useTransform(scrollYProgress, [0.55, 0.92], [0, 12])
+  const heroGlowOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0.18])
+  const heroGlowShift = useTransform(scrollYProgress, [0, 0.7], [0, 48])
+  const heroBlendOpacity = useTransform(scrollYProgress, [0, 0.6], [0.2, 1])
+  const contentTargetY = useTransform(scrollYProgress, [0.1, 0.8], [0, 12])
   const contentY = useSpring(contentTargetY, {
     stiffness: 90,
     damping: 20,
     mass: 0.8,
   })
-  const contentTargetOpacity = useTransform(scrollYProgress, [0.6, 0.95], [1, 0.92])
+  const contentTargetOpacity = useTransform(scrollYProgress, [0.2, 0.85], [1, 0.92])
   const contentOpacity = useSpring(contentTargetOpacity, {
     stiffness: 120,
     damping: 24,
@@ -728,10 +728,10 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-0 h-[200vh]"
+      className="relative z-0 h-screen"
     >
       <div
-        className="surface-grid surface-grid-canvas sticky top-0 z-0 isolate h-screen w-full overflow-hidden"
+        className="surface-grid surface-grid-canvas fixed inset-x-0 top-0 z-0 isolate h-screen w-full overflow-hidden"
       >
         <motion.canvas
           ref={canvasRef}
