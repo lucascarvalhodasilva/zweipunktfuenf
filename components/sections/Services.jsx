@@ -10,7 +10,7 @@ export default function Services() {
   return (
     <section
       id="services"
-      className="sticky top-14 z-10 overflow-hidden rounded-t-[32px] border-b border-[var(--color-border)] bg-[var(--color-bg)] shadow-[0_-8px_32px_rgba(0,0,0,0.4)]"
+      className="relative z-10 overflow-hidden rounded-t-[32px] border-b border-[var(--color-border)] bg-[var(--color-bg)] shadow-[0_-8px_32px_rgba(0,0,0,0.4)] snap-start scroll-mt-14"
     >
       <div
         aria-hidden="true"
