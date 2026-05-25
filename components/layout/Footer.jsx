@@ -7,7 +7,13 @@ export default function Footer() {
         <p className="font-mono uppercase tracking-[0.18em] text-[var(--color-muted)]">
           © 2026 zweipunktfünf, Karlsruhe
         </p>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <a
+            href="/datenschutz"
+            className="font-mono text-xs uppercase tracking-[0.18em] text-[var(--color-muted)] transition-colors duration-300 hover:text-[var(--color-accent)]"
+          >
+            Datenschutz
+          </a>
           {footerPills.map((pill) => (
             <span
               key={pill}
