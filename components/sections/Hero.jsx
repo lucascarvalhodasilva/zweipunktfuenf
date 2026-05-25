@@ -223,6 +223,8 @@ export default function Hero() {
     let isVisible = true
     let loopRunning = false
     let singleFrameId = 0
+    let isIntersecting = true
+    let isTabVisible = true
 
     const SNAPSHOT_KEY = 'hero-snake-snapshot'
     const SNAPSHOT_VERSION = 1
@@ -1007,20 +1009,25 @@ export default function Hero() {
     gameApiRef.current = { startGame, pauseGame }
 
     // Visibility tracking: IntersectionObserver + visibilitychange
+    const updateVisibility = () => {
+      const wasVisible = isVisible
+      isVisible = isIntersecting && isTabVisible
+
+      if (isVisible && !wasVisible) {
+        ensureCorrectLoopState()
+
+        if (!loopRunning) {
+          requestSingleFrame()
+        }
+      } else if (!isVisible && wasVisible) {
+        stopLoop()
+      }
+    }
+
     const intersectionObserver = new IntersectionObserver(
       ([entry]) => {
-        const wasVisible = isVisible
-        isVisible = entry.isIntersecting && document.visibilityState !== 'hidden'
-
-        if (isVisible && !wasVisible) {
-          ensureCorrectLoopState()
-
-          if (!loopRunning) {
-            requestSingleFrame()
-          }
-        } else if (!isVisible && wasVisible) {
-          stopLoop()
-        }
+        isIntersecting = entry.isIntersecting
+        updateVisibility()
       },
       { threshold: 0 }
     )
@@ -1028,23 +1035,8 @@ export default function Hero() {
     intersectionObserver.observe(section)
 
     const handleVisibilityChange = () => {
-      const wasVisible = isVisible
-
-      if (document.visibilityState === 'hidden') {
-        isVisible = false
-
-        if (wasVisible) {
-          stopLoop()
-        }
-      } else {
-        isVisible = true
-
-        ensureCorrectLoopState()
-
-        if (!loopRunning) {
-          requestSingleFrame()
-        }
-      }
+      isTabVisible = document.visibilityState !== 'hidden'
+      updateVisibility()
     }
 
     document.addEventListener('visibilitychange', handleVisibilityChange)
