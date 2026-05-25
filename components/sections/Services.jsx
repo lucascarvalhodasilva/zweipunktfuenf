@@ -1,12 +1,7 @@
-'use client'
-
-import { motion, useReducedMotion } from 'framer-motion'
-
+import RevealOnScroll from '@/components/ui/RevealOnScroll'
 import { services } from '@/lib/constants'
 
 export default function Services() {
-  const prefersReducedMotion = useReducedMotion()
-
   return (
     <section
       id="services"
@@ -31,61 +26,52 @@ export default function Services() {
         </div>
         <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
           {services.map((service, index) => (
-            <motion.article
-              key={service.title}
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
-              whileInView={
-                prefersReducedMotion ? undefined : { opacity: 1, y: 0 }
-              }
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{
-                duration: 0.5,
-                delay: index * 0.08,
-                ease: 'easeOut',
-              }}
-              className={`flex min-h-[320px] flex-col justify-between rounded-[28px] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 ${
-                service.isCrypto
-                  ? 'shadow-[inset_0_0_0_1px_rgba(247,147,26,0.2)]'
-                  : ''
-              }`}
-            >
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs uppercase tracking-[0.3em] text-[var(--color-muted)]">
-                    {service.number}
-                  </span>
-                  <span
-                    className={`text-3xl ${service.isCrypto ? 'text-[var(--color-crypto)]' : 'text-[var(--color-accent)]'}`}
-                    aria-hidden="true"
-                  >
-                    {service.icon}
-                  </span>
-                </div>
-                <div className="space-y-3">
-                  <h3
-                    className={`text-2xl font-bold uppercase tracking-[-0.03em] ${
-                      service.isCrypto
-                        ? 'text-[var(--color-crypto)]'
-                        : 'text-[var(--color-text)]'
-                    }`}
-                  >
-                    {service.title}
-                  </h3>
-                  <p className="font-mono text-sm leading-7 text-[var(--color-text)]/72">
-                    {service.description}
-                  </p>
-                </div>
-              </div>
-              <p
-                className={`font-mono text-xs uppercase tracking-[0.24em] ${
+            <RevealOnScroll key={service.title} delay={index * 0.08}>
+              <article
+                className={`flex min-h-[320px] flex-col justify-between rounded-[28px] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 ${
                   service.isCrypto
-                    ? 'text-[var(--color-crypto)]'
-                    : 'text-[var(--color-accent)]'
+                    ? 'shadow-[inset_0_0_0_1px_rgba(247,147,26,0.2)]'
+                    : ''
                 }`}
               >
-                {service.tagline}
-              </p>
-            </motion.article>
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs uppercase tracking-[0.3em] text-[var(--color-muted)]">
+                      {service.number}
+                    </span>
+                    <span
+                      className={`text-3xl ${service.isCrypto ? 'text-[var(--color-crypto)]' : 'text-[var(--color-accent)]'}`}
+                      aria-hidden="true"
+                    >
+                      {service.icon}
+                    </span>
+                  </div>
+                  <div className="space-y-3">
+                    <h3
+                      className={`text-2xl font-bold uppercase tracking-[-0.03em] ${
+                        service.isCrypto
+                          ? 'text-[var(--color-crypto)]'
+                          : 'text-[var(--color-text)]'
+                      }`}
+                    >
+                      {service.title}
+                    </h3>
+                    <p className="font-mono text-sm leading-7 text-[var(--color-text)]/72">
+                      {service.description}
+                    </p>
+                  </div>
+                </div>
+                <p
+                  className={`font-mono text-xs uppercase tracking-[0.24em] ${
+                    service.isCrypto
+                      ? 'text-[var(--color-crypto)]'
+                      : 'text-[var(--color-accent)]'
+                  }`}
+                >
+                  {service.tagline}
+                </p>
+              </article>
+            </RevealOnScroll>
           ))}
         </div>
       </div>
