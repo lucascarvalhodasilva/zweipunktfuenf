@@ -219,6 +219,10 @@ export default function Hero() {
     let hasPointer = false
     let pointerX = 0
     let pointerY = 0
+    let hasInitialized = false
+
+    const SNAPSHOT_KEY = 'hero-snake-snapshot'
+    const SNAPSHOT_VERSION = 1
 
     const stepDuration = 120
     const acceleratedStepDuration = 75
@@ -241,6 +245,95 @@ export default function Hero() {
       }
 
       return 'w'
+    }
+
+    const saveGameSnapshot = () => {
+      try {
+        const snapshot = {
+          version: SNAPSHOT_VERSION,
+          timestamp: Date.now(),
+          gameStatus: 'paused',
+          score: currentScore,
+          snake,
+          food,
+          direction,
+          pendingDirection,
+          columns,
+          rows,
+        }
+
+        window.localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(snapshot))
+      } catch {
+        // Ignore storage errors
+      }
+    }
+
+    const clearGameSnapshot = () => {
+      window.localStorage.removeItem(SNAPSHOT_KEY)
+    }
+
+    const tryRestoreSnapshot = () => {
+      const stored = window.localStorage.getItem(SNAPSHOT_KEY)
+
+      if (!stored) {
+        return false
+      }
+
+      try {
+        const snapshot = JSON.parse(stored)
+
+        const isValidDirection = (dir) =>
+          dir &&
+          typeof dir.x === 'number' &&
+          typeof dir.y === 'number' &&
+          [-1, 0, 1].includes(dir.x) &&
+          [-1, 0, 1].includes(dir.y)
+
+        const isValidCell = (cell) =>
+          cell &&
+          typeof cell.column === 'number' &&
+          typeof cell.row === 'number' &&
+          cell.column >= 0 &&
+          cell.column < columns &&
+          cell.row >= 0 &&
+          cell.row < rows
+
+        if (
+          !snapshot ||
+          snapshot.version !== SNAPSHOT_VERSION ||
+          snapshot.gameStatus !== 'paused' ||
+          snapshot.columns !== columns ||
+          snapshot.rows !== rows ||
+          !Array.isArray(snapshot.snake) ||
+          snapshot.snake.length === 0 ||
+          typeof snapshot.score !== 'number' ||
+          !isValidDirection(snapshot.direction) ||
+          !isValidDirection(snapshot.pendingDirection) ||
+          !snapshot.snake.every(isValidCell) ||
+          !isValidCell(snapshot.food)
+        ) {
+          clearGameSnapshot()
+
+          return false
+        }
+
+        snake = snapshot.snake
+        food = snapshot.food
+        direction = snapshot.direction
+        pendingDirection = snapshot.pendingDirection
+        currentScore = snapshot.score
+        started = true
+        paused = true
+        gameOver = false
+        setScore(snapshot.score)
+        setGameStatus('paused')
+
+        return true
+      } catch {
+        clearGameSnapshot()
+
+        return false
+      }
     }
 
     const createInitialSnake = () => {
@@ -529,6 +622,7 @@ export default function Hero() {
         paused = false
         setGameStatus('game-over')
         updateHighScores(currentScore)
+        clearGameSnapshot()
         return
       }
 
@@ -554,6 +648,13 @@ export default function Hero() {
 
         paused = !paused
         setGameStatus(paused ? 'paused' : 'running')
+
+        if (paused) {
+          saveGameSnapshot()
+        } else {
+          clearGameSnapshot()
+        }
+
         event.preventDefault()
         return
       }
@@ -589,6 +690,7 @@ export default function Hero() {
       if (paused) {
         paused = false
         setGameStatus('running')
+        clearGameSnapshot()
       }
 
       event.preventDefault()
@@ -610,6 +712,7 @@ export default function Hero() {
       started = true
       paused = false
       gameOver = false
+      clearGameSnapshot()
       setGameStatus('running')
     }
 
@@ -620,6 +723,12 @@ export default function Hero() {
 
       paused = !paused
       setGameStatus(paused ? 'paused' : 'running')
+
+      if (paused) {
+        saveGameSnapshot()
+      } else {
+        clearGameSnapshot()
+      }
     }
 
     const pauseGameOnScroll = () => {
@@ -629,6 +738,7 @@ export default function Hero() {
 
       paused = true
       setGameStatus('paused')
+      saveGameSnapshot()
     }
 
     const handlePointerMove = (event) => {
@@ -672,6 +782,14 @@ export default function Hero() {
     }
 
     resizeCanvas()
+
+    if (!hasInitialized) {
+      hasInitialized = true
+
+      if (tryRestoreSnapshot()) {
+        renderGame()
+      }
+    }
 
     const resizeObserver = new ResizeObserver(() => {
       resizeCanvas()
