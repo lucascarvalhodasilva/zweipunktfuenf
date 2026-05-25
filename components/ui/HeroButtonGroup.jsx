@@ -52,6 +52,9 @@ export default function HeroButtonGroup({
     damping: 24,
     mass: 0.6,
   })
+  const containerPointerEvents = useTransform(containerScrollOpacity, (value) =>
+    value < 0.05 ? 'none' : 'auto',
+  )
 
   // Mobile container fade
   const mobileTargetOpacity = useTransform(
@@ -64,6 +67,9 @@ export default function HeroButtonGroup({
     damping: 24,
     mass: 0.6,
   })
+  const mobilePointerEvents = useTransform(mobileScrollOpacity, (value) =>
+    value < 0.05 ? 'none' : 'auto',
+  )
 
   const closeModal = useCallback(() => {
     const previousModal = activeModal
@@ -297,7 +303,7 @@ export default function HeroButtonGroup({
     <>
       {/* Desktop */}
       <div className="absolute right-24 top-1/2 z-[4] hidden -translate-y-1/2 lg:block">
-        <motion.div style={{ opacity: containerScrollOpacity }}>
+        <motion.div style={{ opacity: containerScrollOpacity, pointerEvents: containerPointerEvents }}>
           <motion.div
             layout
             animate={gameStatus === 'running' ? 'hidden' : 'visible'}
@@ -367,7 +373,7 @@ export default function HeroButtonGroup({
       {/* Mobile */}
       <motion.div
         className="fixed bottom-6 right-5 z-[4] lg:hidden"
-        style={{ opacity: mobileScrollOpacity }}
+        style={{ opacity: mobileScrollOpacity, pointerEvents: mobilePointerEvents }}
       >
         <AnimatePresence>
           {/* Snake is excluded from mobile — it requires keyboard input */}
