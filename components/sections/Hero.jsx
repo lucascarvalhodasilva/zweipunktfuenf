@@ -759,7 +759,7 @@ export default function Hero() {
         style={prefersReducedMotion ? undefined : { opacity: heroBlendOpacity }}
       />
       <motion.div
-        className="relative z-[2] mx-auto flex min-h-screen max-w-7xl flex-col justify-center gap-8 px-5 py-16 md:gap-10 md:px-8 md:py-28 min-h-dvh"
+        className="relative z-[2] mx-auto flex min-h-screen max-w-7xl flex-col justify-center gap-10 px-5 py-20 md:px-8 md:py-28 min-h-dvh"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -769,13 +769,13 @@ export default function Hero() {
             : { y: contentY, opacity: effectiveContentOpacity }
         }
       >
-        <div className="max-w-5xl space-y-5 sm:space-y-6">
+        <div className="max-w-5xl space-y-6 sm:space-y-6">
           <motion.div variants={itemVariants}>
             <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--color-accent)] sm:text-xs sm:tracking-[0.35em] md:text-sm">
               Ihre Webseite verdient ein Upgrade
             </p>
           </motion.div>
-          <h1 className="text-[2.35rem] font-extrabold leading-[0.92] tracking-[-0.04em] min-[375px]:text-[2.65rem] min-[480px]:text-5xl md:text-7xl lg:text-[6.5rem]">
+          <h1 className="text-[2.75rem] font-black leading-[0.92] tracking-[-0.04em] min-[375px]:text-[3.25rem] min-[480px]:text-6xl md:text-7xl lg:text-[6.5rem]">
             <motion.div variants={itemVariants}>
               <span className="block">Wir bauen</span>
             </motion.div>
