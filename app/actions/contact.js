@@ -3,11 +3,11 @@
 const RATE_LIMIT_MS = 60_000
 const recentSubmissions = new Map()
 
-function isRateLimited(ip) {
+function isRateLimited(key) {
   const now = Date.now()
-  const last = recentSubmissions.get(ip)
+  const last = recentSubmissions.get(key)
   if (last && now - last < RATE_LIMIT_MS) return true
-  recentSubmissions.set(ip, now)
+  recentSubmissions.set(key, now)
   // keep map from growing unbounded
   if (recentSubmissions.size > 1000) {
     const oldest = recentSubmissions.keys().next().value
