@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import { footerPills } from '@/lib/constants'
 
 export default function Footer() {
@@ -7,7 +9,7 @@ export default function Footer() {
         <p className="font-mono uppercase tracking-[0.18em] text-[var(--color-muted)]">
           © 2026 zweipunktfünf, Karlsruhe
         </p>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {footerPills.map((pill) => (
             <span
               key={pill}
@@ -16,6 +18,18 @@ export default function Footer() {
               {pill}
             </span>
           ))}
+          <Link
+            href="/impressum"
+            className="font-mono text-xs uppercase tracking-[0.18em] text-[var(--color-text)] transition-colors hover:text-[var(--color-accent)]"
+          >
+            Impressum
+          </Link>
+          <Link
+            href="/datenschutz"
+            className="font-mono text-xs uppercase tracking-[0.18em] text-[var(--color-text)] transition-colors hover:text-[var(--color-accent)]"
+          >
+            Datenschutz
+          </Link>
         </div>
       </div>
     </footer>
