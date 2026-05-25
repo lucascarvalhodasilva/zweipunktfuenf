@@ -1,4 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# zweipunktfünf
+
+Produktionsreifes Next.js-14-Scaffold für eine Webagentur aus Karlsruhe mit Fokus auf Webdesign, Chatbots und Crypto.
+
+## Stack
+
+- Next.js 14 mit App Router
+- JavaScript (`.js` / `.jsx`), kein TypeScript
+- Tailwind CSS
+- Framer Motion
+- ESLint mit `next/core-web-vitals`
+- Prettier
+- Vercel-ready Zero-Config Deployment
+
+## Setup
+
+```bash
+npm install
+npm run dev
+```
+
+Weitere Kommandos:
+
+```bash
+npm run lint
+npm run build
+npm run format:check
+```
+
+## Projektstruktur
+
+```text
+app/
+  globals.css
+  layout.js
+  page.js
+components/
+  layout/
+    Footer.jsx
+    Navbar.jsx
+  sections/
+    Hero.jsx
+    Services.jsx
+    Ticker.jsx
+  ui/
+    Button.jsx
+lib/
+  constants.js
+public/
+  fonts/
+```
+
+## Hinweise
+
+- Google Fonts werden über `next/font/google` geladen.
+- Die Ticker-Animation basiert nur auf CSS.
+- Bewegungen respektieren `prefers-reduced-motion`.
+- Vercel benötigt keine zusätzliche Konfiguration für dieses Projekt.This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
 
