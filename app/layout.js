@@ -20,13 +20,19 @@ export const metadata = {
   description:
     'zweipunktfünf entwickelt markante Webauftritte, KI-gestützte Chatbots und digitale Crypto-Erlebnisse für Unternehmen in Karlsruhe.',
   openGraph: {
-    title: 'zweipunktfünf',
+    title: 'zweipunktfünf | Webdesign, Chatbots und Crypto in Karlsruhe',
     description:
       'Webdesign, Chatbots und Crypto-Produkte für ambitionierte Marken aus Karlsruhe.',
     url: 'https://www.zweipunktfuenf.de',
     siteName: 'zweipunktfünf',
     locale: 'de_DE',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'zweipunktfünf | Webdesign, Chatbots und Crypto in Karlsruhe',
+    description:
+      'Webdesign, Chatbots und Crypto-Produkte für ambitionierte Marken aus Karlsruhe.',
   },
 }
 
