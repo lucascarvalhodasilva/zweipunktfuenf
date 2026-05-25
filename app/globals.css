@@ -1,26 +1,102 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-bg: #0a0a0a;
+  --color-surface: #1a1a1a;
+  --color-border: #2a2a2a;
+  --color-text: #f5f2eb;
+  --color-muted: #555555;
+  --color-accent: #c8ff00;
+  --color-crypto: #f7931a;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'Space Mono', monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(200, 255, 0, 0.1), transparent 30%),
+    linear-gradient(180deg, rgba(26, 26, 26, 0.85) 0%, rgba(10, 10, 10, 1) 35%);
+  color: var(--color-text);
+  font-family: var(--font-display);
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+::selection {
+  background: rgba(200, 255, 0, 0.25);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--color-text);
+}
+
+.surface-grid {
+  position: relative;
+  --surface-grid-cell-width: 36px;
+  --surface-grid-cell-height: 36px;
+}
+
+.surface-grid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(245, 242, 235, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 242, 235, 0.03) 1px, transparent 1px);
+  background-size: var(--surface-grid-cell-width) var(--surface-grid-cell-height);
+  pointer-events: none;
+}
+
+.surface-grid.surface-grid-canvas::before {
+  content: none;
+}
+
+.ticker-track {
+  animation: ticker-scroll 22s linear infinite;
+}
+
+@keyframes ticker-scroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .ticker-track {
+    animation: none;
+    transform: translate3d(0, 0, 0);
+  }
 }
