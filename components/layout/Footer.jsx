@@ -4,7 +4,7 @@ import { footerPills } from '@/lib/constants'
 
 export default function Footer() {
   return (
-    <footer id="kontakt" className="border-t border-[var(--color-border)]">
+    <footer id="kontakt" className="relative z-10 border-t border-[var(--color-border)] bg-[var(--color-bg)]">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-6 text-sm md:flex-row md:items-center md:justify-between md:px-8">
         <p className="font-mono uppercase tracking-[0.18em] text-[var(--color-muted)]">
           © 2026 zweipunktfünf, Karlsruhe

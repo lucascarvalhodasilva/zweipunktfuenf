@@ -7,7 +7,7 @@ export default function Ticker() {
     <section
       id="ticker"
       aria-label="Schlagworte"
-      className="overflow-hidden border-b border-[var(--color-border)] bg-black"
+      className="relative z-10 overflow-hidden border-b border-[var(--color-border)] bg-black"
     >
       <div className="ticker-track flex w-max items-center gap-4 py-4">
         {repeatedItems.map((item, index) => (
