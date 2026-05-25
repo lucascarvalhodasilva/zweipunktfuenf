@@ -101,9 +101,21 @@ export default function Hero() {
   const [score, setScore] = useState(0)
   const [highScores, setHighScores] = useState([0, 0, 0])
   const isGameForeground = gameStatus !== 'idle'
-  const { scrollYProgress } = useScroll({
+  const { scrollYProgress, scrollY } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end start'],
+  })
+  const sectionTop = useMotionValue(0)
+  useEffect(() => {
+    const el = sectionRef.current
+    if (el) sectionTop.set(el.offsetTop)
+  }, [sectionTop])
+  const pinY = useTransform(scrollY, (latest) => {
+    const top = sectionTop.get()
+    const el = sectionRef.current
+    if (!el) return 0
+    const maxPin = el.offsetHeight - window.innerHeight
+    return Math.min(Math.max(0, latest - top), maxPin)
   })
   const heroGlowOpacity = useTransform(scrollYProgress, [0.45, 0.85], [1, 0.18])
   const heroGlowShift = useTransform(scrollYProgress, [0.45, 0.85], [0, 48])
@@ -728,9 +740,12 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-0 h-screen min-h-dvh"
+      className="relative z-0 h-[200vh]"
     >
-      <div className="surface-grid surface-grid-canvas fixed inset-x-0 top-0 z-0 isolate h-screen w-full overflow-hidden min-h-dvh">
+      <motion.div
+        className="surface-grid surface-grid-canvas absolute inset-x-0 top-0 z-0 isolate h-screen w-full overflow-hidden min-h-dvh"
+        style={{ y: pinY }}
+      >
         <motion.canvas
           ref={canvasRef}
           className={`pointer-events-none absolute inset-0 ${
@@ -809,7 +824,7 @@ export default function Hero() {
             </div>
           </motion.div>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   )
 }
