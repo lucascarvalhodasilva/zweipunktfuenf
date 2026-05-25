@@ -11,17 +11,28 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef(null)
   const toggleRef = useRef(null)
+  const headerRef = useRef(null)
+  const [headerHeight, setHeaderHeight] = useState(0)
 
   useEffect(() => {
     const updateScrollState = () => {
       setIsAtTop(window.scrollY <= 8)
     }
 
+    const updateHeaderHeight = () => {
+      if (headerRef.current) {
+        setHeaderHeight(headerRef.current.offsetHeight)
+      }
+    }
+
     updateScrollState()
+    updateHeaderHeight()
     window.addEventListener('scroll', updateScrollState, { passive: true })
+    window.addEventListener('resize', updateHeaderHeight, { passive: true })
 
     return () => {
       window.removeEventListener('scroll', updateScrollState)
+      window.removeEventListener('resize', updateHeaderHeight)
     }
   }, [])
 
@@ -63,7 +74,7 @@ export default function Navbar() {
 
     const menu = menuRef.current
     const focusableSelector =
-      'a[href], button, [tabindex]:not([tabindex="-1"])'
+      'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
     const handleTab = (e) => {
       if (e.key !== 'Tab') return
@@ -94,6 +105,7 @@ export default function Navbar() {
 
   return (
     <nav
+      ref={headerRef}
       className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300 ${
         isAtTop && !menuOpen
           ? 'border-b border-transparent bg-transparent backdrop-blur-0'
@@ -160,7 +172,8 @@ export default function Navbar() {
         role="dialog"
         aria-modal="true"
         aria-label="Navigation"
-        className={`fixed inset-x-0 top-[calc(theme(spacing.4)*2+1.75rem)] bottom-0 z-40 flex flex-col bg-[rgba(10,10,10,0.95)] backdrop-blur-md transition-[opacity,visibility] duration-300 md:hidden ${
+        style={{ top: headerHeight }}
+        className={`fixed inset-x-0 bottom-0 z-40 flex flex-col bg-[rgba(10,10,10,0.95)] backdrop-blur-md transition-[opacity,visibility] duration-300 md:hidden ${
           menuOpen
             ? 'visible opacity-100'
             : 'invisible opacity-0'
