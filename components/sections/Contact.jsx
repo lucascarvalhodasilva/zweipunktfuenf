@@ -1,5 +1,6 @@
 import RevealOnScroll from '@/components/ui/RevealOnScroll'
 import ContactForm from '@/components/sections/ContactForm'
+import { contact } from '@/lib/content'
 
 export default function Contact() {
   return (
@@ -10,14 +11,13 @@ export default function Contact() {
       <div className="mx-auto max-w-2xl">
         <RevealOnScroll>
           <p className="mb-2 font-mono text-xs uppercase tracking-[0.3em] text-[var(--color-accent)]">
-            04 — Kontakt
+            {contact.label}
           </p>
           <h2 className="mb-4 font-display text-3xl font-bold leading-tight md:text-4xl">
-            Projekt starten
+            {contact.heading}
           </h2>
           <p className="mb-10 font-mono text-sm leading-relaxed text-[var(--color-muted)]">
-            Erzähl uns von deiner Idee — wir melden uns innerhalb von 24
-            Stunden.
+            {contact.description}
           </p>
 
           <ContactForm />

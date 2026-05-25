@@ -1,6 +1,6 @@
-import { tickerItems } from '@/lib/constants'
+import { ticker } from '@/lib/content'
 
-const repeatedItems = [...tickerItems, ...tickerItems]
+const repeatedItems = [...ticker.items, ...ticker.items]
 
 export default function Ticker() {
   return (

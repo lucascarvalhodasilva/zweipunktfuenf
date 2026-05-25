@@ -1,16 +1,16 @@
 import Link from 'next/link'
 
-import { footerPills } from '@/lib/constants'
+import { footer } from '@/lib/content'
 
 export default function Footer() {
   return (
     <footer id="kontakt" className="relative z-10 border-t border-[var(--color-border)] bg-[var(--color-bg)]">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-6 text-sm md:flex-row md:items-center md:justify-between md:px-8">
         <p className="font-mono uppercase tracking-[0.18em] text-[var(--color-muted)]">
-          © 2026 zweipunktfünf, Karlsruhe
+          {footer.copyright}
         </p>
         <div className="flex flex-wrap items-center gap-2">
-          {footerPills.map((pill) => (
+          {footer.pills.map((pill) => (
             <span
               key={pill}
               className="rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1 font-mono text-xs uppercase tracking-[0.18em] text-[var(--color-text)]"

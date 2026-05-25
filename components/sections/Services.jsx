@@ -1,5 +1,5 @@
 import RevealOnScroll from '@/components/ui/RevealOnScroll'
-import { services } from '@/lib/constants'
+import { services } from '@/lib/content'
 
 export default function Services() {
   return (
@@ -18,14 +18,14 @@ export default function Services() {
       <div className="mx-auto max-w-7xl px-5 py-20 md:px-8">
         <div className="mb-10 max-w-2xl space-y-4">
           <p className="font-mono text-xs uppercase tracking-[0.35em] text-[var(--color-accent)]">
-            Leistungen
+            {services.label}
           </p>
           <h2 className="text-3xl font-bold uppercase tracking-[-0.03em] md:text-5xl">
-            Drei Bausteine für einen Auftritt mit Kante.
+            {services.heading}
           </h2>
         </div>
         <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-          {services.map((service, index) => (
+          {services.items.map((service, index) => (
             <RevealOnScroll key={service.title} delay={index * 0.08}>
               <article
                 className={`flex min-h-[320px] flex-col justify-between rounded-[28px] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 ${
