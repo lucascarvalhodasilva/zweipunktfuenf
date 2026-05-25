@@ -6,11 +6,6 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 
 import Snake from '@/components/ui/Snake'
 
-const defaultCookiePreferences = {
-  analytics: false,
-  marketing: false,
-}
-
 export default function HeroButtonGroup({
   gameStatus,
   score,
@@ -20,9 +15,6 @@ export default function HeroButtonGroup({
 }) {
   const prefersReducedMotion = useReducedMotion()
   const [activeModal, setActiveModal] = useState(null)
-  const [cookiePreferences, setCookiePreferences] = useState(
-    defaultCookiePreferences
-  )
   const triggerRefs = useRef({})
 
   const closeModal = useCallback(() => {
@@ -35,32 +27,6 @@ export default function HeroButtonGroup({
         triggerRefs.current[previousModal]?.focus()
       })
     }
-  }, [activeModal])
-
-  useEffect(() => {
-    if (activeModal !== 'cookie') {
-      return () => {}
-    }
-
-    const storedPreferences = window.localStorage.getItem('zpf_cookie_consent')
-
-    if (!storedPreferences) {
-      setCookiePreferences(defaultCookiePreferences)
-      return () => {}
-    }
-
-    try {
-      const parsedPreferences = JSON.parse(storedPreferences)
-
-      setCookiePreferences({
-        analytics: Boolean(parsedPreferences.analytics),
-        marketing: Boolean(parsedPreferences.marketing),
-      })
-    } catch {
-      setCookiePreferences(defaultCookiePreferences)
-    }
-
-    return () => {}
   }, [activeModal])
 
   useEffect(() => {
@@ -86,37 +52,16 @@ export default function HeroButtonGroup({
 
   const toggleModal = (modalKey) => {
     setActiveModal((currentModal) =>
-      currentModal === modalKey ? null : modalKey
+      currentModal === modalKey ? null : modalKey,
     )
-  }
-
-  const handleCookiePreferenceChange = (key) => {
-    setCookiePreferences((currentPreferences) => ({
-      ...currentPreferences,
-      [key]: !currentPreferences[key],
-    }))
-  }
-
-  const handleCookieConfirm = () => {
-    window.localStorage.setItem(
-      'zpf_cookie_consent',
-      JSON.stringify({
-        analytics: cookiePreferences.analytics,
-        marketing: cookiePreferences.marketing,
-        savedAt: Date.now(),
-      })
-    )
-    setActiveModal(null)
   }
 
   const buttonBaseClassName =
     'group flex min-h-11 w-full items-center gap-3 rounded-xl border px-4 py-2 font-mono text-[11px] uppercase tracking-[0.12em] transition-colors duration-300'
 
-  const secondaryButtonClassName =
-    `${buttonBaseClassName} border-[var(--color-border)] bg-transparent text-[var(--color-text)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]`
+  const secondaryButtonClassName = `${buttonBaseClassName} border-[var(--color-border)] bg-transparent text-[var(--color-text)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]`
 
-  const primaryButtonClassName =
-    `${buttonBaseClassName} border-[var(--color-accent)] bg-[var(--color-accent)] text-black hover:bg-transparent hover:text-[var(--color-accent)]`
+  const primaryButtonClassName = `${buttonBaseClassName} border-[var(--color-accent)] bg-[var(--color-accent)] text-black hover:bg-transparent hover:text-[var(--color-accent)]`
 
   const panelTransition = prefersReducedMotion
     ? { duration: 0 }
@@ -232,10 +177,11 @@ export default function HeroButtonGroup({
         <div className="space-y-5">
           <div className="space-y-2">
             <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-[var(--color-accent)]">
-              Cookie Einstellungen
+              Cookie Hinweis
             </p>
             <p className="font-mono text-sm leading-7 text-[var(--color-text)]/78">
-              Wähle aus, welche Cookies wir neben den technisch notwendigen setzen dürfen.
+              Diese Website verwendet ausschließlich technisch notwendige
+              Cookies. Analyse- oder Marketing-Cookies werden nicht eingesetzt.
             </p>
             <p className="font-mono text-[11px] leading-6 text-[var(--color-text)]/70">
               Details findest du in unserer{' '}
@@ -264,51 +210,13 @@ export default function HeroButtonGroup({
                 <span className="absolute left-[26px] top-1/2 h-4 w-4 -translate-y-1/2 rounded-full bg-[var(--color-accent)]" />
               </button>
             </div>
-            {[
-              ['analytics', 'Analyse'],
-              ['marketing', 'Marketing'],
-            ].map(([key, label]) => {
-              const enabled = cookiePreferences[key]
-
-              return (
-                <div
-                  key={key}
-                  className="flex items-center justify-between rounded-xl border border-[var(--color-border)] px-4 py-3"
-                >
-                  <div>
-                    <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-text)]">
-                      {label}
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    aria-pressed={enabled}
-                    onClick={() => handleCookiePreferenceChange(key)}
-                    className={`relative h-7 w-12 rounded-full border transition-colors duration-300 ${
-                      enabled
-                        ? 'border-[rgba(200,255,0,0.45)] bg-[rgba(200,255,0,0.2)]'
-                        : 'border-[var(--color-border)] bg-transparent'
-                    }`}
-                  >
-                    <span
-                      className={`absolute top-1/2 h-4 w-4 -translate-y-1/2 rounded-full transition-[left,background-color] duration-300 ${
-                        enabled
-                          ? 'left-[26px] bg-[var(--color-accent)]'
-                          : 'left-[4px] bg-[var(--color-text)]/48'
-                      }`}
-                    />
-                  </button>
-                </div>
-              )
-            })}
           </div>
-          <button
-            type="button"
-            onClick={handleCookieConfirm}
-            className="flex min-h-11 w-full items-center justify-center rounded-xl border border-[var(--color-accent)] bg-[var(--color-accent)] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.2em] text-black transition-colors duration-300 hover:bg-transparent hover:text-[var(--color-accent)]"
+          <a
+            href="/datenschutz"
+            className="flex min-h-11 w-full items-center justify-center rounded-xl border border-[var(--color-border)] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-text)] transition-colors duration-300 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
           >
-            Speichern
-          </button>
+            Datenschutz
+          </a>
         </div>
       )
     }
@@ -335,7 +243,11 @@ export default function HeroButtonGroup({
               initial={prefersReducedMotion ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
-              transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.2, ease: 'easeOut' }}
+              transition={
+                prefersReducedMotion
+                  ? { duration: 0 }
+                  : { duration: 0.2, ease: 'easeOut' }
+              }
               className="space-y-0"
             >
               <div className="mb-3">

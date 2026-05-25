@@ -2,61 +2,66 @@ import Link from 'next/link'
 
 export const metadata = {
   title: 'Datenschutz | zweipunktfünf',
-  description:
-    'Datenschutzerklärung von zweipunktfünf mit Informationen zur Verarbeitung personenbezogener Daten.',
+  description: 'Datenschutzerklärung von zweipunktfünf.',
 }
 
-export default function DatenschutzPage() {
+export default function Datenschutz() {
   return (
-    <main className="mx-auto max-w-3xl px-5 py-20 text-[var(--color-text)] md:px-8">
-      <h1 className="font-mono text-2xl uppercase tracking-[0.2em] text-[var(--color-accent)]">
+    <div className="mx-auto max-w-3xl px-5 py-20 md:px-8">
+      <h1 className="mb-10 font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-[var(--color-text)]">
         Datenschutz
       </h1>
-      <div className="mt-8 space-y-6 font-mono text-sm leading-7 text-[var(--color-text)]/85">
-        <section>
-          <h2 className="mb-2 text-xs uppercase tracking-[0.2em] text-[var(--color-text)]">
-            1. Verantwortliche Stelle
+      <div className="space-y-8 font-mono text-sm leading-7 text-[var(--color-text)]/78">
+        <section className="space-y-3">
+          <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-accent)]">
+            Cookies
           </h2>
           <p>
-            Verantwortlich für die Datenverarbeitung auf dieser Website ist zweipunktfünf,
-            Musterstraße 1, 76133 Karlsruhe, Deutschland.
+            Diese Website verwendet ausschließlich technisch notwendige Cookies,
+            die für den Betrieb der Seite erforderlich sind. Es werden keine
+            Analyse-, Tracking- oder Marketing-Cookies eingesetzt.
           </p>
         </section>
-        <section>
-          <h2 className="mb-2 text-xs uppercase tracking-[0.2em] text-[var(--color-text)]">
-            2. Erhebung und Verarbeitung
+        <section className="space-y-3">
+          <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-accent)]">
+            Datenerhebung
           </h2>
           <p>
-            Beim Besuch dieser Website können technisch notwendige Daten verarbeitet werden,
-            um den Betrieb und die Sicherheit der Seite zu gewährleisten.
+            Wir erheben und speichern keine personenbezogenen Daten durch
+            Tracking-Dienste oder Analyse-Tools. Es werden keine Daten an Dritte
+            weitergegeben.
           </p>
         </section>
-        <section>
-          <h2 className="mb-2 text-xs uppercase tracking-[0.2em] text-[var(--color-text)]">
-            3. Cookies
+        <section className="space-y-3">
+          <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-accent)]">
+            Hosting
           </h2>
           <p>
-            Zusätzlich zu technisch notwendigen Cookies werden Analyse- und Marketing-Cookies
-            nur nach deiner Einwilligung gespeichert.
+            Diese Website wird bei Vercel Inc. gehostet. Beim Besuch der Seite
+            werden automatisch technische Informationen (z.&nbsp;B. IP-Adresse,
+            Browsertyp, Zugriffszeit) in Server-Logfiles gespeichert. Diese
+            Daten sind für den technischen Betrieb erforderlich und werden nicht
+            mit anderen Datenquellen zusammengeführt.
           </p>
         </section>
-        <section>
-          <h2 className="mb-2 text-xs uppercase tracking-[0.2em] text-[var(--color-text)]">
-            4. Deine Rechte
+        <section className="space-y-3">
+          <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-accent)]">
+            Kontakt
           </h2>
           <p>
-            Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der
-            Verarbeitung sowie Widerspruch gegen die Verarbeitung deiner personenbezogenen
-            Daten nach den gesetzlichen Vorgaben.
+            Bei Fragen zum Datenschutz erreichst du uns über die auf der Website
+            angegebenen Kontaktdaten.
           </p>
         </section>
+        <div className="pt-4">
+          <Link
+            href="/"
+            className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-muted)] transition-colors duration-300 hover:text-[var(--color-accent)]"
+          >
+            ← Zurück zur Startseite
+          </Link>
+        </div>
       </div>
-      <Link
-        href="/"
-        className="mt-10 inline-flex font-mono text-xs uppercase tracking-[0.2em] text-[var(--color-accent)] transition-colors hover:text-[var(--color-text)]"
-      >
-        Zurück zur Startseite
-      </Link>
-    </main>
+    </div>
   )
 }
