@@ -106,15 +106,24 @@ export default function Hero() {
     offset: ['start start', 'end start'],
   })
   const sectionTop = useMotionValue(0)
+  const sectionHeight = useMotionValue(0)
+  const viewportHeight = useMotionValue(0)
   useEffect(() => {
-    const el = sectionRef.current
-    if (el) sectionTop.set(el.offsetTop)
-  }, [sectionTop])
+    const measure = () => {
+      const el = sectionRef.current
+      if (el) {
+        sectionTop.set(el.offsetTop)
+        sectionHeight.set(el.offsetHeight)
+      }
+      viewportHeight.set(window.innerHeight)
+    }
+    measure()
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [sectionTop, sectionHeight, viewportHeight])
   const pinY = useTransform(scrollY, (latest) => {
     const top = sectionTop.get()
-    const el = sectionRef.current
-    if (!el) return 0
-    const maxPin = el.offsetHeight - window.innerHeight
+    const maxPin = sectionHeight.get() - viewportHeight.get()
     return Math.min(Math.max(0, latest - top), maxPin)
   })
   const heroGlowOpacity = useTransform(scrollYProgress, [0.45, 0.85], [1, 0.18])
@@ -743,7 +752,7 @@ export default function Hero() {
       className="relative z-0 h-[200vh]"
     >
       <motion.div
-        className="surface-grid surface-grid-canvas absolute inset-x-0 top-0 z-0 isolate h-screen w-full overflow-hidden min-h-dvh"
+        className="surface-grid surface-grid-canvas absolute inset-x-0 top-0 z-0 isolate h-screen w-full overflow-hidden"
         style={{ y: pinY }}
       >
         <motion.canvas
@@ -775,7 +784,7 @@ export default function Hero() {
           style={prefersReducedMotion ? undefined : { opacity: heroBlendOpacity }}
         />
         <motion.div
-          className="relative z-[2] mx-auto flex max-w-7xl flex-col justify-center gap-10 px-5 py-20 md:px-8 md:py-28 min-h-dvh"
+          className="relative z-[2] mx-auto flex h-full max-w-7xl flex-col justify-center gap-10 px-5 py-20 md:px-8 md:py-28"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
