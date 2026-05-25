@@ -918,10 +918,17 @@ export default function Hero() {
       resizeCanvas()
     })
 
+    const handleBeforeUnload = () => {
+      if (started && !gameOver) {
+        saveGameSnapshot()
+      }
+    }
+
     resizeObserver.observe(section)
     window.addEventListener('keydown', handleKeyDown)
     window.addEventListener('keyup', handleKeyUp)
     window.addEventListener('scroll', pauseGameOnScroll, { passive: true })
+    window.addEventListener('beforeunload', handleBeforeUnload)
     section.addEventListener('pointermove', handlePointerMove)
     section.addEventListener('pointerleave', handlePointerLeave)
     gameApiRef.current = { startGame, pauseGame }
@@ -952,10 +959,14 @@ export default function Hero() {
     frameId = window.requestAnimationFrame(render)
 
     return () => {
+      if (started && !gameOver) {
+        saveGameSnapshot()
+      }
       window.cancelAnimationFrame(frameId)
       window.removeEventListener('keydown', handleKeyDown)
       window.removeEventListener('keyup', handleKeyUp)
       window.removeEventListener('scroll', pauseGameOnScroll)
+      window.removeEventListener('beforeunload', handleBeforeUnload)
       section.removeEventListener('pointermove', handlePointerMove)
       section.removeEventListener('pointerleave', handlePointerLeave)
       resizeObserver.disconnect()
