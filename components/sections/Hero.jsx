@@ -760,7 +760,7 @@ export default function Hero() {
           style={prefersReducedMotion ? undefined : { opacity: heroBlendOpacity }}
         />
         <motion.div
-          className="relative z-[2] mx-auto flex h-screen max-w-7xl flex-col justify-center gap-10 px-5 py-20 md:px-8 md:py-28 min-h-dvh"
+          className="relative z-[2] mx-auto flex max-w-7xl flex-col justify-center gap-10 px-5 py-20 md:px-8 md:py-28 min-h-dvh"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
