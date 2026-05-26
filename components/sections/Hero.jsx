@@ -45,7 +45,7 @@ export default function Hero() {
         {/* headline */}
         <motion.h1
           variants={fadeUp}
-          className="text-[clamp(3rem,12vw,6rem)] font-bold leading-[1.05] tracking-tight text-on-surface"
+          className="text-[clamp(3.75rem,12vw,6rem)] font-bold leading-[1.05] tracking-tight text-on-surface"
         >
           {(() => {
             const [before, after] = hero.headline.split('für kleine Budgets.')
