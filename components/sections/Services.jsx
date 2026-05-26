@@ -4,17 +4,15 @@ import { services } from '@/lib/content'
 function ServiceCard({ service }) {
   return (
     <article
-      className={`flex min-h-[320px] flex-col justify-between rounded-[28px] border bg-[var(--color-surface)] p-6 ${
+      className={`group flex min-h-[320px] flex-col justify-between rounded-[28px] border bg-gradient-to-b from-[#1e1e1e] to-[#141414] p-6 transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1.5 ${
         service.isCrypto
-          ? 'border-[var(--color-border)] shadow-[inset_0_0_0_1px_rgba(247,147,26,0.2)]'
-          : service.isAddon
-            ? 'border-[var(--color-border)]/40 opacity-75'
-            : 'border-[var(--color-border)]'
+          ? 'border-[var(--color-border)] shadow-[inset_0_1px_0_rgba(255,255,255,0.06),inset_0_0_0_1px_rgba(247,147,26,0.2)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.06),inset_0_0_0_1px_rgba(247,147,26,0.45),0_8px_24px_rgba(0,0,0,0.35)]'
+          : 'border-[var(--color-border)] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] hover:border-[rgba(200,255,0,0.2)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_8px_24px_rgba(0,0,0,0.35)]'
       }`}
     >
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <span className="font-mono text-xs uppercase tracking-[0.3em] text-[var(--color-muted)]">
+          <span className={`font-mono text-xs uppercase tracking-widest transition-colors duration-300 ${service.isCrypto ? 'text-[var(--color-muted)] group-hover:text-[var(--color-crypto)]' : 'text-[var(--color-muted)] group-hover:text-[var(--color-accent)]'}`}>
             {service.number}
           </span>
           <div className="flex items-center gap-3">
@@ -24,7 +22,7 @@ function ServiceCard({ service }) {
               </span>
             )}
             <span
-              className={`text-3xl ${service.isCrypto ? 'text-[var(--color-crypto)]' : service.isAddon ? 'text-[var(--color-muted)]' : 'text-[var(--color-accent)]'}`}
+              className={`text-lg transition-transform duration-300 ease-out group-hover:scale-110 ${service.isCrypto ? 'text-[var(--color-crypto)]' : 'text-[var(--color-accent)]'}`}
               aria-hidden="true"
             >
               {service.icon}
@@ -33,28 +31,20 @@ function ServiceCard({ service }) {
         </div>
         <div className="space-y-3">
           <h3
-            className={`text-2xl font-bold uppercase tracking-[-0.03em] ${
-              service.isCrypto
-                ? 'text-[var(--color-crypto)]'
-                : service.isAddon
-                  ? 'text-[var(--color-muted)]'
-                  : 'text-[var(--color-text)]'
+            className={`text-xl font-semibold tracking-tight ${
+              service.isCrypto ? 'text-[var(--color-crypto)]' : 'text-[var(--color-text)]'
             }`}
           >
             {service.title}
           </h3>
-          <p className="font-mono text-sm leading-7 text-[var(--color-text)]/72">
+          <p className="text-sm leading-relaxed text-[var(--color-text)]/70 transition-colors duration-300 group-hover:text-[var(--color-text)]/90">
             {service.description}
           </p>
         </div>
       </div>
       <p
         className={`font-mono text-xs uppercase tracking-[0.24em] ${
-          service.isCrypto
-            ? 'text-[var(--color-crypto)]'
-            : service.isAddon
-              ? 'text-[var(--color-muted)]'
-              : 'text-[var(--color-accent)]'
+          service.isCrypto ? 'text-[var(--color-crypto)]' : 'text-[var(--color-accent)]'
         }`}
       >
         {service.tagline}
