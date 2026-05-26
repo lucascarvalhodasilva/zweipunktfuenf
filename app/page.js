@@ -2,8 +2,8 @@ import Footer from '@/components/layout/Footer'
 import Navbar from '@/components/layout/Navbar'
 import Contact from '@/components/sections/Contact'
 import Hero from '@/components/sections/Hero'
-import Services from '@/components/sections/Services'
-import Ticker from '@/components/sections/Ticker'
+import Process from '@/components/sections/Process'
+import Stats from '@/components/sections/Stats'
 
 export default function Home() {
   return (
@@ -11,8 +11,8 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
-        <Services />
-        <Ticker />
+        <Process />
+        <Stats />
         <Contact />
       </main>
       <Footer />

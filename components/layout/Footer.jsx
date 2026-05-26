@@ -4,33 +4,27 @@ import { footer } from '@/lib/content'
 
 export default function Footer() {
   return (
-    <footer id="kontakt" className="relative z-10 border-t border-[var(--color-border)] bg-[var(--color-bg)]">
-      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-6 text-sm md:flex-row md:items-center md:justify-between md:px-8">
-        <p className="font-mono uppercase tracking-[0.18em] text-[var(--color-muted)]">
+    <footer className="w-full border-t border-border-dark bg-midnight">
+      <div className="mx-auto flex max-w-[1280px] flex-col items-center gap-6 px-8 py-10">
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-xs font-bold uppercase tracking-widest text-on-surface">
+            zweipunkt<span className="text-signal">fünf</span>
+          </span>
+        </div>
+        <div className="flex gap-8 font-mono text-xs text-on-surface-variant">
+          {footer.links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="transition-colors hover:text-signal"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+        <p className="font-mono text-xs text-on-surface-variant">
           {footer.copyright}
         </p>
-        <div className="flex flex-wrap items-center gap-2">
-          {footer.pills.map((pill) => (
-            <span
-              key={pill}
-              className="rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1 font-mono text-xs uppercase tracking-[0.18em] text-[var(--color-text)]"
-            >
-              {pill}
-            </span>
-          ))}
-          <Link
-            href="/impressum"
-            className="font-mono text-xs uppercase tracking-[0.18em] text-[var(--color-text)] transition-colors hover:text-[var(--color-accent)]"
-          >
-            Impressum
-          </Link>
-          <Link
-            href="/datenschutz"
-            className="font-mono text-xs uppercase tracking-[0.18em] text-[var(--color-text)] transition-colors hover:text-[var(--color-accent)]"
-          >
-            Datenschutz
-          </Link>
-        </div>
       </div>
     </footer>
   )

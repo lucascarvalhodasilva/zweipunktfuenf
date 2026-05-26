@@ -8,54 +8,48 @@ export const metadata = {
 
 export default function ImpressumPage() {
   return (
-    <main className="mx-auto max-w-3xl px-5 py-20 text-[var(--color-text)] md:px-8">
-      <h1 className="font-mono text-2xl uppercase tracking-[0.2em] text-[var(--color-accent)]">
-        Impressum
-      </h1>
-      <div className="mt-8 space-y-6 font-mono text-sm leading-7 text-[var(--color-text)]/85">
-        <section>
-          <h2 className="mb-2 text-xs uppercase tracking-[0.2em] text-[var(--color-text)]">
-            Angaben gemäß § 5 TMG
-          </h2>
-          <p>
-            zweipunktfünf
-            <br />
-            Musterstraße 1
-            <br />
-            76133 Karlsruhe
-            <br />
-            Deutschland
-          </p>
-        </section>
-        <section>
-          <h2 className="mb-2 text-xs uppercase tracking-[0.2em] text-[var(--color-text)]">
-            Kontakt
-          </h2>
-          <p>
-            E-Mail: hallo@zweipunktfuenf.de
-            <br />
-            Telefon: +49 000 000000
-          </p>
-        </section>
-        <section>
-          <h2 className="mb-2 text-xs uppercase tracking-[0.2em] text-[var(--color-text)]">
-            Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV
-          </h2>
-          <p>
-            zweipunktfünf
-            <br />
-            Musterstraße 1
-            <br />
-            76133 Karlsruhe
-          </p>
-        </section>
+    <main className="min-h-screen bg-midnight px-8 py-20">
+      <div className="mx-auto max-w-3xl">
+        <div className="mb-10 flex items-center gap-4">
+          <span className="font-mono text-xs text-signal">Impressum</span>
+          <div className="h-px flex-grow bg-border-dark" />
+        </div>
+
+        <h1 className="mb-10 text-3xl font-light tracking-tight text-on-surface">
+          Impressum
+        </h1>
+
+        <div className="space-y-6">
+          {[
+            {
+              title: 'Angaben gemäß § 5 TMG',
+              body: 'zweipunktfünf\nMusterstraße 1\n76133 Karlsruhe\nDeutschland',
+            },
+            {
+              title: 'Kontakt',
+              body: 'E-Mail: hallo@zweipunktfuenf.de\nTelefon: +49 000 000000',
+            },
+            {
+              title: 'Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV',
+              body: 'zweipunktfünf\nMusterstraße 1\n76133 Karlsruhe',
+            },
+          ].map(({ title, body }) => (
+            <section key={title} className="glass-card rounded-xl p-6 space-y-3">
+              <h2 className="font-mono text-xs uppercase tracking-widest text-signal">{title}</h2>
+              <p className="whitespace-pre-line text-sm leading-relaxed text-on-surface-variant">{body}</p>
+            </section>
+          ))}
+        </div>
+
+        <div className="mt-10">
+          <Link
+            href="/"
+            className="font-mono text-xs uppercase tracking-widest text-on-surface-variant transition-colors hover:text-signal"
+          >
+            ← Zurück zur Startseite
+          </Link>
+        </div>
       </div>
-      <Link
-        href="/"
-        className="mt-10 inline-flex font-mono text-xs uppercase tracking-[0.2em] text-[var(--color-accent)] transition-colors hover:text-[var(--color-text)]"
-      >
-        Zurück zur Startseite
-      </Link>
     </main>
   )
 }

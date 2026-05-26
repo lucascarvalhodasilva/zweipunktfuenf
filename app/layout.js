@@ -1,9 +1,10 @@
-import { Space_Mono, Syne } from 'next/font/google'
+import { DM_Sans, Space_Mono } from 'next/font/google'
 import './globals.css'
 
-const syne = Syne({
+const dmSans = DM_Sans({
   subsets: ['latin'],
-  variable: '--font-display',
+  variable: '--font-body',
+  weight: ['300', '400', '500', '600'],
   display: 'swap',
 })
 
@@ -38,8 +39,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="de" className={`${syne.variable} ${spaceMono.variable}`}>
-      <body className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] antialiased">
+    <html lang="de" className={`${dmSans.variable} ${spaceMono.variable}`}>
+      <body className="min-h-screen bg-midnight text-on-surface antialiased font-body">
         {children}
       </body>
     </html>

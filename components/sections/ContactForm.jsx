@@ -4,8 +4,8 @@ import { useState, useRef } from 'react'
 import { submitContactForm } from '@/app/actions/contact'
 
 const fieldBase =
-  'w-full rounded-lg border bg-transparent px-4 py-3 font-mono text-sm text-[var(--color-text)] placeholder:text-[var(--color-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] transition-colors'
-const fieldDefault = 'border-[var(--color-border)]'
+  'w-full rounded-lg border bg-transparent px-4 py-3 font-mono text-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-signal transition-colors'
+const fieldDefault = 'border-border-dark'
 const fieldError = 'border-red-500'
 
 function Field({ label, id, error, children }) {
@@ -13,7 +13,7 @@ function Field({ label, id, error, children }) {
     <div>
       <label
         htmlFor={id}
-        className="mb-1.5 block font-mono text-xs uppercase tracking-[0.2em] text-[var(--color-muted)]"
+        className="mb-1.5 block font-mono text-xs uppercase tracking-widest text-on-surface-variant"
       >
         {label}
       </label>
@@ -61,14 +61,10 @@ export default function ContactForm() {
     return (
       <div
         role="status"
-        className="rounded-lg border border-[var(--color-accent)] bg-[var(--color-accent)]/10 px-6 py-8 text-center"
+        className="rounded-xl border border-signal/30 bg-signal/10 px-6 py-8 text-center"
       >
-        <p className="mb-1 font-display text-lg font-semibold text-[var(--color-accent)]">
-          ✓ Anfrage erhalten
-        </p>
-        <p className="font-mono text-sm text-[var(--color-text)]">
-          {state.message}
-        </p>
+        <p className="mb-1 font-body text-lg font-semibold text-signal">✓ Anfrage erhalten</p>
+        <p className="font-mono text-sm text-on-surface">{state.message}</p>
       </div>
     )
   }
@@ -136,7 +132,7 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={isPending}
-          className="inline-flex min-h-12 w-full items-center justify-center rounded-full border border-[var(--color-accent)] bg-[var(--color-accent)] px-6 py-3 font-mono text-xs uppercase tracking-[0.24em] text-black transition-colors duration-300 hover:bg-transparent hover:text-[var(--color-accent)] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+          className="inline-flex h-10 w-full items-center justify-center rounded-lg bg-signal px-8 font-body text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
           {isPending ? 'Wird gesendet …' : 'Nachricht senden'}
         </button>

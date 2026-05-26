@@ -7,61 +7,52 @@ export const metadata = {
 
 export default function Datenschutz() {
   return (
-    <div className="mx-auto max-w-3xl px-5 py-20 md:px-8">
-      <h1 className="mb-10 font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-[var(--color-text)]">
-        Datenschutz
-      </h1>
-      <div className="space-y-8 font-mono text-sm leading-7 text-[var(--color-text)]/78">
-        <section className="space-y-3">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-accent)]">
-            Cookies
-          </h2>
-          <p>
-            Diese Website verwendet ausschließlich technisch notwendige Cookies,
-            die für den Betrieb der Seite erforderlich sind. Es werden keine
-            Analyse-, Tracking- oder Marketing-Cookies eingesetzt.
-          </p>
-        </section>
-        <section className="space-y-3">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-accent)]">
-            Datenerhebung
-          </h2>
-          <p>
-            Wir erheben und speichern keine personenbezogenen Daten durch
-            Tracking-Dienste oder Analyse-Tools. Es werden keine Daten an Dritte
-            weitergegeben.
-          </p>
-        </section>
-        <section className="space-y-3">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-accent)]">
-            Hosting
-          </h2>
-          <p>
-            Diese Website wird bei Vercel Inc. gehostet. Beim Besuch der Seite
-            werden automatisch technische Informationen (z.&nbsp;B. IP-Adresse,
-            Browsertyp, Zugriffszeit) in Server-Logfiles gespeichert. Diese
-            Daten sind für den technischen Betrieb erforderlich und werden nicht
-            mit anderen Datenquellen zusammengeführt.
-          </p>
-        </section>
-        <section className="space-y-3">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-accent)]">
-            Kontakt
-          </h2>
-          <p>
-            Bei Fragen zum Datenschutz erreichst du uns über die auf der Website
-            angegebenen Kontaktdaten.
-          </p>
-        </section>
-        <div className="pt-4">
+    <main className="min-h-screen bg-midnight px-8 py-20">
+      <div className="mx-auto max-w-3xl">
+        <div className="mb-10 flex items-center gap-4">
+          <span className="font-mono text-xs text-signal">Datenschutz</span>
+          <div className="h-px flex-grow bg-border-dark" />
+        </div>
+
+        <h1 className="mb-10 text-3xl font-light tracking-tight text-on-surface">
+          Datenschutzerklärung
+        </h1>
+
+        <div className="space-y-6">
+          {[
+            {
+              title: 'Cookies',
+              body: 'Diese Website verwendet ausschließlich technisch notwendige Cookies, die für den Betrieb der Seite erforderlich sind. Es werden keine Analyse-, Tracking- oder Marketing-Cookies eingesetzt.',
+            },
+            {
+              title: 'Datenerhebung',
+              body: 'Wir erheben und speichern keine personenbezogenen Daten durch Tracking-Dienste oder Analyse-Tools. Es werden keine Daten an Dritte weitergegeben.',
+            },
+            {
+              title: 'Hosting',
+              body: 'Diese Website wird bei Vercel Inc. gehostet. Beim Besuch der Seite werden automatisch technische Informationen (z.\u00a0B. IP-Adresse, Browsertyp, Zugriffszeit) in Server-Logfiles gespeichert. Diese Daten sind für den technischen Betrieb erforderlich und werden nicht mit anderen Datenquellen zusammengeführt.',
+            },
+            {
+              title: 'Kontakt',
+              body: 'Bei Fragen zum Datenschutz erreichst du uns über die auf der Website angegebenen Kontaktdaten.',
+            },
+          ].map(({ title, body }) => (
+            <section key={title} className="glass-card rounded-xl p-6 space-y-3">
+              <h2 className="font-mono text-xs uppercase tracking-widest text-signal">{title}</h2>
+              <p className="text-sm leading-relaxed text-on-surface-variant">{body}</p>
+            </section>
+          ))}
+        </div>
+
+        <div className="mt-10">
           <Link
             href="/"
-            className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-muted)] transition-colors duration-300 hover:text-[var(--color-accent)]"
+            className="font-mono text-xs uppercase tracking-widest text-on-surface-variant transition-colors hover:text-signal"
           >
             ← Zurück zur Startseite
           </Link>
         </div>
       </div>
-    </div>
+    </main>
   )
 }

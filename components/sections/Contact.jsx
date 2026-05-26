@@ -1,27 +1,28 @@
-import RevealOnScroll from '@/components/ui/RevealOnScroll'
 import ContactForm from '@/components/sections/ContactForm'
 import { contact } from '@/lib/content'
 
 export default function Contact() {
   return (
-    <section
-      id="kontakt"
-      className="relative z-10 border-t border-[var(--color-border)] bg-[var(--color-bg)] px-6 py-24 md:px-12 lg:px-24"
-    >
-      <div className="mx-auto max-w-2xl">
-        <RevealOnScroll>
-          <p className="mb-2 font-mono text-xs uppercase tracking-[0.3em] text-[var(--color-accent)]">
-            {contact.label}
-          </p>
-          <h2 className="mb-4 font-display text-3xl font-bold leading-tight md:text-4xl">
-            {contact.heading}
-          </h2>
-          <p className="mb-10 font-mono text-sm leading-relaxed text-[var(--color-muted)]">
-            {contact.description}
-          </p>
+    <section id="contact" className="border-t border-border-dark px-8 py-24">
+      <div className="mx-auto max-w-[1280px]">
+        {/* label */}
+        <div className="mb-8 flex items-center gap-4">
+          <span className="font-mono text-xs text-signal">{contact.label}</span>
+          <div className="h-px flex-grow bg-border-dark" />
+        </div>
+
+        <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
+          <div>
+            <h2 className="mb-4 text-[clamp(1.75rem,4vw,2.5rem)] font-light leading-tight tracking-tight text-on-surface">
+              {contact.heading}
+            </h2>
+            <p className="text-sm leading-relaxed text-on-surface-variant">
+              {contact.description}
+            </p>
+          </div>
 
           <ContactForm />
-        </RevealOnScroll>
+        </div>
       </div>
     </section>
   )
