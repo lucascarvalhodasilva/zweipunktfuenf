@@ -1,7 +1,21 @@
 'use server'
 
+import nodemailer from 'nodemailer'
+
 const RATE_LIMIT_MS = 60_000
 const recentSubmissions = new Map()
+
+function createTransporter() {
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT ?? 587),
+    secure: process.env.SMTP_SECURE === 'true',
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  })
+}
 
 function isRateLimited(key) {
   const now = Date.now()
@@ -53,19 +67,23 @@ export async function submitContactForm(_prevState, formData) {
   }
 
   try {
-    // Log the inquiry – replace with an email service (e.g. Resend, Nodemailer)
-    // when SMTP / API credentials are configured.
-    console.log('[contact] New inquiry', {
-      name,
-      email,
-      message: message.slice(0, 80),
+    const transporter = createTransporter()
+
+    await transporter.sendMail({
+      from: process.env.SMTP_FROM ?? `"Website Anfrage" <${process.env.SMTP_USER}>`,
+      to: process.env.CONTACT_TO ?? 'anfragen@zweipunktfuenf.de',
+      replyTo: `"${name}" <${email}>`,
+      subject: `Neue Anfrage von ${name}`,
+      text: `Name: ${name}\nE-Mail: ${email}\n\nNachricht:\n${message}`,
+      html: `<p><strong>Name:</strong> ${name}</p><p><strong>E-Mail:</strong> <a href="mailto:${email}">${email}</a></p><hr><p>${message.replace(/\n/g, '<br>')}</p>`,
     })
 
     return {
       success: true,
       message: 'Vielen Dank! Wir melden uns innerhalb von 24 Stunden bei dir.',
     }
-  } catch {
+  } catch (err) {
+    console.error('[contact] sendMail failed', err)
     return {
       success: false,
       message:
