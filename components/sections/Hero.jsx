@@ -35,7 +35,7 @@ export default function Hero() {
       {/* top/bottom gradient fade */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-midnight via-transparent to-midnight" />
 
-      <motion.div style={{ opacity, y, scale, filter }} className="relative z-10 w-full">
+      <motion.div style={{ opacity, y, scale, filter }} className="relative z-10 w-full mt-12 sm:mt-0">
         <motion.div
           className="mx-auto max-w-4xl space-y-5 sm:space-y-6"
           variants={stagger}
