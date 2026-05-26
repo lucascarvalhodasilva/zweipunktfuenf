@@ -360,7 +360,7 @@ export default function Process() {
 
         <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2" onClick={() => togglePause()}>
           {/* Steps accordion */}
-          <div className="space-y-1">
+          <div className="space-y-1 min-h-[600px]">
             {processContent.steps.map((step, i) => {
               const isActive = i === activeStep
               return (
@@ -451,7 +451,8 @@ export default function Process() {
           </div>
 
           {/* Browser mockup preview */}
-<div className="glass-card sticky top-20 hidden aspect-[4/3] overflow-hidden rounded-xl border border-border-dark lg:flex flex-col will-change-transform">
+<div className="hidden lg:block">
+  <div className="glass-card aspect-[4/3] overflow-hidden rounded-xl border border-border-dark flex flex-col">
 
   {/* browser chrome */}
   <div className="flex h-7 flex-shrink-0 items-center gap-1.5 border-b border-border-dark bg-deep px-3">
@@ -474,6 +475,7 @@ export default function Process() {
     ))}
   </div>
 
+</div>
 </div>
         </div>
       </div>
