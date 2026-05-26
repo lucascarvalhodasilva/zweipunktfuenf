@@ -100,6 +100,20 @@ export default function Hero() {
 
       {/* abstract floating panel */}
       <div className="pointer-events-none absolute bottom-[-8%] left-1/2 w-full max-w-5xl -translate-x-1/2 rounded-t-xl border border-b-0 border-border-dark bg-deep/40 opacity-20 backdrop-blur-sm" style={{ aspectRatio: '16/6' }} />
+
+      {/* scroll indicator */}
+      <motion.div
+        style={{ opacity }}
+        className="pointer-events-none absolute bottom-8 left-1/2 z-10 -translate-x-1/2"
+      >
+        <motion.svg
+          width="20" height="20" viewBox="0 0 20 20" fill="none"
+          animate={{ y: [0, 5, 0], opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <path d="M4 7l6 6 6-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-on-surface" />
+        </motion.svg>
+      </motion.div>
     </section>
   )
 }
