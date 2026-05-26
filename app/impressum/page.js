@@ -7,6 +7,12 @@ export const metadata = {
 }
 
 export default function ImpressumPage() {
+  const name     = process.env.IMPRESSUM_NAME     ?? ''
+  const street   = process.env.IMPRESSUM_STREET   ?? ''
+  const zipCity  = process.env.IMPRESSUM_ZIP_CITY ?? ''
+  const email    = process.env.IMPRESSUM_EMAIL    ?? ''
+  const phone    = process.env.IMPRESSUM_PHONE    ?? ''
+
   return (
     <main className="min-h-screen bg-midnight px-8 py-20">
       <div className="mx-auto max-w-3xl">
@@ -23,15 +29,15 @@ export default function ImpressumPage() {
           {[
             {
               title: 'Angaben gemäß § 5 TMG',
-              body: 'zweipunktfünf\nMusterstraße 1\n76133 Karlsruhe\nDeutschland',
+              body: `${name}\n${street}\n${zipCity}\nDeutschland`,
             },
             {
               title: 'Kontakt',
-              body: 'E-Mail: hallo@zweipunktfuenf.de\nTelefon: +49 000 000000',
+              body: `E-Mail: ${email}\nTelefon: ${phone}`,
             },
             {
               title: 'Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV',
-              body: 'zweipunktfünf\nMusterstraße 1\n76133 Karlsruhe',
+              body: `${name}\n${street}\n${zipCity}`,
             },
           ].map(({ title, body }) => (
             <section key={title} className="glass-card rounded-xl p-6 space-y-3">
