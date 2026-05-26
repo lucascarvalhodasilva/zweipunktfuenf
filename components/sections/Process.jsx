@@ -118,7 +118,7 @@ const StepVisuals = [
     <div className="flex flex-1 flex-col gap-3 overflow-auto p-3">
 
       <div>
-        <p className="font-mono text-[7px] uppercase tracking-[0.12em] text-on-surface-variant mb-1.5">Color Tokens</p>
+        <p className="font-mono text-[7px] uppercase tracking-[0.12em] text-on-surface-variant mb-1.5">Farb-Tokens</p>
         <div className="grid grid-cols-4 gap-1.5">
           {[
             { name: 'midnight', hex: '#07111F', cls: 'bg-[#07111F] border border-white/10' },
@@ -136,7 +136,7 @@ const StepVisuals = [
       </div>
 
       <div>
-        <p className="font-mono text-[7px] uppercase tracking-[0.12em] text-on-surface-variant mb-1.5">Type Scale · DM Sans</p>
+        <p className="font-mono text-[7px] uppercase tracking-[0.12em] text-on-surface-variant mb-1.5">Schriftschnitte · DM Sans</p>
         <div className="divide-y divide-border-dark rounded border border-border-dark bg-midnight/40">
           {[
             { name: 'Display', size: '6rem',    w: '700' },
@@ -181,7 +181,7 @@ const StepVisuals = [
 
     <div className="flex items-center justify-between border-t border-border-dark px-3 py-1">
       <span className="font-mono text-[7px] text-on-surface-variant">24 Tokens · 18 Komponenten · 6 Screens</span>
-      <span className="font-mono text-[7px] text-signal/60">Figma → Dev Handoff</span>
+      <span className="font-mono text-[7px] text-signal/60">Figma → Entwickler-Übergabe</span>
     </div>
 
   </div>,
@@ -197,23 +197,23 @@ const StepVisuals = [
         </div>
       ))}
       <div className="ml-auto flex items-center px-3">
-        <span className="font-mono text-[7px] text-green-400">✓ all checks passed</span>
+        <span className="font-mono text-[7px] text-green-400">✓ Alle Checks bestanden</span>
       </div>
     </div>
 
     <div className="flex flex-1 overflow-hidden">
       <div className="flex flex-1 flex-col gap-2 overflow-auto p-3">
 
-        <p className="font-mono text-[7px] uppercase tracking-[0.12em] text-on-surface-variant">CI/CD · main → production</p>
+        <p className="font-mono text-[7px] uppercase tracking-[0.12em] text-on-surface-variant">CI/CD · main → Produktion</p>
 
         <div className="flex flex-col divide-y divide-border-dark/50">
           {[
-            { step: 'ESLint · TypeScript check', time: '8s',  ok: true,          },
-            { step: 'Vitest · 24 Unit Tests',    time: '14s', ok: true,          },
+            { step: 'ESLint · TypeScript-Prüfung', time: '8s',  ok: true,          },
+            { step: 'Vitest · 24 Unit-Tests',    time: '14s', ok: true,          },
             { step: 'next build',                time: '23s', ok: true,          },
             { step: 'Lighthouse CI ≥ 90',        time: '31s', ok: true, badge: '98' },
-            { step: 'Deploy → Vercel Edge',      time: '9s',  ok: true,          },
-            { step: 'E2E Smoke Tests',           time: '5s',  ok: true,          },
+            { step: 'Deployment → Vercel Edge',  time: '9s',  ok: true,          },
+            { step: 'E2E-Tests',                 time: '5s',  ok: true,          },
           ].map(({ step, time, ok, badge }) => (
             <div key={step} className="flex items-center gap-2 py-1.5">
               <div className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-green-400/15">
@@ -227,7 +227,7 @@ const StepVisuals = [
         </div>
 
         <div className="rounded border border-border-dark bg-midnight/40 px-3 py-2">
-          <p className="font-mono text-[7px] text-on-surface-variant mb-1.5">Bundle · next build</p>
+          <p className="font-mono text-[7px] text-on-surface-variant mb-1.5">Bundle-Größen · next build</p>
           {[
             { route: 'First Load JS', size: '87 kB', w: 44 },
             { route: '/ (page)',      size: '12 kB', w: 12 },
@@ -247,7 +247,7 @@ const StepVisuals = [
     </div>
 
     <div className="flex items-center gap-3 border-t border-border-dark bg-midnight/60 px-3 py-1">
-      <span className="font-mono text-[7px] text-green-400">● live · 12s ago</span>
+      <span className="font-mono text-[7px] text-green-400">● live · vor 12 Sek.</span>
       <span className="font-mono text-[7px] text-on-surface/40">3f8a2c · feat: hero scroll animation</span>
       <span className="ml-auto font-mono text-[7px] text-on-surface-variant">FRA1 · Edge Network</span>
     </div>
@@ -262,7 +262,7 @@ const StepVisuals = [
         <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-400" />
         zweipunktfuenf.de · LIVE
       </span>
-      <span className="font-mono text-[7px] text-on-surface-variant">Deploy 09:42 · main ✓</span>
+      <span className="font-mono text-[7px] text-on-surface-variant">Deployment 09:42 · main ✓</span>
     </div>
 
     <div className="flex flex-1 overflow-hidden">
@@ -282,7 +282,7 @@ const StepVisuals = [
             '301-Weiterleitungen',
             'DSGVO & Impressum',
             'Core Web Vitals ≥ 90',
-            'Mobile Responsiveness',
+            'Mobile Optimierung',
           ].map((item) => (
             <div key={item} className="flex items-center gap-2">
               <div className="flex h-3.5 w-3.5 flex-shrink-0 items-center justify-center rounded bg-green-400/15">
@@ -300,11 +300,11 @@ const StepVisuals = [
         </div>
         <div className="flex flex-col gap-1.5 p-3">
           {[
-            { m: 'LCP',  v: '0.8s',  l: 'Largest Contentful Paint' },
-            { m: 'INP',  v: '42ms',  l: 'Interaction to Next Paint' },
-            { m: 'CLS',  v: '0.02',  l: 'Cumulative Layout Shift'  },
-            { m: 'TTFB', v: '38ms',  l: 'Time to First Byte'       },
-            { m: 'FCP',  v: '0.6s',  l: 'First Contentful Paint'   },
+            { m: 'LCP',  v: '0.8s',  l: 'Größtes sichtbares Element' },
+            { m: 'INP',  v: '42ms',  l: 'Reaktionszeit auf Eingaben'  },
+            { m: 'CLS',  v: '0.02',  l: 'Layoutverschiebungen gesamt' },
+            { m: 'TTFB', v: '38ms',  l: 'Zeit bis erstes Byte'        },
+            { m: 'FCP',  v: '0.6s',  l: 'Erstes sichtbares Element'   },
           ].map(({ m, v, l }) => (
             <div key={m} className="rounded border border-border-dark bg-midnight/40 px-2.5 py-1.5">
               <div className="mb-0.5 flex items-center justify-between">
@@ -321,7 +321,7 @@ const StepVisuals = [
 
     <div className="flex items-center justify-between border-t border-border-dark px-3 py-1">
       <span className="font-mono text-[7px] text-on-surface-variant">10 / 10 Checks bestanden</span>
-      <span className="font-mono text-[7px] text-green-400">Lighthouse 98 · Google-ready</span>
+      <span className="font-mono text-[7px] text-green-400">Lighthouse 98 · Google-optimiert</span>
     </div>
 
   </div>,
