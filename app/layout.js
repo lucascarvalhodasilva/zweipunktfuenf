@@ -17,13 +17,13 @@ const spaceMono = Space_Mono({
 
 export const metadata = {
   metadataBase: new URL('https://www.zweipunktfuenf.de'),
-  title: 'zweipunktfünf | Webdesign, Chatbots und Crypto in Karlsruhe',
+  title: 'zweipunktfünf | Webseiten in 14 Tagen',
   description:
-    'zweipunktfünf entwickelt markante Webauftritte, KI-gestützte Chatbots und digitale Crypto-Erlebnisse für Unternehmen in Karlsruhe.',
+    'zweipunktfünf entwickelt markante Webauftritte und KI-gestützte Chatbots für Unternehmen in Karlsruhe.',
   openGraph: {
-    title: 'zweipunktfünf | Webdesign, Chatbots und Crypto in Karlsruhe',
+    title: 'zweipunktfünf | Webseiten in 14 Tagen',
     description:
-      'Webdesign, Chatbots und Crypto-Produkte für ambitionierte Marken aus Karlsruhe.',
+      'Webdesign und KI-Chatbots für ambitionierte Marken aus Karlsruhe.',
     url: 'https://www.zweipunktfuenf.de',
     siteName: 'zweipunktfünf',
     locale: 'de_DE',
@@ -31,9 +31,9 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'zweipunktfünf | Webdesign, Chatbots und Crypto in Karlsruhe',
+    title: 'zweipunktfünf | Webseiten in 14 Tagen',
     description:
-      'Webdesign, Chatbots und Crypto-Produkte für ambitionierte Marken aus Karlsruhe.',
+      'Webdesign und KI-Chatbots für ambitionierte Marken aus Karlsruhe.',
   },
 }
 

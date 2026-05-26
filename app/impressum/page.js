@@ -41,8 +41,8 @@ export default function ImpressumPage() {
             },
           ].map(({ title, body }) => (
             <section key={title} className="glass-card rounded-xl p-6 space-y-3">
-              <h2 className="font-mono text-xs uppercase tracking-widest text-signal">{title}</h2>
-              <p className="whitespace-pre-line text-sm leading-relaxed text-on-surface-variant">{body}</p>
+              <h2 className="font-mono text-sm font-semibold uppercase tracking-wider text-signal">{title}</h2>
+              <p className="whitespace-pre-line text-base leading-relaxed text-on-surface/80">{body}</p>
             </section>
           ))}
         </div>
