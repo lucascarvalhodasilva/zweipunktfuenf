@@ -524,17 +524,19 @@ export default function HeroCanvas({
       drawBaseGrid()
       drawGravityField()
 
-      if (food) {
-        const { offsetX, offsetY } = getGravityOffset(food)
-        drawCell(food, 'rgba(247, 147, 26, 0.9)', offsetX, offsetY)
-      }
+      if (!isMobileMode) {
+        if (food) {
+          const { offsetX, offsetY } = getGravityOffset(food)
+          drawCell(food, 'rgba(247, 147, 26, 0.9)', offsetX, offsetY)
+        }
 
-      snake.forEach((segment, index) => {
-        const fillStyle =
-          index === 0 ? 'rgba(200, 255, 0, 0.95)' : 'rgba(200, 255, 0, 0.28)'
-        const { offsetX, offsetY } = getGravityOffset(segment)
-        drawCell(segment, fillStyle, offsetX, offsetY)
-      })
+        snake.forEach((segment, index) => {
+          const fillStyle =
+            index === 0 ? 'rgba(200, 255, 0, 0.95)' : 'rgba(200, 255, 0, 0.28)'
+          const { offsetX, offsetY } = getGravityOffset(segment)
+          drawCell(segment, fillStyle, offsetX, offsetY)
+        })
+      }
 
       const shouldShowGameInstructions = width >= 1024
 
@@ -684,17 +686,6 @@ export default function HeroCanvas({
 
     const pauseGameOnScroll = () => {
       if (isMobileMode) {
-        const currentScrollY = window.scrollY
-        const delta = currentScrollY - lastScrollY
-        lastScrollY = currentScrollY
-
-        scrollAccumulator += Math.abs(delta)
-
-        while (scrollAccumulator >= scrollPixelsPerStep) {
-          scrollAccumulator -= scrollPixelsPerStep
-          stepMobileSnake()
-        }
-
         return
       }
 

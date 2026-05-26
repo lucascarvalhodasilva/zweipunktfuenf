@@ -11,6 +11,7 @@ import {
 } from 'framer-motion'
 
 import dynamic from 'next/dynamic'
+import { LuCookie, LuGamepad2, LuMessageSquare } from 'react-icons/lu'
 
 const Snake = dynamic(() => import('@/components/ui/Snake'), { ssr: false })
 
@@ -147,43 +148,11 @@ export default function HeroButtonGroup({
     : { duration: 0.2, ease: 'easeOut' }
 
   const renderIcon = (type) => {
-    const commonProps = {
-      width: 16,
-      height: 16,
-      viewBox: '0 0 24 24',
-      fill: 'none',
-      stroke: 'currentColor',
-      strokeWidth: 1.5,
-      strokeLinecap: 'round',
-      strokeLinejoin: 'round',
-      className: 'shrink-0',
-      'aria-hidden': true,
-    }
+    const iconProps = { size: 16, className: 'shrink-0', 'aria-hidden': true }
 
-    if (type === 'chat') {
-      return (
-        <svg {...commonProps}>
-          <path d="M4 6.5a2.5 2.5 0 0 1 2.5-2.5h11A2.5 2.5 0 0 1 20 6.5v7A2.5 2.5 0 0 1 17.5 16H10l-4 4v-4H6.5A2.5 2.5 0 0 1 4 13.5z" />
-        </svg>
-      )
-    }
-
-    if (type === 'snake') {
-      return (
-        <svg {...commonProps}>
-          <path d="M7 8h7a3 3 0 1 1 0 6h-4a2 2 0 1 0 0 4h7" />
-          <path d="M18 8h.01" />
-        </svg>
-      )
-    }
-
-    return (
-      <svg {...commonProps}>
-        <path d="M7 10.5a2.5 2.5 0 1 1 5 0c0 1.2-.7 1.9-1.6 2.6-.9.6-1.4 1.1-1.4 2.4" />
-        <path d="M10 19h.01" />
-        <path d="M21 12a9 9 0 1 1-3.2-6.9" />
-      </svg>
-    )
+    if (type === 'chat') return <LuMessageSquare {...iconProps} />
+    if (type === 'snake') return <LuGamepad2 {...iconProps} />
+    return <LuCookie {...iconProps} />
   }
 
   const renderButton = (key, label, className) => (
