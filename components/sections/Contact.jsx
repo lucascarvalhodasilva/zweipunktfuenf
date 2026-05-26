@@ -3,7 +3,7 @@ import { contact } from '@/lib/content'
 
 export default function Contact() {
   return (
-    <section id="contact" className="border-t border-border-dark px-8 py-24">
+    <section id="contact" className="bg-midnight border-t border-border-dark px-8 py-24">
       <div className="mx-auto max-w-[1280px]">
         {/* label */}
         <div className="mb-8 flex items-center gap-4">

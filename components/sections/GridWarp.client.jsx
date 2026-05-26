@@ -135,7 +135,7 @@ export default function GridWarp() {
   return (
     <canvas
       ref={canvasRef}
-      className="pointer-events-none absolute inset-0 h-full w-full"
+      className="pointer-events-none fixed inset-0 h-full w-full z-[-1]"
       aria-hidden="true"
     />
   )

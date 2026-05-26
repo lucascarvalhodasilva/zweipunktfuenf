@@ -71,6 +71,11 @@ body {
   100% { transform: translateY(200%); }
 }
 
+@keyframes bar-fill {
+  from { width: 0% }
+  to   { width: 100% }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

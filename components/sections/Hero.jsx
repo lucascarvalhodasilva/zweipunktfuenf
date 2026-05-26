@@ -1,9 +1,9 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { useRef } from 'react'
 
 import { hero } from '@/lib/content'
-import GridWarp from './GridWarp.client'
 
 const stagger = {
   animate: { transition: { staggerChildren: 0.12 } },
@@ -15,45 +15,49 @@ const fadeUp = {
 }
 
 export default function Hero() {
+  const sectionRef = useRef(null)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  })
+
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
+  const y       = useTransform(scrollYProgress, [0, 0.5], [0, -48])
+  const scale   = useTransform(scrollYProgress, [0, 0.5], [1, 0.96])
+  const filter  = useTransform(scrollYProgress, [0, 0.5], ['blur(0px)', 'blur(6px)'])
+
   return (
     <section
+      ref={sectionRef}
       id="top"
-      className="relative flex min-h-[calc(100vh-3.5rem)] flex-col items-center justify-center overflow-hidden px-8 text-center"
+      className="relative flex min-h-[calc(100svh-3.5rem)] flex-col items-center justify-center overflow-hidden px-6 py-16 text-center sm:py-0 sm:px-8"
     >
-      {/* canvas-driven grid + warp */}
-      <GridWarp />
-
       {/* top/bottom gradient fade */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-midnight via-transparent to-midnight" />
 
-      <motion.div
-        className="relative z-10 mx-auto max-w-4xl space-y-6"
-        variants={stagger}
-        initial="initial"
-        animate="animate"
-      >
-        {/* badge */}
-        <motion.div variants={fadeUp}>
-          <span className="inline-block rounded-full border border-border-dark bg-deep px-4 py-1">
-            <p className="font-mono text-xs text-signal">{hero.badge}</p>
-          </span>
-        </motion.div>
-
+      <motion.div style={{ opacity, y, scale, filter }} className="relative z-10 w-full">
+        <motion.div
+          className="mx-auto max-w-4xl space-y-5 sm:space-y-6"
+          variants={stagger}
+          initial="initial"
+          animate="animate"
+        >
         {/* headline */}
         <motion.h1
           variants={fadeUp}
-          className="text-[clamp(2.5rem,7vw,4rem)] font-light leading-tight tracking-tight text-on-surface"
+          className="text-[clamp(3rem,12vw,6rem)] font-bold leading-[1.05] tracking-tight text-on-surface"
         >
-          {hero.headline.split('Präzision').map((part, i, arr) =>
-            i < arr.length - 1 ? (
-              <span key={i}>
-                {part}
-                <span className="font-semibold text-signal">Präzision</span>
-              </span>
-            ) : (
-              <span key={i}>{part}</span>
+          {(() => {
+            const [before, after] = hero.headline.split('für kleine Budgets.')
+            return (
+              <>
+                <span>{before.trimEnd()}</span>
+                <br />
+                <span className="font-extrabold text-signal">für kleine Budgets.</span>
+                {after}
+              </>
             )
-          )}
+          })()}
         </motion.h1>
 
         {/* subline */}
@@ -61,12 +65,9 @@ export default function Hero() {
           variants={fadeUp}
           className="mx-auto max-w-xl text-lg font-light text-on-surface-variant"
         >
-          {hero.subline.split('14\u00a0Tagen').map((part, i, arr) =>
-            i < arr.length - 1 ? (
-              <span key={i}>
-                {part}
-                <span className="font-semibold text-on-surface">14&nbsp;Tagen</span>
-              </span>
+          {hero.subline.split(/(14 Tagen|999€)/).map((part, i) =>
+            part === '14 Tagen' || part === '999€' ? (
+              <span key={i} className="font-semibold text-on-surface">{part}</span>
             ) : (
               <span key={i}>{part}</span>
             )
@@ -76,11 +77,11 @@ export default function Hero() {
         {/* CTAs */}
         <motion.div
           variants={fadeUp}
-          className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row"
+          className="flex flex-col items-center justify-center gap-3 pt-2 sm:flex-row sm:gap-4 sm:pt-4"
         >
           <a
             href="#contact"
-            className="inline-flex h-10 items-center gap-2 rounded-lg bg-signal px-8 font-body text-sm font-medium text-white transition-opacity hover:opacity-90 active:scale-95"
+            className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-signal px-8 font-body text-base font-semibold text-white transition-opacity hover:opacity-90 active:scale-95 sm:w-auto sm:h-12"
           >
             {hero.cta.primary}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -89,10 +90,11 @@ export default function Hero() {
           </a>
           <a
             href="#prozess"
-            className="inline-flex h-10 items-center rounded-lg border border-border-dark px-8 font-body text-sm font-medium text-on-surface transition-colors hover:bg-deep"
+            className="inline-flex h-14 w-full items-center justify-center rounded-xl border border-border-dark px-8 font-body text-base font-medium text-on-surface transition-colors hover:bg-deep sm:w-auto sm:h-12"
           >
             {hero.cta.secondary}
           </a>
+        </motion.div>
         </motion.div>
       </motion.div>
 
