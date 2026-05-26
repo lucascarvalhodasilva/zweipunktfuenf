@@ -26,23 +26,7 @@ export default function HeroButtonGroup({
   const [activeModal, setActiveModal] = useState(null)
   const triggerRefs = useRef({})
 
-  // Box visual fade — fades the panel background/border/blur first
-  const boxTargetOpacity = useTransform(
-    scrollYProgress,
-    prefersReducedMotion ? [0.5, 0.7] : [0.1, 0.28],
-    [1, 0],
-  )
-  const boxScrollOpacity = useSpring(boxTargetOpacity, {
-    stiffness: 120,
-    damping: 24,
-    mass: 0.6,
-  })
-  const boxBg = useTransform(boxScrollOpacity, (v) => `rgba(10,10,10,${(0.62 * v).toFixed(3)})`)
-  const boxBorder = useTransform(boxScrollOpacity, (v) => `rgba(255,255,255,${(0.14 * v).toFixed(3)})`)
-  const boxShadow = useTransform(boxScrollOpacity, (v) => `0 0 0 1px rgba(255,255,255,${(0.04 * v).toFixed(3)})`)
-  const boxBackdrop = useTransform(boxScrollOpacity, (v) => (v < 0.02 ? 'none' : `blur(${(v * 12).toFixed(1)}px)`))
-
-  // Scroll-driven staggered fade for buttons (start after box has faded)
+  // Scroll-driven staggered fade for buttons
   const chatScrollOpacity = useTransform(
     scrollYProgress,
     prefersReducedMotion ? [0.5, 0.7] : [0.3, 0.48],
@@ -350,8 +334,7 @@ export default function HeroButtonGroup({
               hidden: { opacity: 0, x: 18, pointerEvents: 'none' },
             }}
             transition={{ ...menuVisibilityTransition, layout: layoutTransition }}
-            className="w-72 overflow-hidden rounded-2xl border p-5"
-            style={{ backgroundColor: boxBg, borderColor: boxBorder, boxShadow: boxShadow, backdropFilter: boxBackdrop }}
+            className="w-72"
           >
           <AnimatePresence mode="wait" initial={false}>
             {activeModal === null ? (
@@ -391,12 +374,18 @@ export default function HeroButtonGroup({
                 animate={{ opacity: 1, clipPath: 'inset(0 0 0% 0)' }}
                 exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
                 transition={panelTransition}
-                className="relative"
+                className="relative overflow-hidden rounded-2xl border p-5"
+                style={{
+                  backgroundColor: 'rgba(10,10,10,0.62)',
+                  borderColor: 'rgba(255,255,255,0.14)',
+                  boxShadow: '0 0 0 1px rgba(255,255,255,0.04)',
+                  backdropFilter: 'blur(12px)',
+                }}
               >
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="absolute right-1 top-0.5 font-mono text-sm text-[var(--color-muted)] transition-colors duration-300 hover:text-[var(--color-accent)]"
+                  className="absolute right-3 top-3 font-mono text-sm text-[var(--color-muted)] transition-colors duration-300 hover:text-[var(--color-accent)]"
                   aria-label="Schließen"
                 >
                   ✕

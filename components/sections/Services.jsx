@@ -1,6 +1,68 @@
 import RevealOnScroll from '@/components/ui/RevealOnScroll'
 import { services } from '@/lib/content'
 
+function ServiceCard({ service }) {
+  return (
+    <article
+      className={`flex min-h-[320px] flex-col justify-between rounded-[28px] border bg-[var(--color-surface)] p-6 ${
+        service.isCrypto
+          ? 'border-[var(--color-border)] shadow-[inset_0_0_0_1px_rgba(247,147,26,0.2)]'
+          : service.isAddon
+            ? 'border-[var(--color-border)]/40 opacity-75'
+            : 'border-[var(--color-border)]'
+      }`}
+    >
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <span className="font-mono text-xs uppercase tracking-[0.3em] text-[var(--color-muted)]">
+            {service.number}
+          </span>
+          <div className="flex items-center gap-3">
+            {service.isAddon && (
+              <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-[var(--color-muted)] border border-[var(--color-border)]/60 rounded-full px-2 py-0.5">
+                Add-on
+              </span>
+            )}
+            <span
+              className={`text-3xl ${service.isCrypto ? 'text-[var(--color-crypto)]' : service.isAddon ? 'text-[var(--color-muted)]' : 'text-[var(--color-accent)]'}`}
+              aria-hidden="true"
+            >
+              {service.icon}
+            </span>
+          </div>
+        </div>
+        <div className="space-y-3">
+          <h3
+            className={`text-2xl font-bold uppercase tracking-[-0.03em] ${
+              service.isCrypto
+                ? 'text-[var(--color-crypto)]'
+                : service.isAddon
+                  ? 'text-[var(--color-muted)]'
+                  : 'text-[var(--color-text)]'
+            }`}
+          >
+            {service.title}
+          </h3>
+          <p className="font-mono text-sm leading-7 text-[var(--color-text)]/72">
+            {service.description}
+          </p>
+        </div>
+      </div>
+      <p
+        className={`font-mono text-xs uppercase tracking-[0.24em] ${
+          service.isCrypto
+            ? 'text-[var(--color-crypto)]'
+            : service.isAddon
+              ? 'text-[var(--color-muted)]'
+              : 'text-[var(--color-accent)]'
+        }`}
+      >
+        {service.tagline}
+      </p>
+    </article>
+  )
+}
+
 export default function Services() {
   return (
     <section
@@ -24,55 +86,25 @@ export default function Services() {
             {services.heading}
           </h2>
         </div>
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-          {services.items.map((service, index) => (
-            <RevealOnScroll key={service.title} delay={index * 0.08}>
-              <article
-                className={`flex min-h-[320px] flex-col justify-between rounded-[28px] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 ${
-                  service.isCrypto
-                    ? 'shadow-[inset_0_0_0_1px_rgba(247,147,26,0.2)]'
-                    : ''
-                }`}
-              >
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs uppercase tracking-[0.3em] text-[var(--color-muted)]">
-                      {service.number}
-                    </span>
-                    <span
-                      className={`text-3xl ${service.isCrypto ? 'text-[var(--color-crypto)]' : 'text-[var(--color-accent)]'}`}
-                      aria-hidden="true"
-                    >
-                      {service.icon}
-                    </span>
-                  </div>
-                  <div className="space-y-3">
-                    <h3
-                      className={`text-2xl font-bold uppercase tracking-[-0.03em] ${
-                        service.isCrypto
-                          ? 'text-[var(--color-crypto)]'
-                          : 'text-[var(--color-text)]'
-                      }`}
-                    >
-                      {service.title}
-                    </h3>
-                    <p className="font-mono text-sm leading-7 text-[var(--color-text)]/72">
-                      {service.description}
-                    </p>
-                  </div>
-                </div>
-                <p
-                  className={`font-mono text-xs uppercase tracking-[0.24em] ${
-                    service.isCrypto
-                      ? 'text-[var(--color-crypto)]'
-                      : 'text-[var(--color-accent)]'
-                  }`}
-                >
-                  {service.tagline}
-                </p>
-              </article>
-            </RevealOnScroll>
-          ))}
+        <div className="space-y-5">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+            {services.items
+              .filter((s) => !s.isAddon && !s.isCrypto)
+              .map((service, index) => (
+                <RevealOnScroll key={service.title} delay={index * 0.08}>
+                  <ServiceCard service={service} />
+                </RevealOnScroll>
+              ))}
+          </div>
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+            {services.items
+              .filter((s) => s.isAddon || s.isCrypto)
+              .map((service, index) => (
+                <RevealOnScroll key={service.title} delay={index * 0.08}>
+                  <ServiceCard service={service} />
+                </RevealOnScroll>
+              ))}
+          </div>
         </div>
       </div>
     </section>
