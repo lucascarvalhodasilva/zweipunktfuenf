@@ -381,10 +381,10 @@ export default function Process() {
                       </h3>
 
                       {/* expanded content */}
+                      {isActive && (
                       <div
-                        className={`overflow-hidden transition-all duration-500 ${
-                          isActive ? 'max-h-64 mt-3' : 'max-h-0'
-                        }`}
+                        className="mt-3"
+                        style={{ animation: 'accordion-in 0.3s ease forwards' }}
                       >
                         {/* tags */}
                         <div className="mb-3 flex flex-wrap gap-2">
@@ -442,6 +442,7 @@ export default function Process() {
                           />
                         </div>
                       </div>
+                      )}
                     </div>
                   </div>
                 </button>
@@ -450,7 +451,7 @@ export default function Process() {
           </div>
 
           {/* Browser mockup preview */}
-<div className="glass-card sticky top-20 hidden aspect-[4/3] overflow-hidden rounded-xl border border-border-dark lg:flex flex-col">
+<div className="glass-card sticky top-20 hidden aspect-[4/3] overflow-hidden rounded-xl border border-border-dark lg:flex flex-col will-change-transform">
 
   {/* browser chrome */}
   <div className="flex h-7 flex-shrink-0 items-center gap-1.5 border-b border-border-dark bg-deep px-3">
