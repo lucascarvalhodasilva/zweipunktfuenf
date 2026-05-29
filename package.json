@@ -5,12 +5,14 @@
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0",
     "build": "next build",
+    "generate-og": "node scripts/generate-og.mjs",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@fontsource/dm-sans": "^5.2.8",
     "framer-motion": "^11.18.2",
     "next": "14.2.33",
     "nodemailer": "^8.0.8",
@@ -24,6 +26,7 @@
     "eslint-config-next": "14.2.33",
     "postcss": "^8.4.49",
     "prettier": "^3.4.2",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.4.17"
   }
 }
