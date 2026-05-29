@@ -6,6 +6,8 @@
     "dev": "next dev --hostname 0.0.0.0",
     "build": "next build",
     "generate-og": "node scripts/generate-og.mjs",
+    "prod:build": "podman build -t zweipunktfuenf -f Containerfile .",
+    "prod:up": "podman run --rm -p 4000:3000 zweipunktfuenf",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
