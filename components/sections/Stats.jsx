@@ -1,30 +1,326 @@
+'use client'
+
+import { useRef, useState, useEffect } from 'react'
 import { stats } from '@/lib/content'
 
-export default function Stats() {
+function StarRating() {
   return (
-    <section className="px-8 py-24">
-      <div className="mx-auto max-w-[1280px]">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
-          {/* wide card */}
-          <div className="glass-card flex flex-col justify-center rounded-xl p-12 md:col-span-2">
-            <h2 className="mb-3 text-2xl font-medium text-on-surface">{stats.wide.headline}</h2>
-            <p className="text-sm leading-relaxed text-on-surface-variant">{stats.wide.copy}</p>
-          </div>
+    <div className="flex gap-[3px]" aria-label="5 von 5 Sternen">
+      {[...Array(5)].map((_, i) => (
+        <div
+          key={i}
+          className="h-[13px] w-[13px] bg-signal"
+          style={{
+            clipPath:
+              'polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)',
+          }}
+        />
+      ))}
+    </div>
+  )
+}
 
-          {/* stat cards */}
-          {stats.items.map((item) => (
-            <div
-              key={item.label}
-              className="glass-card flex flex-col items-center justify-center rounded-xl p-12 text-center"
-            >
-              <span className="mb-2 text-5xl font-bold text-signal">{item.value}</span>
-              <p className="font-mono text-xs uppercase tracking-widest text-on-surface-variant">
-                {item.label}
-              </p>
+function QuoteText({ fragments }) {
+  return (
+    <>
+      {fragments.map((frag, i) =>
+        typeof frag === 'string' ? (
+          <span key={i}>{frag}</span>
+        ) : (
+          <strong key={i} className="font-medium text-[#c8d5e2]">
+            {frag.bold}
+          </strong>
+        ),
+      )}
+    </>
+  )
+}
+
+export default function Stats() {
+  const reviewsRef = useRef(null)
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [modalOpen, setModalOpen] = useState(false)
+
+  function isMobile() {
+    return typeof window !== 'undefined' && window.innerWidth <= 680
+  }
+
+  function updateDots() {
+    if (!isMobile() || !reviewsRef.current) return
+    const cards = reviewsRef.current.querySelectorAll('[data-review]')
+    if (!cards.length) return
+    const cardWidth = cards[0].offsetWidth + 12
+    setActiveIndex(Math.round(reviewsRef.current.scrollLeft / cardWidth))
+  }
+
+  function scrollToCard(index) {
+    if (!isMobile() || !reviewsRef.current) return
+    const cards = reviewsRef.current.querySelectorAll('[data-review]')
+    if (!cards.length) return
+    const cardWidth = cards[0].offsetWidth + 12
+    reviewsRef.current.scrollTo({ left: index * cardWidth, behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    const el = reviewsRef.current
+    if (!el) return
+    el.addEventListener('scroll', updateDots, { passive: true })
+    window.addEventListener('resize', updateDots)
+    return () => {
+      el.removeEventListener('scroll', updateDots)
+      window.removeEventListener('resize', updateDots)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!modalOpen) return
+    const onKey = (e) => { if (e.key === 'Escape') setModalOpen(false) }
+    document.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [modalOpen])
+
+  return (
+    <section className="px-8 py-24 max-sm:px-4" aria-labelledby="stats-title">
+      <div className="mx-auto max-w-[1080px] overflow-hidden px-16 py-[72px] max-sm:px-7 max-sm:py-12">
+
+        {/* Header */}
+        <p className="mb-3.5 text-[11px] font-medium uppercase tracking-[0.12em] text-signal">
+          {stats.eyebrow}
+        </p>
+        <div className="mb-2.5 flex items-start justify-between gap-4">
+          <h2
+            id="stats-title"
+            className="text-[clamp(26px,4vw,38px)] font-bold leading-[1.15] text-on-surface"
+          >
+            {stats.heading}
+          </h2>
+          <button
+            onClick={() => setModalOpen(true)}
+            className="mt-1 flex flex-shrink-0 items-center gap-1.5 rounded-lg border border-[#2d4870] px-3.5 py-2 text-[12px] font-medium text-signal transition-colors duration-150 hover:border-signal hover:bg-deep"
+          >
+            Alle Projekte
+            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </button>
+        </div>
+        <p className="mb-[52px] max-w-[520px] text-[15px] text-[#7a8a9e]">
+          {stats.sub}
+        </p>
+
+        {/* Logo strip — marquee */}
+        <div
+          className="mb-10 px-[22px] py-[18px]"
+          aria-label="Referenzkunden"
+        >
+          <p className="mb-3 text-center text-[11px] uppercase tracking-[0.08em] text-[#4a5d72]">
+            {stats.clientsLabel}
+          </p>
+          <div
+            className="marquee-wrap overflow-hidden"
+            style={{
+              maskImage:
+                'linear-gradient(to right, transparent, black 60px, black calc(100% - 60px), transparent)',
+              WebkitMaskImage:
+                'linear-gradient(to right, transparent, black 60px, black calc(100% - 60px), transparent)',
+            }}
+          >
+            <div className="marquee-track flex w-max gap-2" aria-hidden="true">
+              {[...stats.clients, ...stats.clients].map((name, i) => (
+                <span
+                  key={i}
+                  className="whitespace-nowrap rounded-md border border-[#1e3050] bg-deep px-3 py-[5px] text-xs font-medium text-[#6e8fb5]"
+                >
+                  {name}
+                </span>
+              ))}
             </div>
+          </div>
+          <ul className="sr-only">
+            {stats.clients.map((name) => (
+              <li key={name}>{name}</li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Reviews — desktop grid / mobile horizontal scroll */}
+        <div
+          ref={reviewsRef}
+          className="mb-10 grid grid-cols-3 gap-4 max-sm:-mx-7 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:scroll-smooth max-sm:gap-3 max-sm:px-7 max-sm:[scrollbar-width:none] max-sm:[&::-webkit-scrollbar]:hidden"
+          role="list"
+          aria-label="Kundenstimmen"
+          onScroll={updateDots}
+        >
+          {stats.reviews.map((review) => (
+            <article
+              key={review.author.name}
+              data-review=""
+              role="listitem"
+              className="flex flex-col rounded-xl border border-[#1e3050] bg-deep p-5 transition-colors duration-200 hover:border-[#2d4870] max-sm:max-w-[320px] max-sm:flex-[0_0_82vw] max-sm:snap-start"
+            >
+              {/* Stars + link */}
+              <div className="mb-4 flex items-center justify-between">
+                <StarRating />
+                <a
+                  href="https://google.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Website besuchen"
+                  className="flex items-center gap-1 rounded border border-[#1e3050] bg-[#0a1826] px-2 py-1 text-[10px] font-medium text-[#3a6fb0] transition-colors duration-150 hover:border-[#3a6fb0] hover:text-signal"
+                >
+                  Website
+                  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M7 7h10v10"/><path d="M7 17 17 7"/>
+                  </svg>
+                </a>
+              </div>
+
+              {/* Quote */}
+              <p className="mb-5 flex-1 text-sm leading-[1.7] text-[#9fb0c4]">
+                <QuoteText fragments={review.quote} />
+              </p>
+
+              {/* Meta row — no box, hairline dividers only */}
+              <div className="mb-4 grid grid-cols-3 divide-x divide-[#1e3050] border-t border-[#1e3050] pt-4 text-center">
+                <div className="pr-3">
+                  <p className="mb-1 text-[10px] uppercase tracking-[0.08em] text-[#4a5d72]">Branche</p>
+                  <p className="text-xs font-medium text-[#c8d5e2]">{review.meta.branche}</p>
+                </div>
+                <div className="px-3">
+                  <p className="mb-1 text-[10px] uppercase tracking-[0.08em] text-[#4a5d72]">Lieferzeit</p>
+                  <p className="text-xs font-medium text-signal">{review.meta.lieferzeit}</p>
+                </div>
+                <div className="pl-3">
+                  <p className="mb-1 text-[10px] uppercase tracking-[0.08em] text-[#4a5d72]">Lighthouse</p>
+                  <p className="text-xs font-medium text-signal">
+                    {review.meta.lighthouse}<span className="text-[#4a5d72]">/100</span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Author */}
+              <div className="flex items-center gap-2.5 border-t border-[#162438] pt-3.5">
+                <div
+                  className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-[#1e3050] bg-[#0a1826] text-[11px] font-medium text-signal"
+                  aria-hidden="true"
+                >
+                  {review.author.initials}
+                </div>
+                <div>
+                  <p className="text-[13px] font-medium leading-[1.2] text-[#c8d5e2]">{review.author.name}</p>
+                  <p className="mt-0.5 text-[11px] text-[#4a5d72]">{review.author.role}</p>
+                </div>
+              </div>
+            </article>
           ))}
         </div>
+
+        {/* Scroll dots — mobile only */}
+        <div className="mb-8 hidden items-center justify-center gap-1.5 max-sm:flex" aria-hidden="true">
+          {stats.reviews.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => scrollToCard(i)}
+              aria-label={`Karte ${i + 1}`}
+              className={`h-1.5 rounded-full transition-all duration-200 ${
+                activeIndex === i ? 'w-[18px] bg-signal' : 'w-1.5 bg-[#1e3050]'
+              }`}
+            />
+          ))}
+        </div>
+
+        {/* Bottom bar */}
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#1e3050] pt-7">
+          <p className="text-sm text-[#4a5d72]">{stats.bottomText}</p>
+          <a
+            href="#contact"
+            className="inline-block rounded-lg border border-[#2d4870] px-5 py-2.5 text-[13px] font-medium text-signal transition-colors duration-150 hover:border-signal hover:bg-deep active:scale-[0.98]"
+          >
+            {stats.cta}
+          </a>
+        </div>
+
       </div>
+
+      {/* Modal — Projektübersicht */}
+      {modalOpen && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+        >
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-midnight/80 backdrop-blur-md"
+            onClick={() => setModalOpen(false)}
+            aria-hidden="true"
+          />
+
+          {/* Panel */}
+          <div className="relative z-10 flex w-full max-w-3xl flex-col rounded-2xl border border-[#1e3050] bg-[#0a1828] p-6 sm:p-8" style={{ maxHeight: 'min(90vh, 680px)' }}>
+
+            {/* Panel header */}
+            <div className="mb-6 flex items-start justify-between gap-4">
+              <div>
+                <h3 id="modal-title" className="text-lg font-bold text-on-surface">Projektübersicht</h3>
+                <p className="mt-0.5 text-sm text-[#7a8a9e]">Alle abgeschlossenen Projekte</p>
+              </div>
+              <button
+                onClick={() => setModalOpen(false)}
+                aria-label="Schließen"
+                className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-[#1e3050] text-[#7a8a9e] transition-colors hover:border-[#2d4870] hover:text-on-surface"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+            </div>
+
+            {/* Summary */}
+            <div className="mb-6 grid grid-cols-3 divide-x divide-[#1e3050] rounded-xl border border-[#1e3050] bg-deep py-5 text-center">
+              {stats.items.map((item) => (
+                <div key={item.label} className="px-4">
+                  <p className="text-[clamp(20px,3vw,28px)] font-bold leading-none text-on-surface">
+                    {item.value}<em className="not-italic text-signal">{item.suffix}</em>
+                  </p>
+                  <p className="mt-1.5 text-xs text-[#7a8a9e]">{item.label}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Table */}
+            <div className="min-h-0 flex-1 overflow-y-auto rounded-xl border border-[#1e3050]">
+              <table className="w-full text-left text-sm">
+                <thead className="sticky top-0">
+                  <tr className="border-b border-[#1e3050] bg-[#060f1c]">
+                    <th className="px-4 py-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[#4a5d72]">Projekt</th>
+                    <th className="px-4 py-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[#4a5d72]">Branche</th>
+                    <th className="px-4 py-3 text-right text-[11px] font-medium uppercase tracking-[0.08em] text-[#4a5d72]">Lieferzeit</th>
+                    <th className="px-4 py-3 text-right text-[11px] font-medium uppercase tracking-[0.08em] text-[#4a5d72]">Lighthouse</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stats.projects.map((project, i) => (
+                    <tr
+                      key={project.name}
+                      className={`transition-colors hover:bg-deep ${i < stats.projects.length - 1 ? 'border-b border-[#1e3050]' : ''}`}
+                    >
+                      <td className="px-4 py-3.5 font-medium text-[#c8d5e2]">{project.name}</td>
+                      <td className="px-4 py-3.5 text-[#7a8a9e]">{project.branche}</td>
+                      <td className="px-4 py-3.5 text-right font-medium text-signal">{project.lieferzeit} Tage</td>
+                      <td className="px-4 py-3.5 text-right font-medium text-signal">{project.lighthouse}<span className="text-[#4a5d72]">/100</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      )}
+
     </section>
   )
 }
+
