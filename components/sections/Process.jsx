@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 
+import Eyebrow from '@/components/layout/Eyebrow'
 import { process as processContent } from '@/lib/content'
 
 const STEP_DURATION = 5000
@@ -345,18 +346,27 @@ export default function Process() {
   }
 
   return (
-    <section id="prozess" className="bg-midnight py-24 px-8">
+    <section id="prozess" className="py-24 px-8">
       <div className="mx-auto max-w-[1280px]">
-        {/* label */}
-        <div className="mb-8 flex items-center gap-4">
-          <span className="font-mono text-xs text-signal">{processContent.label}</span>
-          <div className="h-px flex-grow bg-border-dark" />
-        </div>
+        <Eyebrow>{processContent.label}</Eyebrow>
 
+        <div className="section-body">
         {/* heading */}
-        <h2 className="mb-12 text-[clamp(1.75rem,4vw,2.5rem)] font-light leading-tight tracking-tight text-on-surface">
-          {processContent.heading}
-        </h2>
+        <div className="mb-12 flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-[clamp(26px,4vw,38px)] font-bold leading-[1.15] text-on-surface">
+              {processContent.heading}
+            </h2>
+            <p className="mt-3 text-sm text-on-surface/60">{processContent.sub}</p>
+          </div>
+          <a
+            href="/leistungen"
+            className="mt-1 flex w-[152px] flex-shrink-0 items-center justify-center gap-1.5 rounded-lg border border-[#2d4870] px-4 py-2.5 text-[13px] font-medium text-signal transition-colors duration-150 hover:border-signal hover:bg-deep"
+          >
+            Alle Leistungen
+            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </a>
+        </div>
 
         <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2" onClick={() => togglePause()}>
           {/* Steps accordion */}
@@ -478,6 +488,7 @@ export default function Process() {
 </div>
 </div>
         </div>
+        </div>{/* end section-body */}
       </div>
     </section>
   )

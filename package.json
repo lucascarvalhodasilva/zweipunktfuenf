@@ -6,6 +6,7 @@
     "dev": "next dev --hostname 0.0.0.0",
     "build": "next build",
     "generate-og": "node scripts/generate-og.mjs",
+    "lighthouse": "sh scripts/lighthouse.sh",
     "prod:build": "podman build -t zweipunktfuenf -f Containerfile .",
     "prod:up": "podman run -d --replace --name zweipunktfuenf -p 4000:3000 zweipunktfuenf",
     "prod:deploy": "npm run prod:build && npm run prod:up",

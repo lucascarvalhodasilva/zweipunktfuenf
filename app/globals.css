@@ -4,6 +4,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
 }
 
 body {
@@ -117,3 +118,5 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+

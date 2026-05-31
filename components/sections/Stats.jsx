@@ -1,6 +1,7 @@
 'use client'
 
 import { Fragment, useRef, useState, useEffect } from 'react'
+import Eyebrow from '@/components/layout/Eyebrow'
 import { stats } from '@/lib/content'
 
 function StarRating() {
@@ -149,35 +150,38 @@ export default function Stats() {
   }, [modalOpen])
 
   return (
-    <section className="px-8 py-24 max-sm:px-4" aria-labelledby="stats-title">
-      <div className="mx-auto max-w-[1080px] overflow-hidden px-16 py-[72px] max-sm:px-7 max-sm:py-12">
+    <section className="h-full flex flex-col px-8 max-sm:px-4" aria-labelledby="stats-title">
+      <div className="mx-auto w-full max-w-[1280px] flex flex-col flex-1 pt-20 pb-10">
+
+        <Eyebrow>{stats.eyebrow}</Eyebrow>
+
+        <div className="section-body flex flex-col flex-1 justify-between">
 
         {/* Header */}
-        <p className="mb-3.5 text-[11px] font-medium uppercase tracking-[0.12em] text-signal">
-          {stats.eyebrow}
-        </p>
-        <div className="mb-2.5 flex items-start justify-between gap-4">
-          <h2
-            id="stats-title"
-            className="text-[clamp(26px,4vw,38px)] font-bold leading-[1.15] text-on-surface"
-          >
-            {stats.heading}
-          </h2>
-          <button
-            onClick={() => setModalOpen(true)}
-            className="mt-1 flex flex-shrink-0 items-center gap-1.5 rounded-lg border border-[#2d4870] px-3.5 py-2 text-[12px] font-medium text-signal transition-colors duration-150 hover:border-signal hover:bg-deep"
-          >
-            Alle Projekte
-            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
-          </button>
+        <div>
+          <div className="flex items-start justify-between gap-4">
+            <h2
+              id="stats-title"
+              className="text-[clamp(26px,4vw,38px)] font-bold leading-[1.15] text-on-surface"
+            >
+              {stats.heading}
+            </h2>
+            <button
+              onClick={() => setModalOpen(true)}
+              className="mt-1 flex w-[152px] flex-shrink-0 items-center justify-center gap-1.5 rounded-lg border border-[#2d4870] px-4 py-2.5 text-[13px] font-medium text-signal transition-colors duration-150 hover:border-signal hover:bg-deep"
+            >
+              Alle Projekte
+              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+            </button>
+          </div>
+          <p className="mt-2 max-w-[520px] text-[15px] text-[#7a8a9e]">
+            {stats.sub}
+          </p>
         </div>
-        <p className="mb-[52px] max-w-[520px] text-[15px] text-[#7a8a9e]">
-          {stats.sub}
-        </p>
 
         {/* Logo strip — marquee */}
         <div
-          className="mb-10 max-w-lg mx-auto px-[22px] py-[18px]"
+          className="max-w-lg mx-auto px-[22px] py-2"
           aria-label="Referenzkunden"
         >
           <p className="mb-3 text-center text-[11px] uppercase tracking-[0.08em] text-[#4a5d72]">
@@ -213,7 +217,7 @@ export default function Stats() {
         {/* Reviews — desktop grid / mobile horizontal scroll */}
         <div
           ref={reviewsRef}
-          className="mb-10 mx-auto grid max-w-[720px] grid-cols-2 gap-4 max-sm:-mx-7 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:scroll-smooth max-sm:gap-3 max-sm:px-7 max-sm:[scrollbar-width:none] max-sm:[&::-webkit-scrollbar]:hidden"
+          className="mx-auto grid max-w-[720px] grid-cols-2 gap-4 max-sm:-mx-8 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:scroll-smooth max-sm:gap-3 max-sm:px-8 max-sm:[scrollbar-width:none] max-sm:[&::-webkit-scrollbar]:hidden"
           role="list"
           aria-label="Kundenstimmen"
           onScroll={updateDots}
@@ -272,7 +276,7 @@ export default function Stats() {
         </div>
 
         {/* Scroll dots — mobile only */}
-        <div className="mb-8 hidden items-center justify-center gap-1.5 max-sm:flex" aria-hidden="true">
+        <div className="hidden items-center justify-center gap-1.5 max-sm:flex" aria-hidden="true">
           {stats.reviews.map((_, i) => (
             <button
               key={i}
@@ -285,16 +289,7 @@ export default function Stats() {
           ))}
         </div>
 
-        {/* Bottom bar */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#1e3050] pt-7">
-          <p className="text-sm text-[#4a5d72]">{stats.bottomText}</p>
-          <a
-            href="#contact"
-            className="inline-block rounded-lg border border-[#2d4870] px-5 py-2.5 text-[13px] font-medium text-signal transition-colors duration-150 hover:border-signal hover:bg-deep active:scale-[0.98]"
-          >
-            {stats.cta}
-          </a>
-        </div>
+        </div>{/* end section-body */}
 
       </div>
 
