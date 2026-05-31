@@ -17,7 +17,7 @@ export default function Home() {
         <SnapReveal><Process /></SnapReveal>
         <SnapReveal><Stats /></SnapReveal>
         
-          <SnapReveal className="!h-[100svh] md:!h-[100dvh]">
+          <SnapReveal className="!h-[100vh] md:!h-[100dvh]">
           <Contact />
         </SnapReveal>
       </main>
