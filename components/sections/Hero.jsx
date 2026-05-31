@@ -81,6 +81,7 @@ export default function Hero() {
         >
           <a
             href="#contact"
+            onClick={(e) => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }) }}
             className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-signal px-8 font-body text-base font-semibold text-white transition-opacity hover:opacity-90 active:scale-95 sm:w-auto sm:h-12"
           >
             {hero.cta.primary}
@@ -90,6 +91,7 @@ export default function Hero() {
           </a>
           <a
             href="#prozess"
+            onClick={(e) => { e.preventDefault(); document.getElementById('prozess')?.scrollIntoView({ behavior: 'smooth' }) }}
             className="inline-flex h-14 w-full items-center justify-center rounded-xl border border-border-dark px-8 font-body text-base font-medium text-on-surface transition-colors hover:bg-deep sm:w-auto sm:h-12"
           >
             {hero.cta.secondary}

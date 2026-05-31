@@ -86,6 +86,10 @@ export default function Navbar() {
     return () => menu.removeEventListener('keydown', handleTab)
   }, [menuOpen])
 
+  function scrollToSection(id) {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
     <>
       <header
@@ -106,6 +110,7 @@ export default function Navbar() {
               <a
                 key={link.href}
                 href={link.href}
+                onClick={(e) => { e.preventDefault(); scrollToSection(link.href.slice(1)) }}
                 className="font-mono text-xs uppercase tracking-widest text-on-surface-variant transition-colors hover:text-signal"
               >
                 {link.label}
@@ -115,6 +120,7 @@ export default function Navbar() {
 
           <a
             href="#contact"
+            onClick={(e) => { e.preventDefault(); scrollToSection('contact') }}
             className="hidden h-9 items-center rounded-lg border border-border-signal px-5 font-mono text-xs uppercase tracking-widest text-on-surface transition-colors hover:bg-deep md:inline-flex"
           >
             Projekt starten
@@ -156,7 +162,7 @@ export default function Navbar() {
             <a
               key={link.href}
               href={link.href}
-              onClick={closeMenu}
+              onClick={(e) => { e.preventDefault(); scrollToSection(link.href.slice(1)); closeMenu() }}
               className="font-mono text-sm uppercase tracking-widest text-on-surface transition-colors hover:text-signal"
             >
               {link.label}
@@ -164,7 +170,7 @@ export default function Navbar() {
           ))}
           <a
             href="#contact"
-            onClick={closeMenu}
+            onClick={(e) => { e.preventDefault(); scrollToSection('contact'); closeMenu() }}
             className="mt-4 inline-flex h-10 items-center rounded-lg bg-signal px-8 font-mono text-xs uppercase tracking-widest text-white transition-opacity hover:opacity-90"
           >
             Projekt starten

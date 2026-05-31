@@ -1,4 +1,10 @@
+'use client'
+
 import { RiMailLine, RiLayoutGridLine } from 'react-icons/ri'
+
+function scrollToSection(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+}
 
 export default function MobileNav() {
   return (
@@ -9,6 +15,7 @@ export default function MobileNav() {
       <div className="flex h-16 items-center justify-around px-4">
         <a
           href="#top"
+          onClick={(e) => { e.preventDefault(); scrollToSection('top') }}
           className="flex flex-col items-center gap-1 text-on-surface-variant transition-colors hover:text-signal active:scale-90"
         >
           <RiLayoutGridLine size={22} />
@@ -16,6 +23,7 @@ export default function MobileNav() {
         </a>
         <a
           href="#prozess"
+          onClick={(e) => { e.preventDefault(); scrollToSection('prozess') }}
           className="flex flex-col items-center gap-1 text-on-surface-variant transition-colors hover:text-signal active:scale-90"
         >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -27,6 +35,7 @@ export default function MobileNav() {
         </a>
         <a
           href="#contact"
+          onClick={(e) => { e.preventDefault(); scrollToSection('contact') }}
           className="flex flex-col items-center gap-1 text-on-surface-variant transition-colors hover:text-signal active:scale-90"
         >
           <RiMailLine size={22} />
