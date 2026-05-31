@@ -36,6 +36,46 @@ function QuoteText({ fragments }) {
   )
 }
 
+function WebsiteChip({ url, preview }) {
+  return (
+    <div className="group relative hidden sm:block">
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Website besuchen"
+        className="flex items-center gap-1 rounded border border-[#1e3050] bg-[#0a1826] px-2 py-1 text-[10px] font-medium text-[#3a6fb0] transition-colors duration-150 hover:border-[#3a6fb0] hover:text-signal"
+      >
+        Website
+        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M7 7h10v10"/><path d="M7 17 17 7"/>
+        </svg>
+      </a>
+      {/* Preview popover */}
+      {preview && (
+        <div className="pointer-events-none absolute bottom-full right-0 mb-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100" aria-hidden="true">
+          {/* browser chrome shell */}
+          <div className="w-[320px] overflow-hidden rounded-lg border border-[#2d4870] shadow-2xl shadow-black/60">
+            <div className="flex items-center gap-1.5 border-b border-[#1e3050] bg-[#060f1c] px-3 py-2">
+              <span className="h-2 w-2 rounded-full bg-[#ff5f57]" />
+              <span className="h-2 w-2 rounded-full bg-[#ffbd2e]" />
+              <span className="h-2 w-2 rounded-full bg-[#28c840]" />
+              <span className="ml-2 flex-1 truncate rounded bg-[#0d1f3c] px-2 py-0.5 text-[9px] text-[#4a5d72]">
+                {url.replace('https://', '')}
+              </span>
+            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={preview} alt="" width={1920} height={1080} className="block w-full" style={{ aspectRatio: '16/9', objectFit: 'cover', objectPosition: 'top' }} />
+          </div>
+          {/* arrow */}
+          <div className="absolute -bottom-1.5 right-4 h-3 w-3 rotate-45 border-b border-r border-[#2d4870] bg-[#060f1c]" />
+        </div>
+      )}
+    </div>
+  )
+}
+
+
 export default function Stats() {
   const reviewsRef = useRef(null)
   const [activeIndex, setActiveIndex] = useState(0)
@@ -112,7 +152,7 @@ export default function Stats() {
 
         {/* Logo strip — marquee */}
         <div
-          className="mb-10 px-[22px] py-[18px]"
+          className="mb-10 max-w-lg mx-auto px-[22px] py-[18px]"
           aria-label="Referenzkunden"
         >
           <p className="mb-3 text-center text-[11px] uppercase tracking-[0.08em] text-[#4a5d72]">
@@ -148,7 +188,7 @@ export default function Stats() {
         {/* Reviews — desktop grid / mobile horizontal scroll */}
         <div
           ref={reviewsRef}
-          className="mb-10 grid grid-cols-3 gap-4 max-sm:-mx-7 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:scroll-smooth max-sm:gap-3 max-sm:px-7 max-sm:[scrollbar-width:none] max-sm:[&::-webkit-scrollbar]:hidden"
+          className="mb-10 mx-auto grid max-w-[720px] grid-cols-2 gap-4 max-sm:-mx-7 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:scroll-smooth max-sm:gap-3 max-sm:px-7 max-sm:[scrollbar-width:none] max-sm:[&::-webkit-scrollbar]:hidden"
           role="list"
           aria-label="Kundenstimmen"
           onScroll={updateDots}
@@ -163,18 +203,7 @@ export default function Stats() {
               {/* Stars + link */}
               <div className="mb-4 flex items-center justify-between">
                 <StarRating />
-                <a
-                  href="https://google.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Website besuchen"
-                  className="flex items-center gap-1 rounded border border-[#1e3050] bg-[#0a1826] px-2 py-1 text-[10px] font-medium text-[#3a6fb0] transition-colors duration-150 hover:border-[#3a6fb0] hover:text-signal"
-                >
-                  Website
-                  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M7 7h10v10"/><path d="M7 17 17 7"/>
-                  </svg>
-                </a>
+                <WebsiteChip url={review.author.url} preview={review.author.preview} />
               </div>
 
               {/* Quote */}
@@ -306,7 +335,14 @@ export default function Stats() {
                       key={project.name}
                       className={`transition-colors hover:bg-deep ${i < stats.projects.length - 1 ? 'border-b border-[#1e3050]' : ''}`}
                     >
-                      <td className="px-4 py-3.5 font-medium text-[#c8d5e2]">{project.name}</td>
+                      <td className="px-4 py-3.5 font-medium text-[#c8d5e2]">
+                        {project.url ? (
+                          <a href={project.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-signal transition-colors duration-150">
+                            {project.name}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                          </a>
+                        ) : project.name}
+                      </td>
                       <td className="px-4 py-3.5 text-[#7a8a9e]">{project.branche}</td>
                       <td className="px-4 py-3.5 text-right font-medium text-signal">{project.lieferzeit} Tage</td>
                       <td className="px-4 py-3.5 text-right font-medium text-signal">{project.lighthouse}<span className="text-[#4a5d72]">/100</span></td>
