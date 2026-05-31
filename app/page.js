@@ -1,5 +1,4 @@
 import Navbar from '@/components/layout/Navbar'
-import SnapResizeHandler from '@/components/layout/SnapResizeHandler'
 import SnapReveal from '@/components/layout/SnapReveal'
 import Contact from '@/components/sections/Contact'
 import GridWarp from '@/components/sections/GridWarp.client'
@@ -13,7 +12,6 @@ export default function Home() {
       <GridWarp />
       <div id="top" className="relative overflow-x-clip">
       <Navbar />
-      <SnapResizeHandler />
       <main>
         <div className="snap-section snap-start h-[100dvh] overflow-hidden"><Hero /></div>
         <SnapReveal><Process /></SnapReveal>
