@@ -1,11 +1,10 @@
-import Footer from '@/components/layout/Footer'
 import ContactForm from '@/components/sections/ContactForm'
 import Eyebrow from '@/components/layout/Eyebrow'
 import { contact } from '@/lib/content'
 
 export default function Contact() {
   return (
-    <section id="contact" className="relative h-full overflow-hidden border-t border-border-dark px-8 ">
+    <section id="contact" className="h-full overflow-hidden border-t border-border-dark px-8 ">
       <div className="mx-auto max-w-[1280px] pt-24">
         <Eyebrow>{contact.label}</Eyebrow>
 
@@ -23,9 +22,6 @@ export default function Contact() {
           <ContactForm />
         </div>
         </div>{/* end section-body */}
-      </div>
-      <div className="absolute bottom-0 left-0 right-0">
-        <Footer />
       </div>
     </section>
   )
