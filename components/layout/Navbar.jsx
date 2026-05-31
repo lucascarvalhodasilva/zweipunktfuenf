@@ -87,7 +87,16 @@ export default function Navbar() {
   }, [menuOpen])
 
   function scrollToSection(id) {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+    const el = document.getElementById(id)
+    if (!el) return
+    const html = document.documentElement
+    const snapEl = el.closest('.snap-start') ?? el
+    const top = snapEl.getBoundingClientRect().top + window.scrollY
+    html.style.scrollSnapType = 'none'
+    window.scrollTo({ top, behavior: 'instant' })
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => { html.style.scrollSnapType = '' })
+    })
   }
 
   return (
