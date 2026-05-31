@@ -150,8 +150,8 @@ export default function Stats() {
   }, [modalOpen])
 
   return (
-    <section className="h-full flex flex-col px-8 max-sm:px-4" aria-labelledby="stats-title">
-      <div className="mx-auto w-full max-w-[1280px] flex flex-col flex-1 pt-20 pb-10">
+    <section className="h-full flex flex-col px-8" aria-labelledby="stats-title">
+      <div className="mx-auto w-full max-w-[1280px] flex flex-col flex-1 py-24">
 
         <Eyebrow action={
           <button
