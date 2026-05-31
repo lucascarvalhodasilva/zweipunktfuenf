@@ -10,7 +10,7 @@ export default function Contact() {
         <Eyebrow>{contact.label}</Eyebrow>
 
         <div className="section-body">
-        <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-8 lg:gap-16 lg:grid-cols-2">
           <div>
             <h2 className="mb-4 text-[clamp(26px,4vw,38px)] font-bold leading-[1.15] text-on-surface">
               {contact.heading}
