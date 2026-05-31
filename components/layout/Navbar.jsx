@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { navLinks } from '@/lib/constants'
+import { footer } from '@/lib/content'
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -168,6 +169,23 @@ export default function Navbar() {
           >
             Projekt starten
           </a>
+
+          {/* Footer info */}
+          <div className="absolute bottom-10 left-0 right-0 flex flex-col items-center gap-4 px-8">
+            <div className="flex gap-6">
+              {footer.links.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={closeMenu}
+                  className="font-mono text-[11px] text-on-surface-variant transition-colors hover:text-signal"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+            <p className="font-mono text-[11px] text-on-surface-variant/50">{footer.copyright}</p>
+          </div>
         </div>
       </div>
     </>

@@ -4,7 +4,7 @@ import { footer } from '@/lib/content'
 
 export default function Footer() {
   return (
-    <footer className="w-full border-t border-border-dark bg-midnight">
+    <footer className="hidden md:block w-full border-t border-border-dark bg-midnight">
       <div className="mx-auto flex max-w-[1280px] flex-col items-center gap-6 px-8 py-10">
         <div className="flex items-center gap-2">
           <span className="font-mono text-xs font-bold uppercase tracking-widest text-on-surface">
