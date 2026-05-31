@@ -153,7 +153,15 @@ export default function Stats() {
     <section className="h-full flex flex-col px-8 max-sm:px-4" aria-labelledby="stats-title">
       <div className="mx-auto w-full max-w-[1280px] flex flex-col flex-1 pt-20 pb-10">
 
-        <Eyebrow>{stats.eyebrow}</Eyebrow>
+        <Eyebrow action={
+          <button
+            onClick={() => setModalOpen(true)}
+            className="sm:hidden flex flex-shrink-0 items-center gap-1.5 rounded-lg border border-[#2d4870] px-3 py-1.5 text-[12px] font-medium text-signal transition-colors duration-150 hover:border-signal hover:bg-deep"
+          >
+            Alle Projekte
+            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </button>
+        }>{stats.eyebrow}</Eyebrow>
 
         <div className="section-body flex flex-col flex-1 justify-between">
 
@@ -168,7 +176,7 @@ export default function Stats() {
             </h2>
             <button
               onClick={() => setModalOpen(true)}
-              className="mt-1 flex w-[152px] flex-shrink-0 items-center justify-center gap-1.5 rounded-lg border border-[#2d4870] px-4 py-2.5 text-[13px] font-medium text-signal transition-colors duration-150 hover:border-signal hover:bg-deep"
+              className="max-sm:hidden mt-1 flex w-[152px] flex-shrink-0 items-center justify-center gap-1.5 rounded-lg border border-[#2d4870] px-4 py-2.5 text-[13px] font-medium text-signal transition-colors duration-150 hover:border-signal hover:bg-deep"
             >
               Alle Projekte
               <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>

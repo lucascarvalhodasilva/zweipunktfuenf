@@ -348,7 +348,15 @@ export default function Process() {
   return (
     <section id="prozess" className="py-24 px-8">
       <div className="mx-auto max-w-[1280px]">
-        <Eyebrow>{processContent.label}</Eyebrow>
+        <Eyebrow action={
+          <a
+            href="/leistungen"
+            className="sm:hidden flex flex-shrink-0 items-center gap-1.5 rounded-lg border border-[#2d4870] px-3 py-1.5 text-[12px] font-medium text-signal transition-colors duration-150 hover:border-signal hover:bg-deep"
+          >
+            Alle Leistungen
+            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </a>
+        }>{processContent.label}</Eyebrow>
 
         <div className="section-body">
         {/* heading */}
@@ -361,7 +369,7 @@ export default function Process() {
           </div>
           <a
             href="/leistungen"
-            className="mt-1 flex w-[152px] flex-shrink-0 items-center justify-center gap-1.5 rounded-lg border border-[#2d4870] px-4 py-2.5 text-[13px] font-medium text-signal transition-colors duration-150 hover:border-signal hover:bg-deep"
+            className="max-sm:hidden mt-1 flex w-[152px] flex-shrink-0 items-center justify-center gap-1.5 rounded-lg border border-[#2d4870] px-4 py-2.5 text-[13px] font-medium text-signal transition-colors duration-150 hover:border-signal hover:bg-deep"
           >
             Alle Leistungen
             <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
