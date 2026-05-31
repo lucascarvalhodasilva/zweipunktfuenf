@@ -16,7 +16,8 @@ export default function Home() {
         <div className="snap-section snap-start h-[100svh] overflow-hidden"><Hero /></div>
         <SnapReveal><Process /></SnapReveal>
         <SnapReveal><Stats /></SnapReveal>
-        <SnapReveal className="!h-[100dvh]">
+        
+          <SnapReveal className="!h-[100svh] md:!h-[100dvh]">
           <Contact />
         </SnapReveal>
       </main>
