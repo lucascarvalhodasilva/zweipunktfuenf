@@ -71,7 +71,7 @@ export default function SnapReveal({ children, className = '' }) {
   return (
     <div
       ref={ref}
-      className={`snap-section snap-start h-[100svh] overflow-hidden ${className}`.trim()}
+      className={`snap-section snap-start h-[100dvh] overflow-hidden ${className}`.trim()}
     >
       {children}
     </div>

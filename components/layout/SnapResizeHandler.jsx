@@ -3,16 +3,12 @@
 import { useEffect } from 'react'
 
 /**
- * Re-snaps to the closest snap section after a resize.
+ * Re-snaps to the closest snap section after a window resize.
  *
- * Two resize sources are handled:
- *  - window.resize          — general viewport resize (desktop drag, orientation)
- *  - visualViewport.resize  — Safari URL bar show/hide (window.resize does NOT
- *                             fire for this on iOS Safari)
- *
- * For visualViewport changes snap is disabled immediately so the snap engine
- * cannot mis-snap while the URL bar is animating. After the animation settles
- * (debounced 100 ms) we re-snap to whichever section is closest and restore.
+ * Handles desktop viewport drag and device orientation changes.
+ * Safari URL bar show/hide is intentionally NOT handled here — visualViewport
+ * fires continuously during the scroll gesture itself, so any snap manipulation
+ * would fight the user's swipe and cause snap-back.
  */
 export default function SnapResizeHandler() {
   useEffect(() => {
@@ -50,26 +46,15 @@ export default function SnapResizeHandler() {
       })
     }
 
-    // General resize (desktop window drag, orientation change)
     function onResize() {
       clearTimeout(timer)
       timer = setTimeout(snapToCurrentSection, 150)
     }
 
-    // Safari URL bar show/hide — disable snap immediately so the engine
-    // cannot re-snap while the bar is animating, then settle and re-snap.
-    function onVisualViewportResize() {
-      document.documentElement.style.scrollSnapType = 'none'
-      clearTimeout(timer)
-      timer = setTimeout(snapToCurrentSection, 100)
-    }
-
     window.addEventListener('resize', onResize)
-    window.visualViewport?.addEventListener('resize', onVisualViewportResize)
 
     return () => {
       window.removeEventListener('resize', onResize)
-      window.visualViewport?.removeEventListener('resize', onVisualViewportResize)
       clearTimeout(timer)
       if (raf1) cancelAnimationFrame(raf1)
       if (raf2) cancelAnimationFrame(raf2)
