@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useEffect } from 'react'
+import { Fragment, useRef, useState, useEffect } from 'react'
 import { stats } from '@/lib/content'
 
 function StarRating() {
@@ -76,10 +76,35 @@ function WebsiteChip({ url, preview }) {
 }
 
 
+function LighthouseGauge({ score, label }) {
+  const circumference = 2 * Math.PI * 56
+  const dash = (score / 100) * circumference
+  const color = score >= 90 ? '#5B8DEE' : score >= 50 ? '#e67e22' : '#e74c3c'
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <svg viewBox="0 0 120 120" width="68" height="68" aria-hidden="true">
+        <circle cx="60" cy="60" r="56" fill="none" stroke="#1e3050" strokeWidth="8" />
+        <circle
+          cx="60" cy="60" r="56" fill="none"
+          stroke={color} strokeWidth="8"
+          strokeDasharray={`${dash} ${circumference}`}
+          strokeLinecap="round"
+          transform="rotate(-90 60 60)"
+        />
+        <text x="60" y="60" textAnchor="middle" dominantBaseline="central" fill={color} fontSize="24" fontWeight="700">
+          {score}
+        </text>
+      </svg>
+      <span className="text-[10px] uppercase tracking-[0.08em] text-[#4a5d72]">{label}</span>
+    </div>
+  )
+}
+
 export default function Stats() {
   const reviewsRef = useRef(null)
   const [activeIndex, setActiveIndex] = useState(0)
   const [modalOpen, setModalOpen] = useState(false)
+  const [expandedRow, setExpandedRow] = useState(null)
 
   function isMobile() {
     return typeof window !== 'undefined' && window.innerWidth <= 680
@@ -289,7 +314,7 @@ export default function Stats() {
           />
 
           {/* Panel */}
-          <div className="relative z-10 flex w-full max-w-3xl flex-col rounded-2xl border border-[#1e3050] bg-[#0a1828] p-6 sm:p-8" style={{ maxHeight: 'min(90vh, 680px)' }}>
+          <div className="relative z-10 flex w-full max-w-3xl flex-col rounded-2xl border border-[#1e3050] bg-[#0a1828] p-6 sm:p-8" style={{ height: 'min(90vh, 720px)' }}>
 
             {/* Panel header */}
             <div className="mb-6 flex items-start justify-between gap-4">
@@ -327,26 +352,59 @@ export default function Stats() {
                     <th className="px-4 py-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[#4a5d72]">Branche</th>
                     <th className="px-4 py-3 text-right text-[11px] font-medium uppercase tracking-[0.08em] text-[#4a5d72]">Lieferzeit</th>
                     <th className="px-4 py-3 text-right text-[11px] font-medium uppercase tracking-[0.08em] text-[#4a5d72]">Lighthouse</th>
+                    <th className="w-10 px-3 py-3" />
                   </tr>
                 </thead>
                 <tbody>
                   {stats.projects.map((project, i) => (
-                    <tr
-                      key={project.name}
-                      className={`transition-colors hover:bg-deep ${i < stats.projects.length - 1 ? 'border-b border-[#1e3050]' : ''}`}
-                    >
-                      <td className="px-4 py-3.5 font-medium text-[#c8d5e2]">
-                        {project.url ? (
-                          <a href={project.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-signal transition-colors duration-150">
-                            {project.name}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
-                          </a>
-                        ) : project.name}
-                      </td>
-                      <td className="px-4 py-3.5 text-[#7a8a9e]">{project.branche}</td>
-                      <td className="px-4 py-3.5 text-right font-medium text-signal">{project.lieferzeit} Tage</td>
-                      <td className="px-4 py-3.5 text-right font-medium text-signal">{project.lighthouse}<span className="text-[#4a5d72]">/100</span></td>
-                    </tr>
+                    <Fragment key={project.name}>
+                      <tr
+                        className={`transition-colors hover:bg-deep ${expandedRow === i ? '' : i < stats.projects.length - 1 ? 'border-b border-[#1e3050]' : ''}`}
+                      >
+                        <td className="px-4 py-3.5 font-medium text-[#c8d5e2]">
+                          {project.url ? (
+                            <a href={project.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-signal transition-colors duration-150">
+                              {project.name}
+                              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                            </a>
+                          ) : project.name}
+                        </td>
+                        <td className="px-4 py-3.5 text-[#7a8a9e]">{project.branche}</td>
+                        <td className="px-4 py-3.5 text-right font-medium text-signal">{project.lieferzeit} Tage</td>
+                        <td className="px-4 py-3.5 text-right font-medium text-signal">{project.lighthouse}<span className="text-[#4a5d72]">/100</span></td>
+                        <td className="py-3.5 pr-3 text-right">
+                          {project.categories && (
+                            <button
+                              onClick={() => setExpandedRow(expandedRow === i ? null : i)}
+                              aria-label={expandedRow === i ? 'Details schließen' : 'Details anzeigen'}
+                              aria-expanded={expandedRow === i}
+                              className="flex items-center justify-center rounded-md p-1 text-[#4a5d72] transition-colors hover:text-signal"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                aria-hidden="true"
+                                className={`transition-transform duration-200 ${expandedRow === i ? 'rotate-180' : ''}`}
+                              >
+                                <path d="m6 9 6 6 6-6" />
+                              </svg>
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                      {expandedRow === i && project.categories && (
+                        <tr className={i < stats.projects.length - 1 ? 'border-b border-[#1e3050]' : ''}>
+                          <td colSpan={5} className="bg-[#060f1c] px-6 py-6">
+                            <div className="flex flex-wrap items-start justify-center gap-8">
+                              <LighthouseGauge score={project.categories.performance} label="Performance" />
+                              <LighthouseGauge score={project.categories.accessibility} label="Zugänglichkeit" />
+                              <LighthouseGauge score={project.categories.bestPractices} label="Best Practices" />
+                              <LighthouseGauge score={project.categories.seo} label="SEO" />
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
                   ))}
                 </tbody>
               </table>
