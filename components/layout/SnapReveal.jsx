@@ -14,7 +14,7 @@ import { useEffect, useRef } from 'react'
  * based on whether the user scrolled down (eyebrow wipes left→right) or
  * up (eyebrow wipes right→left, content drops in from above).
  */
-export default function SnapReveal({ children, className = '' }) {
+export default function SnapReveal({ children, className = '', overflow = 'overflow-hidden' }) {
   const ref = useRef(null)
   const prevScrollY = useRef(typeof window !== 'undefined' ? window.scrollY : 0)
   const directionRef = useRef('down')
@@ -71,7 +71,7 @@ export default function SnapReveal({ children, className = '' }) {
   return (
     <div
       ref={ref}
-      className={`snap-section snap-start h-screen overflow-hidden ${className}`.trim()}
+      className={`snap-section snap-start h-screen ${overflow} ${className}`.trim()}
     >
       {children}
     </div>

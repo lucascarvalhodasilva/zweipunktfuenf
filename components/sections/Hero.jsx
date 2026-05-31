@@ -14,6 +14,21 @@ const fadeUp = {
   animate: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.2, 0.8, 0.2, 1] } },
 }
 
+function scrollToSection(id) {
+  const el = document.getElementById(id)
+  if (!el) return
+  const html = document.documentElement
+  const snapEl = el.closest('.snap-start') ?? el
+  const top = snapEl.getBoundingClientRect().top + window.scrollY
+  html.style.scrollSnapType = 'none'
+  window.scrollTo({ top, behavior: 'instant' })
+  // Two rAFs: first waits for the scroll to be submitted to the compositor,
+  // second waits for it to be committed before re-enabling snap.
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => { html.style.scrollSnapType = '' })
+  })
+}
+
 export default function Hero() {
   const sectionRef = useRef(null)
   const { scrollYProgress } = useScroll({
@@ -81,7 +96,7 @@ export default function Hero() {
         >
           <a
             href="#contact"
-            onClick={(e) => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }) }}
+            onClick={(e) => { e.preventDefault(); scrollToSection('contact') }}
             className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-signal px-8 font-body text-base font-semibold text-white transition-opacity hover:opacity-90 active:scale-95 sm:w-auto sm:h-12"
           >
             {hero.cta.primary}
@@ -91,7 +106,7 @@ export default function Hero() {
           </a>
           <a
             href="#prozess"
-            onClick={(e) => { e.preventDefault(); document.getElementById('prozess')?.scrollIntoView({ behavior: 'smooth' }) }}
+            onClick={(e) => { e.preventDefault(); scrollToSection('prozess') }}
             className="inline-flex h-14 w-full items-center justify-center rounded-xl border border-border-dark px-8 font-body text-base font-medium text-on-surface transition-colors hover:bg-deep sm:w-auto sm:h-12"
           >
             {hero.cta.secondary}
@@ -100,8 +115,7 @@ export default function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* abstract floating panel */}
-      <div className="pointer-events-none absolute bottom-[-8%] left-1/2 w-full max-w-5xl -translate-x-1/2 rounded-t-xl border border-b-0 border-border-dark bg-deep/40 opacity-20 backdrop-blur-sm" style={{ aspectRatio: '16/6' }} />
+     
 
       {/* scroll indicator */}
       <motion.div

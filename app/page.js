@@ -17,7 +17,7 @@ export default function Home() {
         <div className="snap-start h-screen overflow-hidden"><Hero /></div>
         <SnapReveal><Process /></SnapReveal>
         <SnapReveal><Stats /></SnapReveal>
-        <SnapReveal className="flex flex-col">
+        <SnapReveal className="flex flex-col" overflow="overflow-hidden md:overflow-y-auto">
           <Contact />
           <Footer />
         </SnapReveal>
