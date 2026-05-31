@@ -5,8 +5,8 @@ import { contact } from '@/lib/content'
 
 export default function Contact() {
   return (
-    <section id="contact" className="relative h-full overflow-hidden border-t border-border-dark px-8 py-24">
-      <div className="mx-auto max-w-[1280px]">
+    <section id="contact" className="relative h-full overflow-hidden border-t border-border-dark px-8 ">
+      <div className="mx-auto max-w-[1280px] pt-24">
         <Eyebrow>{contact.label}</Eyebrow>
 
         <div className="section-body">
