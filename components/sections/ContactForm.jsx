@@ -35,6 +35,18 @@ export default function ContactForm() {
   })
   const [isPending, setIsPending] = useState(false)
   const formRef = useRef(null)
+  const snapTimeoutRef = useRef(null)
+
+  function handleFormFocus() {
+    clearTimeout(snapTimeoutRef.current)
+    document.documentElement.style.scrollSnapType = 'none'
+  }
+
+  function handleFormBlur() {
+    snapTimeoutRef.current = setTimeout(() => {
+      document.documentElement.style.scrollSnapType = ''
+    }, 150)
+  }
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -70,7 +82,7 @@ export default function ContactForm() {
   }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} noValidate>
+    <form ref={formRef} onSubmit={handleSubmit} noValidate onFocus={handleFormFocus} onBlur={handleFormBlur}>
       {/* honeypot – hidden from real users */}
       <div aria-hidden="true" className="absolute -left-[9999px]">
         <label htmlFor="website">Website</label>
