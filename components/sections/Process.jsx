@@ -346,7 +346,7 @@ export default function Process() {
   }
 
   return (
-    <section id="prozess" className="py-24 px-8">
+    <section id="prozess" className="h-full overflow-hidden py-24 px-8">
       <div className="mx-auto max-w-[1280px]">
         <Eyebrow action={
           <a
