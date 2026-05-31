@@ -5,7 +5,7 @@ import { contact } from '@/lib/content'
 
 export default function Contact() {
   return (
-    <section id="contact" className="relative h-full overflow-hidden border-t border-border-dark px-8 ">
+    <section id="contact" className="relative h-full border-t border-border-dark px-8">
       <div className="mx-auto max-w-[1280px] pt-24">
         <Eyebrow>{contact.label}</Eyebrow>
 

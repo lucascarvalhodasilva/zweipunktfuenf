@@ -10,6 +10,7 @@ html {
 body {
   background-color: #07111F;
   color: #e1e2ea;
+  overscroll-behavior: none;
   font-family: var(--font-body), sans-serif;
   overflow-x: hidden;
 }
