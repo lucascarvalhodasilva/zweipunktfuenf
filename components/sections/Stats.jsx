@@ -181,7 +181,7 @@ export default function Stats() {
 
         {/* Logo strip — marquee */}
         <div
-          className="max-w-lg mx-auto px-[22px] py-2"
+          className="w-full max-w-lg mx-auto px-[22px] py-2"
           aria-label="Referenzkunden"
         >
           <p className="mb-3 text-center text-[11px] uppercase tracking-[0.08em] text-[#4a5d72]">
@@ -217,7 +217,7 @@ export default function Stats() {
         {/* Reviews — desktop grid / mobile horizontal scroll */}
         <div
           ref={reviewsRef}
-          className="mx-auto grid max-w-[720px] grid-cols-2 gap-4 max-sm:-mx-8 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:scroll-smooth max-sm:gap-3 max-sm:px-8 max-sm:[scrollbar-width:none] max-sm:[&::-webkit-scrollbar]:hidden"
+          className="mx-auto grid max-w-[720px] grid-cols-2 gap-4 max-sm:-mx-8 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:scroll-smooth max-sm:scroll-pl-8 max-sm:gap-3 max-sm:px-8 max-sm:[scrollbar-width:none] max-sm:[&::-webkit-scrollbar]:hidden"
           role="list"
           aria-label="Kundenstimmen"
           onScroll={updateDots}
