@@ -13,7 +13,7 @@ export default function Home() {
       <div id="top" className="relative overflow-x-clip">
       <Navbar />
       <main>
-        <div className="snap-section snap-start h-[100dvh] overflow-hidden"><Hero /></div>
+        <div className="snap-section snap-start h-[100svh] overflow-hidden"><Hero /></div>
         <SnapReveal><Process /></SnapReveal>
         <SnapReveal><Stats /></SnapReveal>
         <SnapReveal>
