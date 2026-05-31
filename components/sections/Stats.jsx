@@ -248,8 +248,8 @@ export default function Stats() {
                 <QuoteText fragments={review.quote} />
               </p>
 
-              {/* Meta row — no box, hairline dividers only */}
-              <div className="mb-4 grid grid-cols-3 divide-x divide-[#1e3050] border-t border-[#1e3050] pt-4 text-center">
+              {/* Meta row — hidden on mobile */}
+              <div className="mb-4 hidden sm:grid grid-cols-3 divide-x divide-[#1e3050] border-t border-[#1e3050] pt-4 text-center">
                 <div className="pr-3">
                   <p className="mb-1 text-[10px] uppercase tracking-[0.08em] text-[#4a5d72]">Branche</p>
                   <p className="text-xs font-medium text-[#c8d5e2]">{review.meta.branche}</p>
@@ -284,7 +284,7 @@ export default function Stats() {
         </div>
 
         {/* Scroll dots — mobile only */}
-        <div className="hidden items-center justify-center gap-1.5 max-sm:flex" aria-hidden="true">
+        <div className="hidden items-center justify-center gap-1.5 mt-4 max-sm:flex" aria-hidden="true">
           {stats.reviews.map((_, i) => (
             <button
               key={i}
