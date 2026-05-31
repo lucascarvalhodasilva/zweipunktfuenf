@@ -13,10 +13,13 @@ export default function Navbar() {
   const toggleRef = useRef(null)
 
   useEffect(() => {
-    const updateScrollState = () => setIsScrolled(window.scrollY > 8)
+    const container = document.getElementById('snap-container')
+    const el = container ?? window
+    const getScrollTop = () => container ? container.scrollTop : window.scrollY
+    const updateScrollState = () => setIsScrolled(getScrollTop() > 8)
     updateScrollState()
-    window.addEventListener('scroll', updateScrollState, { passive: true })
-    return () => window.removeEventListener('scroll', updateScrollState)
+    el.addEventListener('scroll', updateScrollState, { passive: true })
+    return () => el.removeEventListener('scroll', updateScrollState)
   }, [])
 
   const closeMenu = useCallback(() => {
@@ -89,14 +92,23 @@ export default function Navbar() {
   function scrollToSection(id) {
     const el = document.getElementById(id)
     if (!el) return
-    const html = document.documentElement
+    const container = document.getElementById('snap-container')
     const snapEl = el.closest('.snap-start') ?? el
-    const top = snapEl.getBoundingClientRect().top + window.scrollY
-    html.style.scrollSnapType = 'none'
-    window.scrollTo({ top, behavior: 'instant' })
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => { html.style.scrollSnapType = '' })
-    })
+    if (container) {
+      const top = snapEl.getBoundingClientRect().top + container.scrollTop
+      container.style.scrollSnapType = 'none'
+      container.scrollTo({ top, behavior: 'instant' })
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => { container.style.scrollSnapType = '' })
+      })
+    } else {
+      const top = snapEl.getBoundingClientRect().top + window.scrollY
+      document.documentElement.style.scrollSnapType = 'none'
+      window.scrollTo({ top, behavior: 'instant' })
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => { document.documentElement.style.scrollSnapType = '' })
+      })
+    }
   }
 
   return (

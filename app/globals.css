@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 html {
-  scroll-snap-type: y mandatory;
   overscroll-behavior: none;
 }
 

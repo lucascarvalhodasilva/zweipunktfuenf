@@ -37,14 +37,20 @@ export default function ContactForm() {
   const formRef = useRef(null)
   const snapTimeoutRef = useRef(null)
 
+  function getSnapContainer() {
+    return document.getElementById('snap-container')
+  }
+
   function handleFormFocus() {
     clearTimeout(snapTimeoutRef.current)
-    document.documentElement.style.scrollSnapType = 'none'
+    const c = getSnapContainer()
+    if (c) c.style.scrollSnapType = 'none'
   }
 
   function handleFormBlur() {
     snapTimeoutRef.current = setTimeout(() => {
-      document.documentElement.style.scrollSnapType = ''
+      const c = getSnapContainer()
+      if (c) c.style.scrollSnapType = ''
     }, 150)
   }
 

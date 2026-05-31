@@ -16,7 +16,7 @@ import { useEffect, useRef } from 'react'
  */
 export default function SnapReveal({ children, className = '' }) {
   const ref = useRef(null)
-  const prevScrollY = useRef(typeof window !== 'undefined' ? window.scrollY : 0)
+  const prevScrollY = useRef(0)
   const directionRef = useRef('down')
 
   useEffect(() => {
@@ -29,12 +29,16 @@ export default function SnapReveal({ children, className = '' }) {
       return
     }
 
+    const scrollEl = document.getElementById('snap-container') ?? window
+    const getScrollTop = () =>
+      scrollEl instanceof Window ? scrollEl.scrollY : scrollEl.scrollTop
+
     function onScroll() {
-      const y = window.scrollY
+      const y = getScrollTop()
       directionRef.current = y >= prevScrollY.current ? 'down' : 'up'
       prevScrollY.current = y
     }
-    window.addEventListener('scroll', onScroll, { passive: true })
+    scrollEl.addEventListener('scroll', onScroll, { passive: true })
 
     // Reset when section fully exits the viewport so animation replays on re-entry.
     const exitObserver = new IntersectionObserver(
@@ -64,7 +68,7 @@ export default function SnapReveal({ children, className = '' }) {
     return () => {
       exitObserver.disconnect()
       snapObserver.disconnect()
-      window.removeEventListener('scroll', onScroll)
+      scrollEl.removeEventListener('scroll', onScroll)
     }
   }, [])
 

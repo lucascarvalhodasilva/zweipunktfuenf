@@ -12,7 +12,7 @@ export default function Home() {
       <GridWarp />
       <div id="top" className="relative overflow-x-clip">
       <Navbar />
-      <main>
+      <main id="snap-container" className="h-[100svh] overflow-y-scroll snap-y snap-mandatory overscroll-none">
         <div className="snap-section snap-start h-[100svh] overflow-hidden"><Hero /></div>
         <SnapReveal><Process /></SnapReveal>
         <SnapReveal><Stats /></SnapReveal>
