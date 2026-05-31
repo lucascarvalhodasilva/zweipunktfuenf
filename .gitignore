@@ -20,6 +20,9 @@
 # production
 /build
 
+# generated screenshots
+/public/previews/
+
 # misc
 .DS_Store
 *.pem
