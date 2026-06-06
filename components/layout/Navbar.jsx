@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { leistungenServices, navLinks } from '@/lib/constants'
+import { navLinks } from '@/lib/constants'
 import { footer } from '@/lib/content'
 import LeistungenNavMenu from '@/components/ui/LeistungenNavMenu'
 
@@ -199,31 +199,22 @@ export default function Navbar() {
           className="relative flex h-full flex-col items-center justify-center gap-10 px-8"
           onClick={(e) => e.stopPropagation()}
         >
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={(e) => { e.preventDefault(); scrollToSection(link.href.slice(1)); closeMenu() }}
-              className="font-mono text-sm uppercase tracking-widest text-on-surface transition-colors hover:text-signal"
-            >
-              {link.label}
-            </a>
-          ))}
+          <a
+            href="#prozess"
+            onClick={(e) => { e.preventDefault(); scrollToSection('prozess'); closeMenu() }}
+            className="font-mono text-sm uppercase tracking-widest text-on-surface transition-colors hover:text-signal"
+          >
+            Web in 14 Tagen
+          </a>
 
-          {/* Leistungen — individual links */}
-          <div className="flex flex-col items-center gap-4">
-            <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-on-surface/25">Leistungen</span>
-            {leistungenServices.map((s) => (
-              <Link
-                key={s.slug}
-                href={`/leistungen/${s.slug}`}
-                onClick={closeMenu}
-                className="font-mono text-sm uppercase tracking-widest text-on-surface-variant transition-colors hover:text-signal"
-              >
-                {s.label}
-              </Link>
-            ))}
-          </div>
+          <Link
+            href="/leistungen"
+            onClick={closeMenu}
+            className="font-mono text-sm uppercase tracking-widest text-on-surface transition-colors hover:text-signal"
+          >
+            Leistungen
+          </Link>
+
           <a
             href="#contact"
             onClick={(e) => { e.preventDefault(); scrollToSection('contact'); closeMenu() }}
