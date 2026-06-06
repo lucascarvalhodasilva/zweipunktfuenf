@@ -42,10 +42,10 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="top"
-      className="relative flex min-h-[calc(100svh-3.5rem)] flex-col items-center justify-center overflow-hidden px-6 py-16 text-center sm:py-0 sm:px-8"
+      className="relative flex h-full flex-col items-center justify-center overflow-hidden px-6 py-16 text-center sm:py-0 sm:px-8"
     >
       {/* top/bottom gradient fade */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-midnight via-transparent to-midnight" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-midnight/80 via-transparent to-midnight/60" />
 
       <motion.div style={{ opacity, y, scale, filter }} className="relative z-10 w-full mt-12 sm:mt-0">
         <motion.div
