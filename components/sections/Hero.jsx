@@ -17,16 +17,13 @@ const fadeUp = {
 function scrollToSection(id) {
   const el = document.getElementById(id)
   if (!el) return
-  const html = document.documentElement
+  const container = document.getElementById('snap-container')
+  if (!container) return
   const snapEl = el.closest('.snap-start') ?? el
-  const top = snapEl.getBoundingClientRect().top + window.scrollY
-  html.style.scrollSnapType = 'none'
-  window.scrollTo({ top, behavior: 'instant' })
-  // Two rAFs: first waits for the scroll to be submitted to the compositor,
-  // second waits for it to be committed before re-enabling snap.
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => { html.style.scrollSnapType = '' })
-  })
+  const top = snapEl.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop
+  container.style.scrollSnapType = 'none'
+  container.scrollTo({ top, behavior: 'smooth' })
+  container.addEventListener('scrollend', () => { container.style.scrollSnapType = '' }, { once: true })
 }
 
 export default function Hero() {
