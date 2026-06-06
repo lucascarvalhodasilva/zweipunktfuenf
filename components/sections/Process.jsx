@@ -346,8 +346,8 @@ export default function Process() {
   }
 
   return (
-    <section id="prozess" className="h-full overflow-hidden px-8">
-      <div className="mx-auto max-w-[1280px] pt-16 md:pt-24">
+    <section id="prozess" className="h-full overflow-hidden flex flex-col px-8">
+      <div className="mx-auto max-w-[1280px] flex flex-col flex-1 min-h-0 pt-16 md:pt-24">
         <Eyebrow action={
           <a
             href="/leistungen"
@@ -358,9 +358,9 @@ export default function Process() {
           </a>
         }>{processContent.label}</Eyebrow>
 
-        <div className="section-body">
+        <div className="section-body flex flex-col flex-1 min-h-0">
         {/* heading */}
-        <div className="mb-12 flex items-start justify-between gap-4">
+        <div className="mb-4 md:mb-12 flex-shrink-0 flex items-start justify-between gap-4">
           <div>
             <h2 className="text-[clamp(26px,4vw,38px)] font-bold leading-[1.15] text-on-surface">
               {processContent.heading}
@@ -376,16 +376,16 @@ export default function Process() {
           </a>
         </div>
 
-        <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2" onClick={() => togglePause()}>
+        <div className="grid grid-cols-1 items-start gap-6 md:gap-12 lg:grid-cols-2" onClick={() => togglePause()}>
           {/* Steps accordion */}
-          <div className="space-y-1 min-h-[600px]">
+          <div className="space-y-1 min-h-0 lg:min-h-[600px]">
             {processContent.steps.map((step, i) => {
               const isActive = i === activeStep
               return (
                 <button
                   key={step.number}
                   onClick={(e) => { e.stopPropagation(); goToStep(i) }}
-                  className={`w-full border-l-2 p-6 text-left transition-colors duration-300 ${
+                  className={`w-full border-l-2 py-3 px-4 md:p-6 text-left transition-colors duration-300 ${
                     isActive ? 'border-signal' : 'border-border-dark'
                   }`}
                 >
