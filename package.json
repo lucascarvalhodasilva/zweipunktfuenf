@@ -8,7 +8,7 @@
     "generate-og": "node scripts/generate-og.mjs",
     "lighthouse": "sh scripts/lighthouse.sh",
     "prod:build": "podman build -t zweipunktfuenf -f Containerfile .",
-    "prod:up": "podman run -d --replace --name zweipunktfuenf -p 4000:3000 zweipunktfuenf",
+    "prod:up": "podman run -d --replace --name zweipunktfuenf -p 4000:3000 --env-file .env.local zweipunktfuenf",
     "prod:deploy": "npm run prod:build && npm run prod:up",
     "start": "next start",
     "lint": "next lint",
