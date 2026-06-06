@@ -1,12 +1,15 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { navLinks } from '@/lib/constants'
+import { leistungenServices, navLinks } from '@/lib/constants'
 import { footer } from '@/lib/content'
+import LeistungenNavMenu from '@/components/ui/LeistungenNavMenu'
 
 export default function Navbar() {
+  const pathname = usePathname()
   const [isScrolled, setIsScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef(null)
@@ -90,6 +93,10 @@ export default function Navbar() {
   }, [menuOpen])
 
   function scrollToSection(id) {
+    if (pathname !== '/') {
+      window.location.href = `/#${id}`
+      return
+    }
     const el = document.getElementById(id)
     if (!el) return
     const container = document.getElementById('snap-container')
@@ -127,6 +134,8 @@ export default function Navbar() {
           </Link>
 
           <div className="hidden items-center gap-8 md:flex">
+            <LeistungenNavMenu />
+
             {navLinks.map((link) => (
               <a
                 key={link.href}
@@ -189,6 +198,21 @@ export default function Navbar() {
               {link.label}
             </a>
           ))}
+
+          {/* Leistungen — individual links */}
+          <div className="flex flex-col items-center gap-4">
+            <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-on-surface/25">Leistungen</span>
+            {leistungenServices.map((s) => (
+              <Link
+                key={s.slug}
+                href={`/leistungen/${s.slug}`}
+                onClick={closeMenu}
+                className="font-mono text-sm uppercase tracking-widest text-on-surface-variant transition-colors hover:text-signal"
+              >
+                {s.label}
+              </Link>
+            ))}
+          </div>
           <a
             href="#contact"
             onClick={(e) => { e.preventDefault(); scrollToSection('contact'); closeMenu() }}
