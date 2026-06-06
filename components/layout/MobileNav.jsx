@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { RiMailLine, RiLayoutGridLine } from 'react-icons/ri'
 
 function scrollToSection(id) {
@@ -21,6 +22,18 @@ export default function MobileNav() {
           <RiLayoutGridLine size={22} />
           <span className="font-mono text-[10px] uppercase tracking-widest">Start</span>
         </a>
+        <Link
+          href="/leistungen"
+          className="flex flex-col items-center gap-1 text-on-surface-variant transition-colors hover:text-signal active:scale-90"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M3 6h18M3 12h18M3 18h18" />
+            <circle cx="6" cy="6" r="1" fill="currentColor" />
+            <circle cx="6" cy="12" r="1" fill="currentColor" />
+            <circle cx="6" cy="18" r="1" fill="currentColor" />
+          </svg>
+          <span className="font-mono text-[10px] uppercase tracking-widest">Leistungen</span>
+        </Link>
         <a
           href="#prozess"
           onClick={(e) => { e.preventDefault(); scrollToSection('prozess') }}

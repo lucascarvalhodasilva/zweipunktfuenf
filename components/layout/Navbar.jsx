@@ -1,14 +1,18 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { navLinks } from '@/lib/constants'
+import { leistungenServices, navLinks } from '@/lib/constants'
 import { footer } from '@/lib/content'
 
 export default function Navbar() {
+  const pathname = usePathname()
   const [isScrolled, setIsScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [leistungenOpen, setLeistungenOpen] = useState(false)
+  const [leistungenMobileOpen, setLeistungenMobileOpen] = useState(false)
   const menuRef = useRef(null)
   const toggleRef = useRef(null)
 
@@ -90,6 +94,10 @@ export default function Navbar() {
   }, [menuOpen])
 
   function scrollToSection(id) {
+    if (pathname !== '/') {
+      window.location.href = `/#${id}`
+      return
+    }
     const el = document.getElementById(id)
     if (!el) return
     const container = document.getElementById('snap-container')
@@ -127,6 +135,35 @@ export default function Navbar() {
           </Link>
 
           <div className="hidden items-center gap-8 md:flex">
+            {/* Leistungen dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => setLeistungenOpen(true)}
+              onMouseLeave={() => setLeistungenOpen(false)}
+            >
+              <Link
+                href="/leistungen"
+                className={`font-mono text-xs uppercase tracking-widest transition-colors hover:text-signal ${pathname.startsWith('/leistungen') ? 'text-signal' : 'text-on-surface-variant'}`}
+              >
+                Leistungen
+              </Link>
+              {leistungenOpen && (
+                <div className="absolute left-1/2 top-full z-50 mt-3 w-52 -translate-x-1/2 rounded-xl border border-border-dark bg-midnight/95 p-1.5 shadow-xl backdrop-blur-md">
+                  {leistungenServices.map((s) => (
+                    <Link
+                      key={s.slug}
+                      href={`/leistungen/${s.slug}`}
+                      onClick={() => setLeistungenOpen(false)}
+                      className={`flex items-center gap-2 rounded-lg px-3 py-2 font-mono text-xs transition-colors hover:bg-deep hover:text-on-surface ${pathname === `/leistungen/${s.slug}` ? 'text-signal bg-deep/50' : 'text-on-surface-variant'}`}
+                    >
+                      <span className={`h-1 w-1 flex-shrink-0 rounded-full ${pathname === `/leistungen/${s.slug}` ? 'bg-signal' : 'bg-on-surface/25'}`} />
+                      {s.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {navLinks.map((link) => (
               <a
                 key={link.href}
@@ -189,6 +226,45 @@ export default function Navbar() {
               {link.label}
             </a>
           ))}
+
+          {/* Leistungen expandable sub-list */}
+          <div className="flex flex-col items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setLeistungenMobileOpen((p) => !p)}
+              className="flex items-center gap-2 font-mono text-sm uppercase tracking-widest text-on-surface transition-colors hover:text-signal"
+            >
+              Leistungen
+              <svg
+                width="10"
+                height="10"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className={`transition-transform duration-200 ${leistungenMobileOpen ? 'rotate-180' : ''}`}
+                aria-hidden="true"
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            {leistungenMobileOpen && (
+              <div className="flex flex-col items-center gap-2">
+                {leistungenServices.map((s) => (
+                  <Link
+                    key={s.slug}
+                    href={`/leistungen/${s.slug}`}
+                    onClick={closeMenu}
+                    className="font-mono text-xs uppercase tracking-widest text-on-surface-variant transition-colors hover:text-signal"
+                  >
+                    {s.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
           <a
             href="#contact"
             onClick={(e) => { e.preventDefault(); scrollToSection('contact'); closeMenu() }}

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { leistungen } from '@/lib/content'
+import { leistungen, leistungenNav } from '@/lib/content'
 
 export const metadata = {
   title: leistungen.meta.title,
@@ -9,39 +9,94 @@ export const metadata = {
 
 export default function LeistungenPage() {
   return (
-    <div className="min-h-screen bg-midnight text-on-surface">
+    <div>
 
-      {/* ── Header ─────────────────────────────────────── */}
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-border-dark bg-midnight/80 backdrop-blur-md">
-        <nav className="mx-auto flex h-14 max-w-[1280px] items-center justify-between px-8">
-          <Link href="/" className="font-mono text-sm font-bold tracking-wider text-on-surface">
-            <span>zweipunkt</span>
-            <span className="text-signal">fünf</span>
-          </Link>
-          <Link
-            href="/#contact"
-            className="hidden h-9 items-center rounded-lg border border-border-signal px-5 font-mono text-xs uppercase tracking-widest text-on-surface transition-colors hover:bg-deep md:inline-flex"
-          >
-            Projekt starten
-          </Link>
+      {/* ── Mobile: full-page service tree ─────────────────────────────── */}
+      <div className="md:hidden px-5 py-10">
+        <div className="mb-8">
+          <span className="mb-3 inline-block font-mono text-xs text-signal">{leistungen.eyebrow}</span>
+          <h1 className="text-[clamp(28px,7vw,40px)] font-bold leading-[1.1] text-on-surface">
+            {leistungen.heading}
+          </h1>
+          <p className="mt-3 text-sm text-on-surface/60">{leistungen.sub}</p>
+        </div>
+
+        <nav aria-label="Leistungen auswählen" className="flex flex-col gap-3">
+          {leistungenNav.map((svc) => (
+            <Link
+              key={svc.slug}
+              href={`/leistungen/${svc.slug}`}
+              className="group flex items-center justify-between rounded-xl border border-border-dark bg-deep/20 px-5 py-4 transition-colors hover:border-signal/40 hover:bg-deep/40"
+            >
+              <div>
+                <p className="font-mono text-sm font-bold text-on-surface group-hover:text-signal transition-colors">
+                  {svc.label}
+                </p>
+                <p className="mt-0.5 text-xs text-on-surface/50">{svc.tagline}</p>
+              </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="flex-shrink-0 text-on-surface/30 group-hover:text-signal transition-colors"
+                aria-hidden="true"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </Link>
+          ))}
         </nav>
-      </header>
+      </div>
 
-      <main className="mx-auto max-w-[1280px] px-8 pb-24 pt-32">
+      {/* ── Desktop: overview content ───────────────────────────────────── */}
+      <div className="hidden md:block px-10 py-16">
 
-        {/* ── Hero ───────────────────────────────────────── */}
-        <div className="mb-20 max-w-2xl">
-          <span className="mb-4 inline-block font-mono text-xs text-signal">{leistungen.eyebrow}</span>
-          <h1 className="text-[clamp(32px,5vw,56px)] font-bold leading-[1.1] text-on-surface">
+        {/* Hero */}
+        <div className="mb-14 max-w-2xl">
+          <span className="mb-3 inline-block font-mono text-xs text-signal">{leistungen.eyebrow}</span>
+          <h1 className="text-[clamp(32px,4vw,52px)] font-bold leading-[1.1] text-on-surface">
             {leistungen.heading}
           </h1>
           <p className="mt-4 text-base text-on-surface/60">{leistungen.sub}</p>
         </div>
 
-        {/* ── Packages ───────────────────────────────────── */}
-        <section aria-labelledby="packages-heading" className="mb-24">
-          <h2 id="packages-heading" className="sr-only">Pakete & Preise</h2>
-          <div className="grid gap-6 md:grid-cols-3">
+        {/* Service cards grid */}
+        <section aria-labelledby="services-heading" className="mb-16">
+          <h2 id="services-heading" className="mb-6 font-mono text-xs uppercase tracking-widest text-signal">
+            Unsere Leistungen
+          </h2>
+          <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+            {leistungenNav.map((svc) => (
+              <Link
+                key={svc.slug}
+                href={`/leistungen/${svc.slug}`}
+                className="group flex flex-col rounded-xl border border-border-dark bg-deep/20 p-5 transition-colors hover:border-signal/40 hover:bg-deep/40"
+              >
+                <p className="mb-1 font-mono text-sm font-bold text-on-surface group-hover:text-signal transition-colors">
+                  {svc.label}
+                </p>
+                <p className="flex-1 text-sm text-on-surface/50">{svc.tagline}</p>
+                <div className="mt-4 flex items-center gap-1 font-mono text-[11px] text-signal/60 group-hover:text-signal transition-colors">
+                  Mehr erfahren
+                  <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Packages */}
+        <section aria-labelledby="packages-heading" className="mb-16">
+          <h2 id="packages-heading" className="mb-6 font-mono text-xs uppercase tracking-widest text-signal">
+            Pakete & Preise
+          </h2>
+          <div className="grid gap-5 lg:grid-cols-3">
             {leistungen.packages.map((pkg) => (
               <div
                 key={pkg.id}
@@ -58,14 +113,12 @@ export default function LeistungenPage() {
                     </span>
                   </div>
                 )}
-
-                <div className="mb-6">
-                  <h3 className="mb-1 font-mono text-lg font-bold text-on-surface">{pkg.name}</h3>
-                  <p className="mb-3 text-sm text-on-surface/50">{pkg.tagline}</p>
+                <div className="mb-5">
+                  <h3 className="mb-1 font-mono text-base font-bold text-on-surface">{pkg.name}</h3>
+                  <p className="mb-2 text-sm text-on-surface/50">{pkg.tagline}</p>
                   <p className="font-mono text-2xl font-bold text-signal">{pkg.price}</p>
                 </div>
-
-                <ul className="mb-8 flex flex-1 flex-col gap-2">
+                <ul className="mb-6 flex flex-1 flex-col gap-1.5">
                   {pkg.features.map((f) => (
                     <li key={f} className="flex items-start gap-2 text-sm text-on-surface/70">
                       <span className="mt-0.5 flex-shrink-0 font-mono text-[10px] text-signal">✓</span>
@@ -73,7 +126,6 @@ export default function LeistungenPage() {
                     </li>
                   ))}
                 </ul>
-
                 <Link
                   href="/#contact"
                   className={`flex h-10 items-center justify-center rounded-lg font-mono text-xs uppercase tracking-widest transition-colors ${
@@ -89,20 +141,13 @@ export default function LeistungenPage() {
           </div>
         </section>
 
-        {/* ── Always Included ────────────────────────────── */}
-        <section aria-labelledby="includes-heading" className="mb-24">
-          <div className="mb-10">
-            <div className="mb-4 flex items-center gap-4">
-              <span className="font-mono text-xs text-signal">INBEGRIFFEN</span>
-              <div className="h-px flex-grow bg-border-dark" />
-            </div>
-            <h2 id="includes-heading" className="text-[clamp(24px,3.5vw,36px)] font-bold text-on-surface">
-              {leistungen.includes.heading}
-            </h2>
-            <p className="mt-3 max-w-xl text-sm text-on-surface/60">{leistungen.includes.sub}</p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Always Included */}
+        <section aria-labelledby="includes-heading" className="mb-16">
+          <h2 id="includes-heading" className="mb-2 text-[clamp(22px,3vw,32px)] font-bold text-on-surface">
+            {leistungen.includes.heading}
+          </h2>
+          <p className="mb-6 max-w-xl text-sm text-on-surface/60">{leistungen.includes.sub}</p>
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {leistungen.includes.items.map((item) => (
               <div key={item.title} className="glass-card rounded-xl p-5">
                 <span className="mb-3 block text-2xl" aria-hidden="true">{item.icon}</span>
@@ -113,19 +158,12 @@ export default function LeistungenPage() {
           </div>
         </section>
 
-        {/* ── FAQ ────────────────────────────────────────── */}
-        <section aria-labelledby="faq-heading" className="mb-24">
-          <div className="mb-10">
-            <div className="mb-4 flex items-center gap-4">
-              <span className="font-mono text-xs text-signal">FAQ</span>
-              <div className="h-px flex-grow bg-border-dark" />
-            </div>
-            <h2 id="faq-heading" className="text-[clamp(24px,3.5vw,36px)] font-bold text-on-surface">
-              Häufige Fragen.
-            </h2>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
+        {/* FAQ */}
+        <section aria-labelledby="faq-heading" className="mb-16">
+          <h2 id="faq-heading" className="mb-6 text-[clamp(22px,3vw,32px)] font-bold text-on-surface">
+            Häufige Fragen.
+          </h2>
+          <div className="grid gap-4 lg:grid-cols-2">
             {leistungen.faq.map((item) => (
               <div key={item.q} className="glass-card rounded-xl p-6">
                 <h3 className="mb-2 font-mono text-sm font-bold text-on-surface">{item.q}</h3>
@@ -135,9 +173,9 @@ export default function LeistungenPage() {
           </div>
         </section>
 
-        {/* ── CTA ────────────────────────────────────────── */}
-        <section className="rounded-2xl border border-signal/20 bg-deep/40 px-8 py-16 text-center">
-          <h2 className="mb-3 text-[clamp(24px,3.5vw,36px)] font-bold text-on-surface">
+        {/* CTA */}
+        <section className="rounded-2xl border border-signal/20 bg-deep/40 px-8 py-14 text-center">
+          <h2 className="mb-3 text-[clamp(22px,3vw,34px)] font-bold text-on-surface">
             {leistungen.cta.heading}
           </h2>
           <p className="mb-8 text-sm text-on-surface/60">{leistungen.cta.sub}</p>
@@ -152,18 +190,7 @@ export default function LeistungenPage() {
           </Link>
         </section>
 
-      </main>
-
-      {/* ── Footer ─────────────────────────────────────── */}
-      <footer className="border-t border-border-dark">
-        <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-4 px-8 py-6">
-          <Link href="/" className="font-mono text-xs text-on-surface-variant transition-colors hover:text-signal">
-            ← Zurück zur Startseite
-          </Link>
-          <span className="font-mono text-xs text-on-surface/30">© 2026 zweipunktfünf</span>
-        </div>
-      </footer>
-
+      </div>
     </div>
   )
 }
