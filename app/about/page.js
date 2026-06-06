@@ -25,11 +25,6 @@ export default function AboutPage() {
 
         {/* Hero */}
         <div className="mb-20">
-          <div className="mb-8">
-            <span className="font-mono text-2xl font-bold tracking-wider text-on-surface">
-              zweipunkt<span className="text-signal">fünf</span>
-            </span>
-          </div>
           <Eyebrow>{about.label}</Eyebrow>
           <div className="max-w-2xl">
             <h1 className="text-[clamp(32px,5vw,52px)] font-bold leading-[1.1] text-on-surface">

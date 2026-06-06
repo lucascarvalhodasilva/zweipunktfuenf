@@ -223,6 +223,14 @@ export default function Navbar() {
           </Link>
 
           <a
+            href="#ueber-uns"
+            onClick={(e) => { e.preventDefault(); scrollToSection('ueber-uns'); closeMenu() }}
+            className="font-mono text-sm uppercase tracking-widest text-on-surface transition-colors hover:text-signal"
+          >
+            Über uns
+          </a>
+
+          <a
             href="#contact"
             onClick={(e) => { e.preventDefault(); scrollToSection('contact'); closeMenu() }}
             className="mt-4 inline-flex h-10 items-center rounded-lg bg-signal px-8 font-mono text-xs uppercase tracking-widest text-white transition-opacity hover:opacity-90"
