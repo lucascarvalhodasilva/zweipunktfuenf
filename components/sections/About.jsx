@@ -25,6 +25,7 @@ export default function About() {
               return (
                 <div
                   key={member.initials}
+                  style={{ order: member.mobileOrder }}
                   className="snap-center flex-shrink-0 w-[72vw] max-w-[280px] flex flex-col items-center gap-5 p-6 text-center"
                 >
                   <div className={`h-24 w-24 flex-shrink-0 rounded-full border-2 ${c.border} overflow-hidden flex items-center justify-center ${member.image ? '' : c.bg}`}>
