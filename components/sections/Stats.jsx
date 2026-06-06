@@ -163,7 +163,7 @@ export default function Stats() {
           </button>
         }>{stats.eyebrow}</Eyebrow>
 
-        <div className="section-body flex flex-col flex-1 min-h-0 justify-between overflow-y-auto">
+        <div className="section-body flex flex-col flex-1 min-h-0 justify-between overflow-y-auto overflow-x-hidden">
 
         {/* Header */}
         <div>
