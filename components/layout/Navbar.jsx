@@ -134,9 +134,20 @@ export default function Navbar() {
           </Link>
 
           <div className="hidden items-center gap-8 md:flex">
+            {navLinks.slice(0, 1).map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={(e) => { e.preventDefault(); scrollToSection(link.href.slice(1)) }}
+                className="font-mono text-xs uppercase tracking-widest text-on-surface-variant transition-colors hover:text-signal"
+              >
+                {link.label}
+              </a>
+            ))}
+
             <LeistungenNavMenu />
 
-            {navLinks.map((link) => (
+            {navLinks.slice(1).slice(1).map((link) => (
               <a
                 key={link.href}
                 href={link.href}

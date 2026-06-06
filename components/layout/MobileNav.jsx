@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { RiMailLine, RiLayoutGridLine } from 'react-icons/ri'
+import { RiLayoutGridLine } from 'react-icons/ri'
 
 function scrollToSection(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
@@ -44,16 +44,9 @@ export default function MobileNav() {
             <rect x="9" y="3" width="6" height="4" rx="1" />
             <path d="M9 12h6M9 16h4" />
           </svg>
-          <span className="font-mono text-[10px] uppercase tracking-widest">Prozess</span>
+          <span className="font-mono text-[10px] uppercase tracking-widest">14 Tagen</span>
         </a>
-        <a
-          href="#contact"
-          onClick={(e) => { e.preventDefault(); scrollToSection('contact') }}
-          className="flex flex-col items-center gap-1 text-on-surface-variant transition-colors hover:text-signal active:scale-90"
-        >
-          <RiMailLine size={22} />
-          <span className="font-mono text-[10px] uppercase tracking-widest">Kontakt</span>
-        </a>
+
       </div>
     </nav>
   )
