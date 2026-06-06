@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { RiLayoutGridLine } from 'react-icons/ri'
 
 function scrollToSection(id) {
@@ -8,6 +9,25 @@ function scrollToSection(id) {
 }
 
 export default function MobileNav() {
+  const pathname = usePathname()
+
+  function scrollToAbout(e) {
+    e.preventDefault()
+    if (pathname !== '/') {
+      window.location.href = '/#ueber-uns'
+      return
+    }
+    const el = document.getElementById('ueber-uns')
+    if (!el) return
+    const container = document.getElementById('snap-container')
+    const snapEl = el.closest('.snap-start') ?? el
+    if (container) {
+      const top = snapEl.getBoundingClientRect().top + container.scrollTop
+      container.style.scrollSnapType = 'none'
+      container.scrollTo({ top, behavior: 'instant' })
+      requestAnimationFrame(() => requestAnimationFrame(() => { container.style.scrollSnapType = '' }))
+    }
+  }
   return (
     <nav
       aria-label="Mobile navigation"
@@ -45,6 +65,19 @@ export default function MobileNav() {
             <path d="M9 12h6M9 16h4" />
           </svg>
           <span className="font-mono text-[10px] uppercase tracking-widest">14 Tagen</span>
+        </a>
+        <a
+          href="#ueber-uns"
+          onClick={scrollToAbout}
+          className="flex flex-col items-center gap-1 text-on-surface-variant transition-colors hover:text-signal active:scale-90"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="9" cy="7" r="3" />
+            <path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            <path d="M21 21v-2a4 4 0 0 0-3-3.85" />
+          </svg>
+          <span className="font-mono text-[10px] uppercase tracking-widest">Team</span>
         </a>
 
       </div>

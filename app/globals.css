@@ -126,6 +126,10 @@ body {
 [data-nav-content][data-motion='to-end']     { animation: nav-slide-from-right 200ms ease reverse; }
 [data-nav-content][data-motion='to-start']   { animation: nav-slide-from-left  200ms ease reverse; }
 
+/* Hide scrollbar for carousel elements */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

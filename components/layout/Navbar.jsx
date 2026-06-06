@@ -147,6 +147,13 @@ export default function Navbar() {
 
             <LeistungenNavMenu />
 
+            <Link
+              href="/about"
+              className="font-mono text-xs uppercase tracking-widest text-on-surface-variant transition-colors hover:text-signal"
+            >
+              Über uns
+            </Link>
+
             {navLinks.slice(1).slice(1).map((link) => (
               <a
                 key={link.href}

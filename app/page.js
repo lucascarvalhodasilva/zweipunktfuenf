@@ -1,5 +1,6 @@
 import Navbar from '@/components/layout/Navbar'
 import SnapReveal from '@/components/layout/SnapReveal'
+import About from '@/components/sections/About'
 import Contact from '@/components/sections/Contact'
 import GridWarp from '@/components/sections/GridWarp.client'
 import Hero from '@/components/sections/Hero'
@@ -17,6 +18,9 @@ export default function Home() {
         <SnapReveal><Process /></SnapReveal>
         <SnapReveal><Stats /></SnapReveal>
         <SnapReveal><Contact /></SnapReveal>
+        <div className="md:hidden">
+          <SnapReveal><About /></SnapReveal>
+        </div>
       </main>
     </div>
     </>
