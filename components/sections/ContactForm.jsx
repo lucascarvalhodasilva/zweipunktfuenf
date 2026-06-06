@@ -4,20 +4,23 @@ import { useState, useRef } from 'react'
 import { submitContactForm } from '@/app/actions/contact'
 
 const fieldBase =
-  'w-full rounded-lg border bg-transparent px-4 py-3 font-mono text-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-signal transition-colors'
-const fieldDefault = 'border-border-dark'
+  'w-full rounded-xl border-2 bg-transparent px-4 py-3 font-mono text-sm text-on-surface placeholder:text-on-surface/40 focus:outline-none focus:border-signal transition-all shadow-[inset_0_2px_12px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.04)]'
+const fieldDefault = 'border-white/15 hover:border-white/25'
 const fieldError = 'border-red-500'
 
-function Field({ label, id, error, children }) {
+function Field({ label, id, error, children, className = '' }) {
   return (
-    <div>
+    <div className={className}>
       <label
         htmlFor={id}
         className="mb-1.5 block font-mono text-xs uppercase tracking-widest text-on-surface-variant"
       >
         {label}
       </label>
-      {children}
+      <div className="relative">
+        {children}
+        <div className="pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(7,17,31,0.7)_100%)]" />
+      </div>
       {error && (
         <p className="mt-1 text-xs text-red-400" role="alert">
           {error}
@@ -88,7 +91,7 @@ export default function ContactForm() {
   }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} noValidate onFocus={handleFormFocus} onBlur={handleFormBlur}>
+    <form ref={formRef} onSubmit={handleSubmit} noValidate onFocus={handleFormFocus} onBlur={handleFormBlur} className="h-full flex flex-col">
       {/* honeypot – hidden from real users */}
       <div aria-hidden="true" className="absolute -left-[9999px]">
         <label htmlFor="website">Website</label>
@@ -101,8 +104,8 @@ export default function ContactForm() {
         />
       </div>
 
-      <div className="space-y-5">
-        <Field label="Name" id="name" error={state.errors?.name}>
+      <div className="flex flex-col flex-1 justify-between md:grid md:grid-cols-2 md:content-start md:gap-5">
+        <Field label="Name" id="name" error={state.errors?.name} className="md:col-span-2">
           <input
             type="text"
             id="name"
@@ -115,34 +118,55 @@ export default function ContactForm() {
         </Field>
 
         <Field label="E-Mail" id="email" error={state.errors?.email}>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            placeholder="max@beispiel.de"
-            className={`${fieldBase} ${state.errors?.email ? fieldError : fieldDefault}`}
-          />
-        </Field>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="max@beispiel.de"
+              className={`${fieldBase} ${state.errors?.email ? fieldError : fieldDefault}`}
+            />
+          </Field>
+
+          <Field label="Telefon" id="phone" error={state.errors?.phone}>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              placeholder="+49 123 456789"
+              className={`${fieldBase} ${state.errors?.phone ? fieldError : fieldDefault}`}
+            />
+          </Field>
+
+          <Field label="Webseite (optional)" id="website_url" error={state.errors?.website_url} className="md:col-span-2">
+            <input
+              type="url"
+              id="website_url"
+              name="website_url"
+              placeholder="https://beispiel.de"
+              className={`${fieldBase} ${state.errors?.website_url ? fieldError : fieldDefault}`}
+            />
+          </Field>
 
         <Field
           label="Nachricht"
           id="message"
           error={state.errors?.message}
+          className="md:col-span-2"
         >
           <textarea
             id="message"
             name="message"
             required
             minLength={10}
-            rows={5}
+            rows={3}
             placeholder="Beschreibe kurz dein Projekt oder deine Frage …"
-            className={`${fieldBase} resize-y ${state.errors?.message ? fieldError : fieldDefault}`}
+            className={`${fieldBase} resize-none md:resize-y ${state.errors?.message ? fieldError : fieldDefault}`}
           />
         </Field>
 
         {state.message && !state.success && (
-          <p className="text-sm text-red-400" role="alert">
+          <p className="text-sm text-red-400 md:col-span-2" role="alert">
             {state.message}
           </p>
         )}
@@ -150,7 +174,7 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={isPending}
-          className="inline-flex h-10 w-full items-center justify-center rounded-lg bg-signal px-8 font-body text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+          className="inline-flex h-10 w-full items-center justify-center rounded-lg bg-signal px-8 font-body text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 md:col-span-2 sm:w-auto"
         >
           {isPending ? 'Wird gesendet …' : 'Nachricht senden'}
         </button>

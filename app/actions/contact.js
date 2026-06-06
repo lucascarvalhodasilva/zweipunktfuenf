@@ -40,6 +40,8 @@ export async function submitContactForm(_prevState, formData) {
 
   const name = (formData.get('name') || '').trim()
   const email = (formData.get('email') || '').trim()
+  const phone = (formData.get('phone') || '').trim()
+  const websiteUrl = (formData.get('website_url') || '').trim()
   const message = (formData.get('message') || '').trim()
 
   // validation
@@ -74,8 +76,8 @@ export async function submitContactForm(_prevState, formData) {
       to: process.env.CONTACT_TO ?? 'anfragen@zweipunktfuenf.de',
       replyTo: `"${name}" <${email}>`,
       subject: `Neue Anfrage von ${name}`,
-      text: `Name: ${name}\nE-Mail: ${email}\n\nNachricht:\n${message}`,
-      html: `<p><strong>Name:</strong> ${name}</p><p><strong>E-Mail:</strong> <a href="mailto:${email}">${email}</a></p><hr><p>${message.replace(/\n/g, '<br>')}</p>`,
+      text: `Name: ${name}\nE-Mail: ${email}${phone ? `\nTelefon: ${phone}` : ''}${websiteUrl ? `\nWebseite: ${websiteUrl}` : ''}\n\nNachricht:\n${message}`,
+      html: `<p><strong>Name:</strong> ${name}</p><p><strong>E-Mail:</strong> <a href="mailto:${email}">${email}</a></p>${phone ? `<p><strong>Telefon:</strong> ${phone}</p>` : ''}${websiteUrl ? `<p><strong>Webseite:</strong> <a href="${websiteUrl}">${websiteUrl}</a></p>` : ''}<hr><p>${message.replace(/\n/g, '<br>')}</p>`,
     })
 
     return {
