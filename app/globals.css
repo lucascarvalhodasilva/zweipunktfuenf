@@ -4,8 +4,6 @@
 
 html {
   overscroll-behavior: none;
-  overflow: hidden;
-  height: 100svh;
 }
 
 body {
@@ -13,8 +11,7 @@ body {
   color: #e1e2ea;
   overscroll-behavior: none;
   font-family: var(--font-body), sans-serif;
-  overflow: hidden;
-  height: 100svh;
+  overflow-x: hidden;
 }
 
 ::selection {
