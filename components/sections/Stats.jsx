@@ -4,19 +4,52 @@ import { Fragment, useRef, useState, useEffect } from 'react'
 import Eyebrow from '@/components/layout/Eyebrow'
 import { stats } from '@/lib/content'
 
-function StarRating() {
+const STAR_PATH = 'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'
+
+function Star({ fill = 1, uid = 's' }) {
+  if (fill >= 1) {
+    return (
+      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style={{ filter: 'drop-shadow(0 0 3px rgba(251,191,36,0.45))' }}>
+        <path d={STAR_PATH} fill="#FBBF24" stroke="#F59E0B" strokeWidth="0.5" strokeLinejoin="round" />
+      </svg>
+    )
+  }
+  if (fill <= 0) {
+    return (
+      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+        <path d={STAR_PATH} fill="none" stroke="rgba(251,191,36,0.18)" strokeWidth="1.5" strokeLinejoin="round" />
+      </svg>
+    )
+  }
+  // half star
   return (
-    <div className="flex gap-[3px]" aria-label="5 von 5 Sternen">
-      {[...Array(5)].map((_, i) => (
-        <div
-          key={i}
-          className="h-[13px] w-[13px] bg-signal"
-          style={{
-            clipPath:
-              'polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)',
-          }}
-        />
-      ))}
+    <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style={{ filter: 'drop-shadow(0 0 3px rgba(251,191,36,0.35))' }}>
+      <defs>
+        <clipPath id={uid}>
+          <rect x="0" y="0" width="12" height="24" />
+        </clipPath>
+      </defs>
+      <path d={STAR_PATH} fill="none" stroke="rgba(251,191,36,0.18)" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d={STAR_PATH} fill="#FBBF24" stroke="#F59E0B" strokeWidth="0.5" strokeLinejoin="round" clipPath={`url(#${uid})`} />
+    </svg>
+  )
+}
+
+function StarRating({ rating = 5, max = 5, id = 'sr' }) {
+  const label = `${rating} von ${max} Sternen`
+  return (
+    <div className="flex items-center gap-2" aria-label={label}>
+      <div className="flex gap-[3px]">
+        {Array.from({ length: max }, (_, i) => {
+          const diff = rating - i
+          const fill = diff >= 1 ? 1 : diff >= 0.5 ? 0.5 : 0
+          return <Star key={i} fill={fill} uid={`${id}-${i}`} />
+        })}
+      </div>
+      <span className="font-mono text-[11px] font-semibold text-on-surface/70 tabular-nums">
+        {rating % 1 === 0 ? `${rating}.0` : rating}
+        <span className="font-normal text-on-surface/30">/5</span>
+      </span>
     </div>
   )
 }
@@ -151,7 +184,7 @@ export default function Stats() {
 
   return (
     <section className="h-full overflow-hidden flex flex-col px-8" aria-labelledby="stats-title">
-      <div className="mx-auto w-full max-w-[1280px] flex flex-col flex-1 min-h-0 pt-10 md:pt-16 [@media(min-height:820px)]:pt-16 [@media(min-height:820px)]:md:pt-24">
+      <div className="mx-auto w-full max-w-[1280px] flex flex-col flex-1 min-h-0 pt-16 [@media(min-height:820px)]:pt-16 [@media(min-height:820px)]:md:pt-24">
 
         <Eyebrow action={
           <button
@@ -163,7 +196,7 @@ export default function Stats() {
           </button>
         }>{stats.eyebrow}</Eyebrow>
 
-        <div className="section-body flex flex-col flex-1 min-h-0 justify-between overflow-y-auto overflow-x-hidden">
+        <div className="section-body flex flex-col flex-1 min-h-0 justify-start gap-[clamp(1.5rem,4vh,3rem)] overflow-y-auto overflow-x-hidden">
 
         {/* Header */}
         <div>
@@ -239,7 +272,7 @@ export default function Stats() {
             >
               {/* Stars + link */}
               <div className="mb-4 flex items-center justify-between">
-                <StarRating />
+                <StarRating rating={review.rating ?? 5} id={review.author.initials} />
                 <WebsiteChip url={review.author.url} preview={review.author.preview} />
               </div>
 
