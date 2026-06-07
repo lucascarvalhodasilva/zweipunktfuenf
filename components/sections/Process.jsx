@@ -347,7 +347,7 @@ export default function Process() {
 
   return (
     <section id="prozess" className="h-full overflow-hidden flex flex-col px-8">
-      <div className="mx-auto max-w-[1280px] flex flex-col flex-1 min-h-0 pt-16 md:pt-24">
+        <div className="mx-auto max-w-[1280px] flex flex-col flex-1 min-h-0 pt-10 md:pt-16 [@media(min-height:820px)]:pt-16 [@media(min-height:820px)]:md:pt-24">
         <Eyebrow action={
           <a
             href="/leistungen"

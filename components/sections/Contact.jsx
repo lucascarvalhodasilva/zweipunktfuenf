@@ -6,10 +6,10 @@ import { contact } from '@/lib/content'
 export default function Contact() {
   return (
     <section id="contact" className="relative h-full flex flex-col border-t border-border-dark px-8">
-      <div className="mx-auto w-full max-w-[1280px] flex flex-col flex-1 min-h-0 pt-16 md:pt-24">
+      <div className="mx-auto w-full max-w-[1280px] flex flex-col flex-1 min-h-0 pt-10 md:pt-16 [@media(min-height:820px)]:pt-16 [@media(min-height:820px)]:md:pt-24 md:pb-40">
         <Eyebrow>{contact.label}</Eyebrow>
 
-        <div className="section-body flex flex-col flex-1 min-h-0">
+        <div className="section-body flex flex-col flex-1 min-h-0 overflow-y-auto">
         <div className="grid grid-cols-1 flex-1 min-h-0 lg:gap-16 lg:grid-cols-2">
           <div className="hidden lg:block">
             <h2 className="mb-4 text-[clamp(26px,4vw,38px)] font-bold leading-[1.15] text-on-surface">

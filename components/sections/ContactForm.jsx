@@ -104,7 +104,7 @@ export default function ContactForm() {
         />
       </div>
 
-      <div className="flex flex-col flex-1 justify-between md:grid md:grid-cols-2 md:content-start md:gap-5">
+      <div className="flex flex-col flex-1 justify-between md:grid md:grid-cols-2 md:content-start md:gap-3 [@media(min-height:900px)]:md:gap-5">
         <Field label="Name" id="name" error={state.errors?.name} className="md:col-span-2">
           <input
             type="text"
