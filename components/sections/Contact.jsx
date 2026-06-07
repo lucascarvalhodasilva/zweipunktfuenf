@@ -6,7 +6,7 @@ import { contact } from '@/lib/content'
 export default function Contact() {
   return (
     <section id="contact" className="relative h-full flex flex-col border-t border-border-dark px-8">
-      <div className="mx-auto w-full max-w-[1280px] flex flex-col flex-1 min-h-0 pt-16 [@media(min-height:820px)]:pt-16 [@media(min-height:820px)]:md:pt-24 md:pb-40">
+      <div className="mx-auto w-full max-w-[1280px] flex flex-col flex-1 min-h-0 pt-16 md:pt-18 [@media(min-height:820px)]:pt-16 [@media(min-height:820px)]:md:pt-24 md:pb-40">
         <Eyebrow>{contact.label}</Eyebrow>
 
         <div className="section-body flex flex-col flex-1 min-h-0 overflow-y-auto">

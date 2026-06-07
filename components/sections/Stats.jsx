@@ -184,7 +184,7 @@ export default function Stats() {
 
   return (
     <section className="h-full overflow-hidden flex flex-col px-8" aria-labelledby="stats-title">
-      <div className="mx-auto w-full max-w-[1280px] flex flex-col flex-1 min-h-0 pt-16 [@media(min-height:820px)]:pt-16 [@media(min-height:820px)]:md:pt-24">
+      <div className="mx-auto w-full max-w-[1280px] flex flex-col flex-1 min-h-0 pt-16 md:pt-18 [@media(min-height:820px)]:pt-16 [@media(min-height:820px)]:md:pt-24">
 
         <Eyebrow action={
           <button
